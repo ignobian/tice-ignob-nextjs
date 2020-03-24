@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getCookie } from '../../actions/auth';
 import { createCategory, getCategories, removeCategory } from '../../actions/category';
+import { Button, CategoryBtn } from '../Button';
 
 const Category = () => {
   const [ values, setValues ] = useState({
@@ -32,13 +33,12 @@ const Category = () => {
   }
 
   const showCategories = () => categories.map((c, i) => (
-    <button 
+    <CategoryBtn
       title="Double click to delete"
       onDoubleClick={() => deleteConfirm(c.slug)}
-      key={i}
-      className="btn btn-outline-primary mx-1 mt-3">
-        {c.name}
-      </button>
+      key={i}>
+        # {c.name}
+      </CategoryBtn>
   ));
 
   const deleteConfirm = slug => {
@@ -93,35 +93,11 @@ const Category = () => {
     });
   }
   
-  const clearMsg = () => {
-    setValues({
-      ...values,
-      error: false,
-      success: false,
-      removed: false
-    })
-  }
-  
-  const showSuccess = () => {
-    if (success) {
-      setTimeout(clearMsg, 2000);
-      return <p className="text-success">Category is created</p>
-    }
-  }
+  const showSuccess = () => success && <p className="text-success">Category is created</p>
 
-  const showError = () => {
-    if (error) {
-      setTimeout(clearMsg, 2000);
-      return <p className="text-danger">Category already exists</p>
-    }
-  }
+  const showError = () => error && <p className="text-danger">{error}</p>
 
-  const showRemoved = () => {
-    if (removed) {
-      setTimeout(clearMsg, 2000);
-      return <p className="text-danger">Category is removed</p>
-    }
-  }
+  const showRemoved = () => removed && <p className="text-danger">Category is removed</p>
 
   const newCategoryForm = () => (
     <form onSubmit={handleSubmit}>
@@ -136,9 +112,8 @@ const Category = () => {
           className="form-control"/>
 
       </div>
-      <div className="form-group">
-        <input type="submit" className="btn btn-primary" value="Create" />
-      </div>
+
+      <Button type="submit">Create</Button>
     </form>
   );
 
@@ -149,7 +124,9 @@ const Category = () => {
       {showRemoved()}
       <div>
         {newCategoryForm()}
-        {showCategories()}
+        <div className="mt-5">
+          {showCategories()}
+        </div>
       </div>
     </>
   )

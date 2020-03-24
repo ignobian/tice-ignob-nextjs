@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getCookie } from '../../actions/auth';
 import { createTag, getTags, removeTag } from '../../actions/tag';
+import { TagBtn, Button } from '../Button';
 
 const Tag = () => {
   const [ values, setValues ] = useState({
@@ -32,13 +33,12 @@ const Tag = () => {
   }
 
   const showTags = () => tags.map((t, i) => (
-    <button 
+    <TagBtn 
       title="Double click to delete"
       onDoubleClick={() => deleteConfirm(t.slug)}
-      key={i}
-      className="btn btn-outline-primary mx-1 mt-3">
+      key={i}>
         {t.name}
-      </button>
+      </TagBtn>
   ));
 
   const deleteConfirm = slug => {
@@ -93,35 +93,11 @@ const Tag = () => {
     });
   }
   
-  const clearMsg = () => {
-    setValues({
-      ...values,
-      error: false,
-      success: false,
-      removed: false
-    })
-  }
-  
-  const showSuccess = () => {
-    if (success) {
-      setTimeout(clearMsg, 2000);
-      return <p className="text-success">Tag is created</p>
-    }
-  }
+  const showSuccess = () => success && <p className="text-success">Tag is created</p>
 
-  const showError = () => {
-    if (error) {
-      setTimeout(clearMsg, 2000);
-      return <p className="text-danger">Tag already exists</p>
-    }
-  }
+  const showError = () => error && <p className="text-danger">{error}</p>
 
-  const showRemoved = () => {
-    if (removed) {
-      setTimeout(clearMsg, 2000);
-      return <p className="text-danger">Tag is removed</p>
-    }
-  }
+  const showRemoved = () => removed && <p className="text-danger">Tag is removed</p>
 
   const newTagForm = () => (
     <form onSubmit={handleSubmit}>
@@ -136,9 +112,8 @@ const Tag = () => {
           className="form-control"/>
 
       </div>
-      <div className="form-group">
-        <input type="submit" className="btn btn-primary" value="Create" />
-      </div>
+
+      <Button type="submit">Create</Button>
     </form>
   );
 
@@ -149,7 +124,9 @@ const Tag = () => {
       {showRemoved()}
       <div>
         {newTagForm()}
-        {showTags()}
+        <div className="mt-5">
+          {showTags()}
+        </div>
       </div>
     </>
   )
