@@ -56,7 +56,7 @@ const UserProfile = ({ user, blogs }) => {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <div className="card">
+              <div className="card mt-4">
                 <div className="card-body">
                   <div className="row">
                     <div className="col-md-8">

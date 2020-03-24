@@ -26,12 +26,15 @@ const DropdownMenu = () => {
     <Container>
       <ul>
         <li style={{color: '#111'}} className="border-bottom pb-3">Welcome {isAuth() ? isAuth().name: ''}</li>
+        {isAuth().role === 1 && (
+          <>
+            <li><Link href="/admin/dashboard"><DefaultLink>Admin dashboard</DefaultLink></Link></li>
+            <li className="border-bottom pb-3"><Link href="/admin/category-tag"><DefaultLink>Categories and tags</DefaultLink></Link></li>
+          </>
+        )} 
         <li className="border-bottom pb-3"><Link href="/blogs"><DefaultLink>Browse blogs</DefaultLink></Link></li>
         <li><DefaultLink href="/blogs/new">Create blog</DefaultLink></li>
         <li className="border-bottom pb-3"><Link href="/user/blogs"><DefaultLink>Manage my blogs</DefaultLink></Link></li>
-        {isAuth().role === 1 && (
-          <li className="border-bottom pb-3"><Link href="/admin/category-tag"><DefaultLink>Manage categories and tags</DefaultLink></Link></li>
-        )} 
         <li className="border-bottom pb-3"><Link href="/user/update"><DefaultLink>Update profile</DefaultLink></Link></li>
         <li><NoButton className="p-0" onClick={() => signout(() => Router.push(`/`))}>Sign out</NoButton></li>
       </ul>

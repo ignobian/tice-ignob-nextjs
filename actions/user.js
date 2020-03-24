@@ -31,3 +31,14 @@ export const update = (token, user) => {
   .then(res => res.json())
   .catch(err => console.log(err));
 };
+
+export const getUsers = (token) => {
+  return fetch(`${API}/users`, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}

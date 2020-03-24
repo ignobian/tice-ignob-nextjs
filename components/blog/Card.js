@@ -21,17 +21,21 @@ const SmallTagBtn = styled(TagBtn)`
 const Card = ({ blog }) => {
   const showCategories = blog => (
     blog.categories.map((category, i) => (
-      <Link key={i} href={`/categories/${category.slug}`}>
-        <SmallCategoryBtn># {category.name}</SmallCategoryBtn>
-      </Link>
+      <div className="my-3">
+        <Link key={i} href={`/categories/${category.slug}`}>
+          <SmallCategoryBtn># {category.name}</SmallCategoryBtn>
+        </Link>
+      </div>
     ))
   )
 
   const showTags = blog => (
     blog.tags.map((tag, i) => (
-      <Link key={i} href={`/tags/${tag.slug}`}>
-        <SmallTagBtn>{tag.name}</SmallTagBtn>
-      </Link>
+      <div className="my-3">
+        <Link key={i} href={`/tags/${tag.slug}`}>
+          <SmallTagBtn>{tag.name}</SmallTagBtn>
+        </Link>
+      </div>
     ))
   )
 
@@ -43,12 +47,12 @@ const Card = ({ blog }) => {
       <div>
         <h5>{blog.title}</h5>
         <p className="m-0">{blog.mdesc}...</p>
-        <p className="text-muted py-2">
+        <p className="text-muted pt-2 mb-1">
           <small>Posted by {blog.postedBy.username} | {moment(blog.updatedAt).fromNow()}</small>
           <span className="ml-3 mr-2">{blog.claps.length}</span>
           <img width="27" src="/images/clap.svg" alt="claps"/>
         </p>
-        <div className="pb-2">
+        <div className="d-flex flex-wrap">
           {showCategories(blog)}
           {showTags(blog)}
         </div>
