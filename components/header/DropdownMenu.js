@@ -25,7 +25,7 @@ const DropdownMenu = () => {
   return (
     <Container>
       <ul>
-        <li style={{color: '#111'}} className="border-bottom pb-3">Welcome {isAuth().name}</li>
+        <li style={{color: '#111'}} className="border-bottom pb-3">Welcome {isAuth() ? isAuth().name: ''}</li>
         <li className="border-bottom pb-3"><Link href="/blogs"><DefaultLink>Browse blogs</DefaultLink></Link></li>
         <li><DefaultLink href="/blogs/new">Create blog</DefaultLink></li>
         <li className="border-bottom pb-3"><Link href="/user/blogs"><DefaultLink>Manage my blogs</DefaultLink></Link></li>

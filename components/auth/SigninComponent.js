@@ -38,11 +38,7 @@ const SigninComponent = () => {
         // save user info to localstorage
         // authenticate user
         authenticate(data, () => {
-          if (isAuth() && isAuth().role === 1) {
-            Router.push('/admin');
-          } else {
-            Router.push('/user');
-          }
+          Router.push('/');
         });
       }
     });
