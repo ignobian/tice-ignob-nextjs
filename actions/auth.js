@@ -16,14 +16,27 @@ export const handleResponse = response => {
   }
 }
 
-export const signup = (user) => {
-  return fetch(`${API}/signup`, {
+export const preSignup = (user) => {
+  return fetch(`${API}/pre-signup`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(user)
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err));
+};
+
+export const signup = token => {
+  return fetch(`${API}/signup`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ token })
   })
   .then(res => res.json())
   .catch(err => console.log(err));
@@ -122,3 +135,29 @@ export const updateUser = (user, next) => {
   }
   next();
 }
+
+export const forgotPassword = (email) => {
+  return fetch(`${API}/forgot-password`, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email })
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err));
+};
+
+export const resetPassword = (resetPasswordLink, newPassword) => {
+  return fetch(`${API}/reset-password`, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ resetPasswordLink, newPassword })
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err));
+};

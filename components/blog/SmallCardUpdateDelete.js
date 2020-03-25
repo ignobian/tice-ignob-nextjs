@@ -9,8 +9,8 @@ import { SecondaryButton, SecondaryButtonLink } from '../Button';
 import { DisplaySm } from '../responsive/Display';
 
 const Container = styled.div`
-  height: 70px;
-  padding: 0 20px;
+  /* height: 70px; */
+  padding: 20px;
   background-color: white;
   border-radius: 50px;
   box-shadow: 1px 1px 5px rgba(0,0,0,.2);
@@ -37,7 +37,7 @@ const Img = styled.img`
   cursor: pointer;
 `;
 
-const SmallCardUpdateDelete = ({ blog, loadBlogs }) => {
+const SmallCardUpdateDelete = ({ blog, onDelete }) => {
 
   const [isImage, setIsImage] = useState(true);
 
@@ -55,31 +55,35 @@ const SmallCardUpdateDelete = ({ blog, loadBlogs }) => {
         if (data.error) {
           console.log(data.error)
         } else {
-          loadBlogs();
+          if (onDelete) onDelete();
         }
       });
     }
   }
 
   const showUpdateButton = blog => (
-    <Link href={`/user/update/${blog.slug}`}>
-      <SecondaryButtonLink>Update</SecondaryButtonLink>
-    </Link>
+    <div className="my-1">
+      <Link href={`/user/update/${blog.slug}`}>
+        <SecondaryButtonLink>Update</SecondaryButtonLink>
+      </Link>
+    </div>
   )
 
   const showDeleteButton = blog => (
-    <SecondaryButton style={{borderColor: 'red', color: 'red', padding: '4px 12px'}} onClick={() => deleteConfirm(blog.slug)} className="ml-2">Delete</SecondaryButton>
+    <div className="my-1">
+      <SecondaryButton style={{borderColor: 'red', color: 'red', padding: '4px 12px' }} onClick={() => deleteConfirm(blog.slug)} className="ml-2">Delete</SecondaryButton>
+    </div>
   )
 
   return (
     <Container className="mt-2">
       {isImage && (
-        <Link href={`/blogs/${blog.slug}`}>
+        <Link href={`/${blog.slug}`}>
           <Img src={`${API}/blog/photo/${blog.slug}`} onError={hideImage} alt=""/>
         </Link>
       )}
 
-      <Link href={`/blogs/${blog.slug}`}><h4 className="flex-grow-1" style={{cursor: 'pointer'}}>{blog.title}</h4></Link>
+      <Link href={`/${blog.slug}`}><h4 className="flex-grow-1" style={{cursor: 'pointer'}}>{blog.title}</h4></Link>
 
       <DisplaySm>
         <div className="mr-2">
@@ -88,7 +92,7 @@ const SmallCardUpdateDelete = ({ blog, loadBlogs }) => {
       </DisplaySm>
 
 
-      <div className="buttons">
+      <div className="d-flex flex-wrap align-items-center">
         {showUpdateButton(blog)}
         {showDeleteButton(blog)}
       </div>

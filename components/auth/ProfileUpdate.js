@@ -119,7 +119,7 @@ const ProfileUpdate = () => {
         <textarea id="about" value={about} onChange={handleChange('about')} className="form-control"></textarea>
       </div>
 
-      <Button type="submit">Submit</Button>
+      <Button type="submit">Update</Button>
     </form>
   )
 

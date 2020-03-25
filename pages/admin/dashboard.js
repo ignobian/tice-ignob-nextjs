@@ -8,6 +8,8 @@ import { getCookie } from '../../actions/auth';
 import { APP_NAME } from '../../config';
 import sortBy from 'sort-by';
 import { SecondaryButtonLink } from '../../components/Button';
+import AdminSearchBlogs from '../../components/admin/AdminSearchBlogs';
+import { DisplaySmallerThanLg } from '../../components/responsive/Display';
 
 const Dashboard = () => {
 
@@ -88,6 +90,13 @@ const Dashboard = () => {
     </table>
   );
 
+  const showAdminSearchBlogs = () => (
+    <div className="ml-md-4">
+      <h3>Search blogs</h3>
+      <AdminSearchBlogs/>
+    </div>
+  )
+
   const showError = () => error && <div className="alert alert-danger">{error}</div>
 
   return (
@@ -100,7 +109,7 @@ const Dashboard = () => {
               <h2>Admin dashboard</h2>
             </div>
 
-            <div className="col-12 mt-4">
+            <div className="col-12 col-lg-6 mt-4">
             
               <h3>All users</h3>
 
@@ -109,6 +118,19 @@ const Dashboard = () => {
               {showOptionSelect()}
 
               {showUsersTable()}
+
+
+            </div>
+
+            <div className="col-lg-6 mt-4">
+
+              <DisplaySmallerThanLg>
+                <div className="mb-5">
+                  <hr/>
+                </div>
+              </DisplaySmallerThanLg>
+
+              {showAdminSearchBlogs()}
 
             </div>
           </div>

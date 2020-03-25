@@ -33,12 +33,13 @@ const Category = () => {
   }
 
   const showCategories = () => categories.map((c, i) => (
-    <CategoryBtn
-      title="Double click to delete"
-      onDoubleClick={() => deleteConfirm(c.slug)}
-      key={i}>
-        # {c.name}
-      </CategoryBtn>
+      <CategoryBtn
+        className="mr-2 mt-2"
+        title="Double click to delete"
+        onDoubleClick={() => deleteConfirm(c.slug)}
+        key={i}>
+          # {c.name}
+        </CategoryBtn>
   ));
 
   const deleteConfirm = slug => {
@@ -124,7 +125,7 @@ const Category = () => {
       {showRemoved()}
       <div>
         {newCategoryForm()}
-        <div className="mt-5">
+        <div className="mt-5 d-flex flex-wrap">
           {showCategories()}
         </div>
       </div>

@@ -1,5 +1,4 @@
 import Layout from '../../../components/Layout';
-import Link from 'next/link';
 import CanUpdateBlog from '../../../components/auth/CanUpdateBlog';
 import BlogCreateUpdate from '../../../components/crud/BlogCreateUpdate';
 import { withRouter } from 'next/router';

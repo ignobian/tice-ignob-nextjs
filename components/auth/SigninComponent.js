@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { signin, authenticate, isAuth } from '../../actions/auth';
 import Router from 'next/router';
 import { Button } from '../Button';
+import { DefaultLink } from '../Link';
 import Loading from '../Loading';
+import Link from 'next/link';
 
 const SigninComponent = () => {
   const [ values, setValues ] = useState({
@@ -74,7 +76,8 @@ const SigninComponent = () => {
             placeholder="Type your password" />
         </div>
 
-        <div className="d-flex justify-content-center mt-4">
+        <div className="d-flex justify-content-between align-items-center mt-4">
+          <Link href="/user/password/forgot"><DefaultLink>Forgot password?</DefaultLink></Link>
           <Button type="submit">Sign in</Button>
         </div>
 

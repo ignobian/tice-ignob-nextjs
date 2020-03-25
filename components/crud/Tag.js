@@ -34,6 +34,7 @@ const Tag = () => {
 
   const showTags = () => tags.map((t, i) => (
     <TagBtn 
+      className="mr-2 mt-2"
       title="Double click to delete"
       onDoubleClick={() => deleteConfirm(t.slug)}
       key={i}>
@@ -124,7 +125,7 @@ const Tag = () => {
       {showRemoved()}
       <div>
         {newTagForm()}
-        <div className="mt-5">
+        <div className="mt-5 d-flex flex-wrap">
           {showTags()}
         </div>
       </div>

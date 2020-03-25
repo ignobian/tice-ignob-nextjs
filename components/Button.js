@@ -7,6 +7,7 @@ const buttonStyles = css`
   background-color: ${props => props.theme.primary.main};
   box-shadow: 1px 1px 5px rgba(0,0,0,.3);
   transition: background-color 200ms ease-out, box-shadow 200ms ease-out;
+  white-space: nowrap;
   &:hover {
     box-shadow: 1px 2px 7px rgba(0,0,0,.4);
     background-color: ${props => props.theme.primary.hover};
@@ -18,6 +19,7 @@ const buttonOutlineStyles = css`
   border-radius: 5px;
   color: ${props => props.theme.primary.main}!important;
   border: 1px solid ${props => props.theme.primary.main};
+  white-space: nowrap;
   transition: background-color 200ms ease-out, box-shadow 200ms ease-out, color 200ms ease-out;
   &:hover {
     background-color: ${props => props.theme.primary.main};
@@ -29,6 +31,7 @@ const secondaryButtonStyles = css`
   padding: 7px 12px;
   border-radius: 5px;
   color: ${props => props.theme.secondary.main};
+  white-space: nowrap;
   border: 1px solid ${props => props.theme.secondary.main};
   transition: color 200ms ease-out, border 200ms ease-out;
   cursor: pointer;
@@ -76,8 +79,8 @@ export const CategoryBtn = styled.a`
   border-radius: 50px;
   font-size: 20px;
   padding: 10px 20px;
-  margin: 10px;
   font-weight: light;
+  white-space: nowrap;
   /* border: 1px solid ${props => props.theme.primary.main}; */
   box-shadow: 1px 1px 5px rgba(0,0,0,.2);
   transition: box-shadow 150ms ease-out;
@@ -88,12 +91,12 @@ export const CategoryBtn = styled.a`
 
 // buttons for tags
 export const TagBtn = styled.a`
-  background-color: #dfdfdf;
-  border: 1px solid #dfdfdf;
+  background-color: #efefef;
+  border: 1px solid #efefef;
   border-radius: 50px;
   font-size: 15px;
   padding: 10px 20px;
-  margin: 5px;
+  white-space: nowrap;
   /* border: 1px solid ${props => props.theme.primary.main}; */
   transition: border 150ms ease-out, background-color 150ms ease-out;
   &:hover {

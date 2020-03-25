@@ -5,7 +5,7 @@ const CategoryListSection = ({ categories }) => {
 
   const listCategories = () => (
     categories && categories.map((c, i) => (
-      <div className="py-3">
+      <div className="py-3 mx-2">
         <Link key={i} href={`/categories/${c.slug}`}>
           <CategoryBtn># {c.name}</CategoryBtn>
         </Link>

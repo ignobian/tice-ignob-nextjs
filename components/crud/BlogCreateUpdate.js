@@ -132,7 +132,7 @@ const CreateUpdateBlog = ({ router }) => {
           // clear the title in the local storage
           clearStorage('title');
           // redirect to the update page of this blog post
-          Router.push(`/blogs/${data.slug}`);
+          Router.push(`/${data.slug}`);
         }
       });
     } else {
@@ -286,7 +286,7 @@ const CreateUpdateBlog = ({ router }) => {
   const showFeaturedImage = () => {
     const src = photoPreview ? photoPreview : `${API}/blog/photo/${slug}`;
     return (
-      <img width="100" height="100" src={src} alt=""/>
+      <img className="mb-2" height="100" src={src} alt=""/>
     );
   }
 

@@ -8,6 +8,7 @@ import { ButtonLink } from '../components/Button';
 import { DefaultLink } from "../components/Link";
 import FeaturedBlogs from '../components/home/FeaturedBlogs';
 import { list } from "../actions/blog";
+import { isAuth } from "../actions/auth";
 
 const Index = ({ categories, blogs }) => {
   const head = () => (
@@ -46,18 +47,21 @@ const Index = ({ categories, blogs }) => {
               <p><strong>We are passionate about coding and are keen to share that knowledge with you</strong></p>
             </div>
 
-            <div className="col-6 offset-3 col-md-4 offset-md-4 mt-2">
-              <ButtonLink style={{display: 'block', padding: '17px'}}>Get started</ButtonLink>
+            {!isAuth() && (
+              <div className="col-6 offset-3 col-md-4 offset-md-4 mt-2">
+                <ButtonLink style={{display: 'block', padding: '17px'}}>Get started</ButtonLink>
 
-              <div className="mt-3 text-left" style={{opacity: 0.8}}>
-                <p className="mb-2">Already have an account?</p>
-                <Link href="/"><DefaultLink>Sign in</DefaultLink></Link>
+                <div className="mt-3 text-left" style={{opacity: 0.8}}>
+                  <p className="mb-2">Already have an account?</p>
+                  <Link href="/"><DefaultLink>Sign in</DefaultLink></Link>
+                </div>
               </div>
-            </div>
+            )}
+
           </div>
 
           <div className="row">
-            <div className="col-12 col-md-10 offset-md-1 mt-5">
+            <div className="col-12 col-md-10 offset-md-1 mt-4">
               <h2 className="pt-5">Featured blogs</h2>
               <FeaturedBlogs blogs={blogs}/>
             </div>

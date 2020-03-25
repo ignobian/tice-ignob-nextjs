@@ -40,12 +40,12 @@ const Card = ({ blog }) => {
   )
 
   return (
-    <div className="border-bottom mt-4 pb-5 d-flex">
+    <div className="border-bottom mt-4 pb-5 d-flex" style={{overflow: 'hidden'}}>
       <div>
         <img className="mr-3" width="120" src={`${API}/blog/photo/${blog.slug}`} alt=""/>
       </div>
       <div>
-        <h5>{blog.title}</h5>
+        <Link href={`/${blog.slug}`}><h5 style={{ cursor: 'pointer' }}>{blog.title}</h5></Link>
         <p className="m-0">{blog.mdesc}...</p>
         <p className="text-muted pt-2 mb-1">
           <small>Posted by {blog.postedBy.username} | {moment(blog.updatedAt).fromNow()}</small>
@@ -57,7 +57,7 @@ const Card = ({ blog }) => {
           {showTags(blog)}
         </div>
         <div className="mt-4">
-          <Link href={`/blogs/${blog.slug}`}>
+          <Link href={`/${blog.slug}`}>
             <ButtonOutlineLink>Read more</ButtonOutlineLink>
           </Link>
         </div>

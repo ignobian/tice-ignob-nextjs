@@ -26,7 +26,7 @@ const DropdownMenu = () => {
     <Container>
       <ul>
         <li style={{color: '#111'}} className="border-bottom pb-3">Welcome {isAuth() ? isAuth().name: ''}</li>
-        {isAuth().role === 1 && (
+        {isAuth() && isAuth().role === 1 && (
           <>
             <li><Link href="/admin/dashboard"><DefaultLink>Admin dashboard</DefaultLink></Link></li>
             <li className="border-bottom pb-3"><Link href="/admin/category-tag"><DefaultLink>Categories and tags</DefaultLink></Link></li>

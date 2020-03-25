@@ -116,3 +116,17 @@ export const addClap = (blog, user) => {
     .catch(err => console.log(err))
   }
 }
+
+export const searchWithOption = (query, token, option) => {
+  return fetch(`${API}/blogs/advanced-search`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ query, option })
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}

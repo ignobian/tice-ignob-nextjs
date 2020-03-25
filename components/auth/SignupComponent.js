@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { signup, isAuth } from '../../actions/auth';
+import { isAuth, preSignup } from '../../actions/auth';
 import Router from 'next/router';
 import { Button } from '../Button';
 import Loading from '../Loading';
@@ -27,7 +27,7 @@ const SignupComponent = () => {
     setValues({ ...values, loading: true, error: false });
     const user = { name, email, password };
 
-    signup(user)
+    preSignup(user)
     .then(data => {
       if (data.error) {
         setValues({ ...values, 
@@ -54,7 +54,7 @@ const SignupComponent = () => {
 
   const showLoading = () => loading && <Loading/>;
   const showError = () => error && <div className="alert alert-danger">{error}</div>;
-  const showMessage = () => message && <div className="alert alert-info">{message}</div>;
+  const showMessage = () => message && <div className="text-muted">{message}</div>;
 
   const signupForm = () => {
     return (

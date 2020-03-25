@@ -34,3 +34,10 @@ export const DisplaySmallerThanMd = styled.div`
     display: none;
   }
 `;
+
+export const DisplaySmallerThanLg = styled.div`
+  display: block;
+  @media (min-width: 992px) {
+    display: none;
+  }
+`;
