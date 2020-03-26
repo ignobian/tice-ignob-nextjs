@@ -37,11 +37,16 @@ const Tag = ({ tag, blogs }) => {
       <Layout>
         <main>
           <div className="container-fluid">
-            <div className="col-md-12 py-5 border-bottom">
-              <h1 style={{fontWeight: '100', fontSize: '4em', opacity: 0.6}}>{tag.name}</h1>
-            </div>
-            <div>
-              {showBlogs()}
+            <div className="row">
+
+              <div className="col-md-8 offset-md-2 py-5 border-bottom">
+                <h1 style={{fontWeight: '100', fontSize: '4em', opacity: 0.6}}>{tag.name}</h1>
+              </div>
+
+              <div className="col-md-8 offset-md-2">
+                {showBlogs()}
+              </div>
+
             </div>
           </div>
         </main>
