@@ -94,7 +94,7 @@ export const TagBtn = styled.a`
   background-color: #efefef;
   border: 1px solid #efefef;
   border-radius: 50px;
-  font-size: 15px;
+  font-size: 13px;
   padding: 10px 20px;
   white-space: nowrap;
   /* border: 1px solid ${props => props.theme.primary.main}; */

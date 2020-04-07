@@ -14,6 +14,7 @@ import { Avatar } from '../components/Avatar';
 import { ClapImg } from '../components/ClapImg';
 import { CategoryBtn, TagBtn } from '../components/Button';
 import { isAuth } from '../actions/auth';
+import FollowButton from '../components/FollowButton';
 
 const Banner = styled.div`
   height: 300px;
@@ -100,8 +101,8 @@ const singleBlog = ({ blog }) => {
   
   const showTags = blog => (
     blog.tags.map((t, i) => (
-      <Link key={i} href={`/tags/${t.slug}`}>
-        <TagBtn className="m-0 mr-2">{t.name}</TagBtn>
+      <Link key={i} href={`/tags/${t}`}>
+        <TagBtn className="m-0 mr-2">{t}</TagBtn>
       </Link>
     ))
   );
@@ -116,6 +117,7 @@ const singleBlog = ({ blog }) => {
     <div className="d-flex align-items-center my-3">
       <Avatar className="mr-2" src={`${API}/user/photo/${user.uniqueUsername}`} onError={setDefaultSrc} />
       <Link href={`/profile/${user.uniqueUsername}`}><DefaultLink>{user.username}</DefaultLink></Link>
+      <span className="ml-2">| <FollowButton noborder user={user} /></span>
       <span className="ml-2 text-muted flex-grow-1"> | Posted {moment(blog.createdAt).fromNow()}</span>
       {showClap()}
     </div>

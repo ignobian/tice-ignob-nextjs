@@ -130,3 +130,14 @@ export const searchWithOption = (query, token, option) => {
   .then(res => res.json())
   .catch(err => console.log(err))
 }
+
+export const getFeedBlogs = token => {
+  return fetch(`${API}/blogs/feed`, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}

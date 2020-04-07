@@ -5,17 +5,17 @@ import { getTag } from '../../actions/tag';
 import Card from '../../components/blog/Card';
 import sortBy from 'sort-by';
 
-const Tag = ({ tag, blogs }) => {
+const Tag = ({ tagName, blogs }) => {
   const head = () => (
     <Head>
-      <title>Tag {tag.name} - {APP_NAME}</title>
+      <title>Tag {tagName} - {APP_NAME}</title>
 
-      <meta name="description" content={`Best programming tutorials on ${tag.name}`}/>
+      <meta name="description" content={`Best programming tutorials on ${tagName}`}/>
 
-      <link rel="canonical" href={`${DOMAIN}/tags/${tag.slug}`} />
-      <meta property="og:title" content={`Tag ${tag.title} - ${APP_NAME}`} />
+      <link rel="canonical" href={`${DOMAIN}/tags/${tagName}`} />
+      <meta property="og:title" content={`Tag ${tagName} - ${APP_NAME}`} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`${DOMAIN}/tags/${tag.slug}`} />
+      <meta property="og:url" content={`${DOMAIN}/tags/${tagName}`} />
       <meta property="og:site_name" content={APP_NAME} />
 
       <meta property="og:image" content={`${DOMAIN}/images/seoImage.png`} />
@@ -40,7 +40,7 @@ const Tag = ({ tag, blogs }) => {
             <div className="row">
 
               <div className="col-md-8 offset-md-2 py-5 border-bottom">
-                <h1 style={{fontWeight: '100', fontSize: '4em', opacity: 0.6}}>{tag.name}</h1>
+                <h1 style={{fontWeight: '100', fontSize: '4em', opacity: 0.6}}>{tagName}</h1>
               </div>
 
               <div className="col-md-8 offset-md-2">
@@ -61,7 +61,7 @@ Tag.getInitialProps = ({ query }) => {
     if (data.error) {
       console.log(data.error);
     } else {
-      return { tag: data.tag, blogs: data.blogs.sort(sortBy('-updatedAt')) }
+      return { tagName: data.tag, blogs: data.blogs.sort(sortBy('-updatedAt')) }
     }
   });
 }

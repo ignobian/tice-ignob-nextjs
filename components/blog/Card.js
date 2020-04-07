@@ -2,9 +2,11 @@ import Link from 'next/link';
 import moment from 'moment';
 import renderHTML from 'react-render-html';
 import { API } from '../../config';
-import { ButtonOutlineLink, CategoryBtn, TagBtn } from '../Button';
+import { ButtonOutlineLink, CategoryBtn, TagBtn, NoButton } from '../Button';
 import styled from 'styled-components';
 import { ClapImg } from '../ClapImg';
+import { DefaultLink } from '../Link';
+import FollowButton from '../FollowButton';
 
 const SmallCategoryBtn = styled(CategoryBtn)`
   font-size: 15px;
@@ -19,6 +21,10 @@ const SmallTagBtn = styled(TagBtn)`
 `;
 
 const Card = ({ blog }) => {
+  const followLink = () => (
+    <FollowButton noborder user={blog.postedBy} />
+  );
+
   const showCategories = blog => (
     blog.categories.map((category, i) => (
       <div className="my-3">
@@ -32,8 +38,8 @@ const Card = ({ blog }) => {
   const showTags = blog => (
     blog.tags.map((tag, i) => (
       <div className="my-3">
-        <Link key={i} href={`/tags/${tag.slug}`}>
-          <SmallTagBtn>{tag.name}</SmallTagBtn>
+        <Link key={i} href={`/tags/${tag}`}>
+          <SmallTagBtn>{tag}</SmallTagBtn>
         </Link>
       </div>
     ))
@@ -48,7 +54,7 @@ const Card = ({ blog }) => {
         <Link href={`/${blog.slug}`}><h5 style={{ cursor: 'pointer' }}>{blog.title}</h5></Link>
         <p className="m-0">{blog.mdesc}...</p>
         <p className="text-muted pt-2 mb-1">
-          <small>Posted by {blog.postedBy.username} | {moment(blog.updatedAt).fromNow()}</small>
+          <small>Posted by <Link href={`/profile/${blog.postedBy.uniqueUsername}`}><DefaultLink>{blog.postedBy.username}</DefaultLink></Link> | {followLink()} | {moment(blog.updatedAt).fromNow()}</small>
           <span className="ml-3 mr-2">{blog.claps.length}</span>
           <img width="27" src="/images/clap.svg" alt="claps"/>
         </p>

@@ -3,14 +3,16 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { APP_NAME, DOMAIN } from '../config';
 import CategoryListSection from '../components/home/CategoryListSection';
+import TagListSection from '../components/home/TagListSection';
 import { getCategories } from "../actions/category";
+import { getFeaturedTags } from "../actions/tag";
 import { ButtonLink } from '../components/Button';
 import { DefaultLink } from "../components/Link";
 import FeaturedBlogs from '../components/home/FeaturedBlogs';
 import { list } from "../actions/blog";
 import { isAuth } from "../actions/auth";
 
-const Index = ({ categories, blogs }) => {
+const Index = ({ categories, tags, blogs }) => {
   const head = () => (
     <Head>
       <title>Welcome to {APP_NAME} - blogs about tech</title>
@@ -41,6 +43,10 @@ const Index = ({ categories, blogs }) => {
 
             <div className="col-12 my-5">
               <CategoryListSection categories={categories}/>
+            </div>
+
+            <div>
+              <TagListSection tags={tags} />
             </div>
 
             <div className="col-12 my-2">
@@ -79,13 +85,20 @@ Index.getInitialProps = () => {
       console.log(data.error);
     } else {
       const categories = data;
-      return list().then(data => {
+      return getFeaturedTags().then(data => {
         if (data.error) {
           console.log(data.error);
         } else {
-          return { categories, blogs: data }
+          const tags = data;
+          return list().then(data => {
+            if (data.error) {
+              console.log(data.error);
+            } else {
+              return { categories, tags, blogs: data }
+            }
+          });
         }
-      });
+      })
     }
   });
 }

@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import Router, { withRouter } from 'next/router';
 import dynamic from 'next/dynamic';
+import { Input, Label } from 'reactstrap';
 
 // components
 import { Button, SecondaryButtonLabel } from '../Button';
 import { DisplaySmallerThanMd } from '../responsive/Display';
+import Chip from '../TagChip';
 
 // actions
 import { getCookie } from '../../actions/auth';
 import { getCategories } from '../../actions/category';
-import { getTags } from '../../actions/tag';
 import { createBlog, getBlog, updateBlog } from '../../actions/blog';
 
 // import React Quill dynamically (only on the clientside)
@@ -39,13 +40,12 @@ const CreateUpdateBlog = ({ router }) => {
 
   // state
   const [categories, setCategories] = useState([]);
-  const [tags, setTags] = useState([]);
 
   const [checkedCategories, setCheckedCategories] = useState([]);
-  const [checkedTags, setCheckedTags] = useState([]);
-
+  
   const [title, setTitle] = useState(titleFromLS());
   const [body, setBody] = useState(blogFromLS());
+  const [tags, setTags] = useState([]);
 
   const [values, setValues] = useState({
     error: '',
@@ -53,13 +53,14 @@ const CreateUpdateBlog = ({ router }) => {
     success: '',
     loading: false,
     photo: '',
+    tagField: '',
     photoPreview: '',
     hidePublishButton: false,
     isEdit: false,
     slug: ''
   });
 
-  const { error, sizeError, success, loading, hidePublishButton, photo, photoPreview, isEdit, slug } = values;
+  const { error, tagField, sizeError, success, loading, hidePublishButton, photo, photoPreview, isEdit, slug } = values;
   const token = getCookie('token');
 
   useEffect(() => {
@@ -75,12 +76,11 @@ const CreateUpdateBlog = ({ router }) => {
       })
     }
     initCategories();
-    initTags();
   }, [router]);
 
   const initUpdateBlog = (blog) => {
     setCheckedCategories(blog.categories.map(record => record._id));
-    setCheckedTags(blog.tags.map(record => record._id));
+    setTags(blog.tags);
     setTitle(blog.title);
     setBody(blog.body);
     setValues({...values, isEdit: true, slug: blog.slug});
@@ -96,16 +96,6 @@ const CreateUpdateBlog = ({ router }) => {
     });
   }
 
-  const initTags = () => {
-    getTags().then(data => {
-      if (data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        setTags(data);
-      }
-    });
-  }
-
   const handleSubmit = e => {
     e.preventDefault();
     // set loading to true
@@ -115,7 +105,7 @@ const CreateUpdateBlog = ({ router }) => {
     data.set('title', title);
     data.set('body', body);
     data.set('categories', checkedCategories);
-    data.set('tags', checkedTags);
+    data.set('tags', tags);
     if (photo) {
       data.set('photo', photo);
     }
@@ -164,6 +154,8 @@ const CreateUpdateBlog = ({ router }) => {
       if (typeof window !== 'undefined') {
         localStorage.setItem('title', JSON.stringify(value))
       }
+    } else if (name === 'tags') {
+      handleTag(value);
     } else {
       setValues({
         ...values,
@@ -171,6 +163,22 @@ const CreateUpdateBlog = ({ router }) => {
         error: ''
       });
     }
+  }
+
+  const handleTag = (value) => {
+    const typedCharacter = value.substring(value.length - 1);
+    console.log(typedCharacter)
+    if (typedCharacter === ',') {
+      const tag = value.substring(0, value.length - 1);
+      setTags(tags.concat(tag));
+      setValues({ ...values, tagField: '' });
+    } else {
+      setValues({ ...values, tagField: value });
+    }
+  }
+
+  const removeTag = name => {
+    setTags(tags.filter(t => t !== name));
   }
   
   const handleBody = e => {
@@ -245,14 +253,18 @@ const CreateUpdateBlog = ({ router }) => {
   )
 
   const showTags = () => (
-    <ul style={{maxHeight: '150px', overflowY: 'scroll'}}>
-      {tags && tags.map((t, i) => (
-        <li key={i} className="list-unstyled">
-          <input checked={isInState(t._id, 'tag')} onChange={() => handleToggle(t._id, 'tag')} id={t.name} type="checkbox" className="mr-2"/>
-          <label className="form-check-label" htmlFor={t.name}>{t.name}</label>
-        </li>
+    <div className="d-flex flex-wrap my-3">
+      {tags.map(tag => (
+        <Chip onDelete={removeTag} className="mr-1">{tag}</Chip>
       ))}
-    </ul>
+    </div>
+  )
+    
+  const showTagInput = () => (
+    <Input 
+      placeholder="Separate by comma"
+      onChange={handleChange('tags')}
+      value={tagField} />
   )
 
   const blogForm = () => (
@@ -310,8 +322,11 @@ const CreateUpdateBlog = ({ router }) => {
           <h4>Categories</h4>
           {showCategories()}
           <hr/>
-          <h4>Tags</h4>
-          {showTags()}
+          <div className="mb-5">
+            <h4>Tags</h4>
+            {showTags()}
+            {showTagInput()}
+          </div>
         </div>
       </div>
     </div>

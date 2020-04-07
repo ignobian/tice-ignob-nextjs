@@ -62,18 +62,11 @@ const Blogs = ({ blogs, categories, tags, totalBlogs, blogsLimit, blogsSkip, rou
   const showAllCategories = () => (
     categories.map((c, i) => (
       <Link href={`/categories/${c.slug}`} key={i}>
-        <CategoryBtn># {c.name}</CategoryBtn>
+        <CategoryBtn className="ml-2"># {c.name}</CategoryBtn>
       </Link>
     ))
   );
-  
-  const showAllTags = () => (
-    tags.map((t, i) => (
-      <Link href={`/tags/${t.slug}`} key={i}>
-        <TagBtn>{t.name}</TagBtn>
-      </Link>
-    ))
-  );
+
 
   return (
     <>
@@ -86,8 +79,7 @@ const Blogs = ({ blogs, categories, tags, totalBlogs, blogsLimit, blogsSkip, rou
                 <h1 className="font-weight-bold text-center">Browse on what you're interested in</h1>
               </div>
               <section className="text-center">
-                <div className="my-4">{showAllCategories()}</div>
-                <div className="my-4 pt-2 pb-5 border-bottom">{showAllTags()}</div>
+                <div className="my-4 pb-5 border-bottom">{showAllCategories()}</div>
               </section>
             </header>
           </div>
@@ -115,9 +107,9 @@ Blogs.getInitialProps = () => {
     if (data.error) {
       console.log(data.error);
     } else {
-      const { blogs, categories, tags, size} = data;
+      const { blogs, categories, size} = data;
       return {
-        blogs, categories, tags, totalBlogs: size, blogsLimit: limit, blogsSkip: skip
+        blogs, categories, totalBlogs: size, blogsLimit: limit, blogsSkip: skip
       };
     }
   });

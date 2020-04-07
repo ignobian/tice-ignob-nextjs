@@ -1,6 +1,16 @@
 import fetch from 'isomorphic-fetch';
 import { API } from '../config';
 
+export const getFeaturedTags = () => {
+  return fetch(`${API}/tags/featured`, {
+    headers: {
+      Accept: 'application/json'
+    }
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err));
+};
+
 export const createTag = (tag, token) => {
   return fetch(`${API}/tag`, {
     method: 'POST',

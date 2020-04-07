@@ -1,11 +1,14 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import Layout from '../../components/Layout';
 import { userPublicProfile } from '../../actions/user';
-import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../../config';
+import { API, DOMAIN, APP_NAME } from '../../config';
 import moment from 'moment';
 import ContactAuthorForm from '../../components/form/ContactAuthorForm';
 import { Avatar } from '../../components/Avatar';
+import Card from '../../components/blog/Card';
+import { Container, Row, Col } from 'reactstrap';
+import ClapImg from '../../components/ClapImg';
+import FollowButton from '../../components/FollowButton';
 
 const UserProfile = ({ user, blogs }) => {
   const setDefaultSrc = e => {
@@ -32,58 +35,62 @@ const UserProfile = ({ user, blogs }) => {
   );
 
   const showRecentPosts = () => (
-    <div className="card">
-      <div className="card-body">
-        <h5 className="card-title pb-4">Recent blogs by {user.username}</h5>
-        {blogs && blogs.map((blog, i) => (
-          <div className="my-4" key={i}>
-            <Link href={`/blogs/${blog.slug}`}>
-              <a className="lead">{blog.title}</a>
-            </Link>
-          </div>
-        ))}
-      </div>
-    </div>
+    blogs && blogs.map((blog, i) => (
+      <Card blog={blog} key={i} />
+    ))
   )
 
   const showContactForm = () => (
-    <div className="card">
-      <div className="card-body">
-        <h5 className="card-title pb-4">Message {user.username}</h5>
-        <ContactAuthorForm author={user} />
-      </div>
-    </div>
+    <>
+      <h5 className="card-title pb-4">Message {user.username}</h5>
+      <ContactAuthorForm author={user} />
+    </>
   )
 
   return (
     <>
       {head()}
       <Layout>
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
+        <Container>
 
-              <div className="card mt-4 p-4">
-                <div className="d-flex justify-content-between align-items-center">
-                  <h3 className="m-0">{user.name}</h3>
-                  <Avatar src={`${API}/user/photo/${user.uniqueUsername}`} alt={user.username} onError={setDefaultSrc} />
+          <Row className="mt-4">
+
+            <Col xs="12" md="8">
+
+              <div className="card p-4">
+                <div className="d-flex align-items-center">
+                  <h3 className="m-0 mr-3">{user.name}</h3>
+                  <Avatar className="mr-3" src={`${API}/user/photo/${user.uniqueUsername}`} alt={user.username} onError={setDefaultSrc} />
+                  <div className="flex-grow-1">
+                    <FollowButton user={user} />
+                  </div>
+                  <p className="m-0">{user.claps}</p>
+                  <ClapImg style={{ width: 26, marginLeft: 8 }} />
                 </div>
                 <hr/>
-                <p className="text-muted">Joined {moment(user.createdAt).fromNow()}</p>
-                <p>{user.about}</p>
+                <div className="details">
+                  <p className="text-muted">Joined {moment(user.createdAt).fromNow()}</p>
+                  <p>{user.about}</p>
+                </div>
+
               </div>
 
-            </div>
+            </Col>
 
-            <div className="col-md-6 mt-4">
-              {showRecentPosts()}
-            </div>
-
-            <div className="col-md-6 mt-4">
+            <Col xs="12" md="4" className="mt-3">
               {showContactForm()}
-            </div>
-          </div>
-        </div>
+            </Col>
+
+            <hr/>
+
+            <Col xs="12">
+              <h2 className="my-5">{user.name}'s blogs</h2>
+              {showRecentPosts()}
+            </Col>
+
+          </Row>
+
+        </Container>
 
       </Layout>
     </>

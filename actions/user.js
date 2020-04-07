@@ -19,6 +19,18 @@ export const getProfile = token => {
   .catch(err => console.log(err));
 };
 
+export const getFollowers = token => {
+  return fetch(`${API}/user/followers`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err));
+}
+
 export const update = (token, user) => {
   return fetch(`${API}/user/update`, {
     method: 'PUT',
@@ -38,6 +50,20 @@ export const getUsers = (token) => {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`
     }
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}
+
+export const toggleFollower = (userId, token) => {
+  return fetch(`${API}/user/toggle-follower`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ id: userId })
   })
   .then(res => res.json())
   .catch(err => console.log(err))

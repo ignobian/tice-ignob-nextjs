@@ -9,3 +9,7 @@ export const ClapImg = styled.img`
     opacity: 1;
   }
 `;
+
+export default function({ style }) {
+  return <ClapImg style={style} src="/images/clap.svg" />
+}
