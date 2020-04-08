@@ -29,7 +29,8 @@ const DropdownMenu = () => {
         {isAuth() && isAuth().role === 1 && (
           <>
             <li><Link href="/admin/dashboard"><DefaultLink>Admin dashboard</DefaultLink></Link></li>
-            <li className="border-bottom pb-3"><Link href="/admin/category"><DefaultLink>Manage Categories</DefaultLink></Link></li>
+            <li><Link href="/admin/category"><DefaultLink>Manage Categories</DefaultLink></Link></li>
+            <li className="border-bottom pb-3"><Link href="/admin/reports"><DefaultLink>Manage Reports</DefaultLink></Link></li>
           </>
         )} 
         <li><Link href="/blogs"><DefaultLink>Browse blogs</DefaultLink></Link></li>

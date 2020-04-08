@@ -49,6 +49,10 @@ export const Button = styled.button`
   ${buttonStyles}
 `;
 
+export const ButtonOutline = styled.button`
+  ${buttonOutlineStyles}
+`;
+
 export const ButtonOutlineLink = styled.a`
   ${buttonOutlineStyles}
 `;

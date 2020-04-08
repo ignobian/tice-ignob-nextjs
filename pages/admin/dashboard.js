@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getUsers } from '../../actions/user';
+import { getReports } from '../../actions/report';
 import { ClapImg } from '../../components/ClapImg';
 import { getCookie } from '../../actions/auth';
 import { APP_NAME } from '../../config';
@@ -11,6 +12,7 @@ import { SecondaryButtonLink } from '../../components/Button';
 import AdminSearchBlogs from '../../components/admin/AdminSearchBlogs';
 import { DisplaySmallerThanLg } from '../../components/responsive/Display';
 import Admin from '../../components/auth/Admin';
+import { Container, Row, Col } from 'reactstrap';
 
 const Dashboard = () => {
 
@@ -24,10 +26,11 @@ const Dashboard = () => {
   const [values, setValues] = useState({
     error: '',
     users: [],
+    reports: [],
     orderOptions: ['claps', 'blogs', 'name']
   });
 
-  const { error, users, orderOptions } = values;
+  const { error, users, reports, orderOptions } = values;
 
   const token = getCookie('token');
 
@@ -36,7 +39,14 @@ const Dashboard = () => {
       if (data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        setValues({ ...values, error: '', users: data.sort(sortBy('-claps')) });
+        const users = data
+        getReports(token).then(data => {
+          if (data.error) {
+            setValues({ ...values, error: data.error });
+          } else {
+            setValues({ ...values, error: '', users: users.sort(sortBy('-claps')), reports: data });
+          }
+        });
       }
     });
   }
@@ -105,13 +115,13 @@ const Dashboard = () => {
     <Admin>
       {head()}
       <Layout>
-        <div className="container">
-          <div className="row">
-            <div className="col-12 mt-4">
+        <Container>
+          <Row>
+            <Col xs="12" className="mt-4">
               <h2>Admin dashboard</h2>
-            </div>
+            </Col>
 
-            <div className="col-12 col-lg-6 mt-4">
+            <Col xs="12" lg="6" className="mt-4">
             
               <h3>All users</h3>
 
@@ -121,10 +131,17 @@ const Dashboard = () => {
 
               {showUsersTable()}
 
+              <hr/>
+              <div className="my-3">
+                <h3 className="mb-3">Reports</h3>
+                <p>Total: {reports.length}</p>
+                <Link href="/admin/reports"><SecondaryButtonLink>Manage</SecondaryButtonLink></Link>
+              </div>
 
-            </div>
 
-            <div className="col-lg-6 mt-4">
+            </Col>
+
+            <Col xs="12" lg="6" className="mt-4">
 
               <DisplaySmallerThanLg>
                 <div className="mb-5">
@@ -134,9 +151,9 @@ const Dashboard = () => {
 
               {showAdminSearchBlogs()}
 
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Container>
       </Layout>
     </Admin>
   );

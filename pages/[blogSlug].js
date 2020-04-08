@@ -15,6 +15,8 @@ import { ClapImg } from '../components/ClapImg';
 import { CategoryBtn, TagBtn } from '../components/Button';
 import { isAuth } from '../actions/auth';
 import FollowButton from '../components/FollowButton';
+import { Container, Row, Col } from 'reactstrap';
+import ReportBtn from '../components/ReportBtn';
 
 const Banner = styled.div`
   height: 300px;
@@ -140,32 +142,34 @@ const singleBlog = ({ blog }) => {
             <img src={`${API}/blog/photo/${blog.slug}`} alt={blog.title} />
           </Banner>
 
-          <div className="container">
-            <div className="row">
+          <Container>
+            <Row>
 
-              <div className="col-md-10 offset-md-1">
+              <Col xs="12" md={{size: 10, offset: 1}}>
                 {showAuthor(blog.postedBy)}
-              </div>
+              </Col>
 
 
-              <div className="mt-4 col-md-10 offset-md-1">
-                {showCategories(blog)}
-                {showTags(blog)}
-              </div>
+              <Col xs="12" md={{size: 10, offset: 1}} className="mt-4 d-flex align-items-center">
+                <div className="flex-grow-1">
+                  {showCategories(blog)}
+                  {showTags(blog)}
+                </div>
+                <div>
+                  <ReportBtn blog={blog} />
+                </div>
+              </Col>
 
-              <div className="col-md-10 offset-md-1" style={{overflowX: 'hidden'}}>
+              <Col xs="12" md={{size: 10, offset: 1}} style={{overflowX: 'hidden'}}>
                 <h1 className="my-4">{blog.title}</h1>
-              </div>
+              </Col>
 
-
-
-              <section className="col-md-10 offset-md-1">
+              <Col xs="12" md={{size: 10, offset: 1}}>
                 {renderHtml(blog.body)}
-              </section>
+              </Col>
 
-
-            </div>
-          </div>
+            </Row>
+          </Container>
 
           <div className="container pb-5">
             <div className="text-center py-5 h2">
