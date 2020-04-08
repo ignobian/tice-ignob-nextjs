@@ -1,9 +1,8 @@
 import Layout from '../../components/Layout';
-import Link from 'next/link';
 import ProfileUpdate from '../../components/auth/ProfileUpdate';
 import Private from '../../components/auth/Private';
 import Head from 'next/head';
-import { API, APP_NAME, DOMAIN } from '../../config';
+import { APP_NAME, DOMAIN } from '../../config';
 
 const UserUpdate = () => {
   const head = () => (

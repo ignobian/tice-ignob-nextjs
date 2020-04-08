@@ -1,9 +1,8 @@
 import Layout from '../../components/Layout';
-import Link from 'next/link';
 import FollowerList from '../../components/user/FollowerList';
 import Private from '../../components/auth/Private';
 import Head from 'next/head';
-import { API, APP_NAME, DOMAIN } from '../../config';
+import { APP_NAME, DOMAIN } from '../../config';
 import { Container, Row, Col } from 'reactstrap';
 
 const UserUpdate = () => {
@@ -22,6 +21,7 @@ const UserUpdate = () => {
       <meta property="og:image" content={`${DOMAIN}/images/seoImage.png`} />
       <meta property="og:image:secure_url" content={`${DOMAIN}/images/seoImage.png`} />
       <meta property="og:image:type" content="image/png" />
+      <meta name="robots" content="index,follow" />
     </Head>
   )
   return (

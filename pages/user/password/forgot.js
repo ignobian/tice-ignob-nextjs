@@ -3,8 +3,16 @@ import Layout from '../../../components/Layout';
 import Loading from '../../../components/Loading';
 import { forgotPassword } from '../../../actions/auth';
 import { SecondaryButton } from '../../../components/Button';
+import Head from 'next/head';
+import { APP_NAME } from '../../../config';
 
 const ForgotPassword = () => {
+  const head = () => (
+    <Head>
+      <title>Forgot password - {APP_NAME}</title>
+      <meta name="robots" content="noindex,nofollow" />
+    </Head>
+  )
   const [values, setValues] = useState({
     email: '',
     message: '',
@@ -57,24 +65,27 @@ const ForgotPassword = () => {
   );
 
   return (
-    <Layout>
-      <div className="container">
-        <div className="row">
+    <>
+      {head()}
+      <Layout>
+        <div className="container">
+          <div className="row">
 
-          <div className="col-md-10 offset-md-1 my-4">
-            <h2>Forgot password</h2>
-          </div>
+            <div className="col-md-10 offset-md-1 my-4">
+              <h2>Forgot password</h2>
+            </div>
 
-          <div className="col-md-10 offset-md-1">
-            {showError()}
-            {showMessage()}
-            {showLoading()}
-            {showForm && passwordForgotForm()}
+            <div className="col-md-10 offset-md-1">
+              {showError()}
+              {showMessage()}
+              {showLoading()}
+              {showForm && passwordForgotForm()}
+            </div>
           </div>
         </div>
-      </div>
 
-    </Layout>
+      </Layout>
+    </>
   )
 }
 

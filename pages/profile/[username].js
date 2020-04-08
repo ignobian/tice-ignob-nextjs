@@ -30,6 +30,7 @@ const UserProfile = ({ user, blogs }) => {
       <meta property="og:image" content={`${API}/user/photo/${user.uniqueUsername}`} />
       <meta property="og:image:secure_url" content={`${API}/user/photo/${user.uniqueUsername}`} />
       <meta property="og:image:type" content="image/jpg" />
+      <meta name="robots" content="index,follow" />
       {/* TODO: <meta property="fb:app_id" content={FB_APP_ID} /> */}
     </Head>
   );

@@ -28,6 +28,7 @@ const Index = ({ categories, tags, blogs }) => {
       <meta property="og:image" content={`${DOMAIN}/images/seoImage.png`} />
       <meta property="og:image:secure_url" content={`${DOMAIN}/images/seoImage.png`} />
       <meta property="og:image:type" content="image/jpg" />
+      <meta name="robots" content="index,follow" />
     </Head>
   );
 
@@ -41,11 +42,11 @@ const Index = ({ categories, tags, blogs }) => {
               <h2 className="font-weight-bold" style={{fontSize: '2.9em'}}>Get to know about what matters to you.</h2>
             </div>
 
-            <div className="col-12 my-5">
+            <div className="col-12 mt-5">
               <CategoryListSection categories={categories}/>
             </div>
 
-            <div className="col-12">
+            <div className="col-12 mt-3 mb-5">
               <TagListSection tags={tags} />
             </div>
 

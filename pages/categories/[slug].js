@@ -20,6 +20,7 @@ const Category = ({ category, blogs }) => {
       <meta property="og:image" content={`${DOMAIN}/images/seoImage.png`} />
       <meta property="og:image:secure_url" content={`${DOMAIN}/images/seoImage.png`} />
       <meta property="og:image:type" content="image/png" />
+      <meta name="robots" content="index,follow" />
       {/* TODO: <meta property="fb:app_id" content={FB_APP_ID} /> */}
     </Head>
   );

@@ -73,6 +73,18 @@ const sitemapXml = ({ blogs, categories, tags, users }) => {
       <loc>${DOMAIN}/user/followers</loc>
       <priority>0.80</priority>
     </url>
+    <url>
+      <loc>${DOMAIN}/search</loc>
+      <priority>0.80</priority>
+    </url>
+    <url>
+      <loc>${DOMAIN}/signin</loc>
+      <priority>0.50</priority>
+    </url>
+    <url>
+      <loc>${DOMAIN}/signup</loc>
+      <priority>0.50</priority>
+    </url>
     ${postsXml}
     ${categoriesXml}
     ${tagsXml}

@@ -48,7 +48,7 @@ const Card = ({ blog }) => {
   return (
     <div className="border-bottom mt-4 pb-5 d-flex" style={{overflow: 'hidden'}}>
       <div>
-        <img className="mr-3" width="120" src={`${API}/blog/photo/${blog.slug}`} alt=""/>
+        <img className="mr-3" width="120" src={`${API}/blog/photo/${blog.slug}`} alt={blog.title}/>
       </div>
       <div>
         <Link href={`/${blog.slug}`}><h5 style={{ cursor: 'pointer' }}>{blog.title}</h5></Link>

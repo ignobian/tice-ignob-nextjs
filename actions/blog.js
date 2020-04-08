@@ -96,8 +96,13 @@ export const listSearch = (params) => {
   .catch(err => console.log(err))
 }
 
-export const listFromUser = user => {
-  return fetch(`${API}/${user.username}/blogs`)
+export const listFromUser = token => {
+  return fetch(`${API}/user/blogs`, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  })
   .then(res => res.json())
   .catch(err => console.log(err))
 }

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import Router, { withRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import { Input, Label } from 'reactstrap';
+import stripHtml from 'string-strip-html';
+import { Input, Label, FormGroup, Form, Container, Row, Col } from 'reactstrap';
 
 // components
 import { Button, SecondaryButtonLabel } from '../Button';
@@ -267,32 +268,53 @@ const CreateUpdateBlog = ({ router }) => {
       value={tagField} />
   )
 
-  const blogForm = () => (
-    <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="title" className="text-muted">Title</label>
-        <input type="text" className="form-control" onChange={handleChange('title')} value={title} id="title" />
-      </div>
+  const blogForm = () => {
+    const titleMin = 50;
+    const titleMax = 60;
+    const titleCount = title.length;
 
-      <div className="form-group">
-        <ReactQuill modules={QuillModules} formats={QuillFormats} value={body} placeholder="Write something..." onChange={handleBody} />
-      </div>
+    // for the body (based on words)
+    const bodyWordMin = 300;
+    const bodyWordCount = stripHtml(body || '').split(' ').length;
 
-      <div className="form-group">
-        <Button type="submit" >{isEdit ? 'Update' : 'Publish'}</Button>
-      </div>
-    </form>
-  );
+    return (
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label htmlFor="title" className="text-muted">Title</Label>
+          <Row form className="align-items-center">
+            <Col xs="11">
+              <Input type="text" onChange={handleChange('title')} value={title} id="title" />
+            </Col>
+            <Col xs="1">
+              <small style={{ color: (titleCount >= titleMin && titleCount <= titleMax) ? 'green' : 'red' }}>{titleCount}</small>
+            </Col>
+          </Row>
+        </FormGroup>
+
+        <FormGroup className="mb-1">
+          <ReactQuill modules={QuillModules} formats={QuillFormats} value={body} placeholder="Write something..." onChange={handleBody} />
+        </FormGroup>
+
+        <div className="d-flex justify-content-end mb-3 w-100">
+          <small style={{ color: (bodyWordCount >= bodyWordMin) ? 'green' : 'red' }}>{bodyWordCount}</small>
+        </div>
+
+        <FormGroup>
+          <Button type="submit" >{isEdit ? 'Update' : 'Publish'}</Button>
+        </FormGroup>
+      </Form>
+    )
+  }
 
   const addFeaturedImage = () => (
-    <div className="form-group">
+    <FormGroup>
       <div className="featured-image-container">
         {showFeaturedImage()}
       </div>
       <small className="text-muted">Max size: 1mb</small><br/>
       <SecondaryButtonLabel htmlFor="photo">Upload featured image</SecondaryButtonLabel>
       <input id="photo" onChange={handleChange('photo')} type="file" accept="image/*" hidden />
-    </div>
+    </FormGroup>
   )
 
   const showFeaturedImage = () => {
@@ -303,9 +325,9 @@ const CreateUpdateBlog = ({ router }) => {
   }
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-12 col-md-8">
+    <Container fluid>
+      <Row>
+        <Col xs="12" md="8">
           {blogForm()}
           {showSuccess()}
           {showError()}
@@ -313,9 +335,9 @@ const CreateUpdateBlog = ({ router }) => {
           <DisplaySmallerThanMd>
             <hr/>
           </DisplaySmallerThanMd>
-        </div>
+        </Col>
 
-        <div className="col-12 col-md-4">
+        <Col xs="12" md="4">
           <h4>Featured image</h4>
           {addFeaturedImage()}
           <hr/>
@@ -327,9 +349,9 @@ const CreateUpdateBlog = ({ router }) => {
             {showTags()}
             {showTagInput()}
           </div>
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

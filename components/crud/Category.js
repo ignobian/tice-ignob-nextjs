@@ -125,7 +125,10 @@ const Category = () => {
       {showRemoved()}
       <div>
         {newCategoryForm()}
-        <div className="mt-5 d-flex flex-wrap">
+        <div className="mb-3 mt-5">
+          <small className="text-muted"><i>Double click to delete</i></small>
+        </div>
+        <div className="mt-3 d-flex flex-wrap">
           {showCategories()}
         </div>
       </div>

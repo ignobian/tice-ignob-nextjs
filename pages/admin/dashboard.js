@@ -10,12 +10,14 @@ import sortBy from 'sort-by';
 import { SecondaryButtonLink } from '../../components/Button';
 import AdminSearchBlogs from '../../components/admin/AdminSearchBlogs';
 import { DisplaySmallerThanLg } from '../../components/responsive/Display';
+import Admin from '../../components/auth/Admin';
 
 const Dashboard = () => {
 
   const head = () => (
     <Head>
       <title>Admin dashboard - {APP_NAME}</title>
+      <meta name="robots" content="noindex,nofollow" />
     </Head>
   )
 
@@ -100,7 +102,7 @@ const Dashboard = () => {
   const showError = () => error && <div className="alert alert-danger">{error}</div>
 
   return (
-    <>
+    <Admin>
       {head()}
       <Layout>
         <div className="container">
@@ -136,7 +138,7 @@ const Dashboard = () => {
           </div>
         </div>
       </Layout>
-    </>
+    </Admin>
   );
 }
 

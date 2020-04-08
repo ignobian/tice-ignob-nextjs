@@ -6,8 +6,17 @@ import Loading from '../../../../components/Loading';
 import { SecondaryButton } from '../../../../components/Button';
 import { DefaultLink } from '../../../../components/Link';
 import Link from 'next/link';
+import Head from 'next/head';
+import { APP_NAME } from '../../../../config';
 
 const ResetPassword = ({ router }) => {
+  const head = () => (
+    <Head>
+      <title>Reset password - {APP_NAME}</title>
+      <meta name="robots" content="noindex,nofollow" />
+    </Head>
+  )
+
   const [values, setValues] = useState({
     newPassword: '',
     passwordConfirmation: '',
@@ -85,22 +94,25 @@ const ResetPassword = ({ router }) => {
   const showLoading = () => loading && <Loading/>
 
   return (
-    <Layout>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-10 col-lg-8 offset-md-1 offset-lg-2 my-4">
-            <h2>Reset password</h2>
-          </div>
+    <>
+      {head()}
+      <Layout>
+        <div className="container">
+          <div className="row">
+            <div className="col-md-10 col-lg-8 offset-md-1 offset-lg-2 my-4">
+              <h2>Reset password</h2>
+            </div>
 
-          <div className="col-md-10 col-lg-8 offset-md-1 offset-lg-2">
-            {showError()}
-            {showMessage()}
-            {showLoading()}
-            {showForm && passwordResetForm()}
+            <div className="col-md-10 col-lg-8 offset-md-1 offset-lg-2">
+              {showError()}
+              {showMessage()}
+              {showLoading()}
+              {showForm && passwordResetForm()}
+            </div>
           </div>
         </div>
-      </div>
-    </Layout>
+      </Layout>
+    </>
   );
 }
 

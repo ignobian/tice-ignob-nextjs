@@ -43,6 +43,7 @@ const singleBlog = ({ blog }) => {
       <meta property="og:image:secure_url" content={`${API}/blog/photo/${blog.slug}`} />
       <meta property="og:image:type" content="image/jpg" />
       {/* TODO: <meta property="fb:app_id" content={FB_APP_ID} /> */}
+      <meta name="robots" content="index,follow" />
     </Head>
   );
 
