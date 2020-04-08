@@ -45,7 +45,7 @@ const Index = ({ categories, tags, blogs }) => {
               <CategoryListSection categories={categories}/>
             </div>
 
-            <div>
+            <div className="col-12">
               <TagListSection tags={tags} />
             </div>
 

@@ -55,6 +55,12 @@ export const getUsers = (token) => {
   .catch(err => console.log(err))
 }
 
+export const getUsersForXML = () => {
+  return fetch(`${API}/users/xml`)
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}
+
 export const toggleFollower = (userId, token) => {
   return fetch(`${API}/user/toggle-follower`, {
     method: 'POST',
