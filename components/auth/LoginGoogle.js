@@ -12,6 +12,10 @@ const LoginGoogle = () => {
 
   const { loading } = values;
 
+  const logError = err => {
+    console.log(err);
+  }
+
   const responseGoogle = response => {
     const tokenId = response.tokenId;
     const user = { tokenId };
@@ -44,7 +48,7 @@ const LoginGoogle = () => {
           clientId={GOOGLE_CLIENT_ID}
           buttonText="Login with Google"
           onSuccess={responseGoogle}
-          onFailure={responseGoogle}
+          onFailure={logError}
           theme="dark"
         />
       </div>
