@@ -30,11 +30,14 @@ const Banner = styled.div`
 `;
 
 const singleBlog = ({ blog }) => {
+  const keywords = blog.tags.concat(blog.keywords || []);
+  keywords.unshift(blog.title);
+
   const head = () => (
     <Head>
       <title>{blog.title}</title>
       <meta name="description" content={blog.mdesc} />
-      <meta name="keywords" content={blog.tags.join(',')} />
+      <meta name="keywords" content={keywords.join(',').substr(0, 255)} />
       <meta name="author" content={blog.postedBy.name} />
 
       <link rel="canonical" href={`${DOMAIN}/${blog.slug}`} />

@@ -56,7 +56,7 @@ const Blogs = ({ blogs, categories, tags, totalBlogs, blogsLimit, blogsSkip, rou
 
   const showLoadedBlogs = () => (
     loadedBlogs.map((blog, i) => (
-      <article className="my-3">
+      <article key={i} className="my-3">
         <Card blog={blog} />
       </article>
     ))
