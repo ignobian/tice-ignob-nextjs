@@ -20,13 +20,15 @@ class MyDocument extends Document {
     return { ...page, styleTags };
   }
 
-  setGoogleTags() {
-    if (publicRuntimeConfig.PRODUCTION) {
-      return {
-        __html: `
-        
-        `
-      }
+  setGoogleTags = () => {
+    return {
+      __html: `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-163351726-1');
+      `
     }
   }
 
@@ -42,7 +44,12 @@ class MyDocument extends Document {
           />
           <link rel="stylesheet" href="/css/styles.css"/>
           {this.props.styleTags}
-          {/* <script dangerouslySetInnerHTML={this.setGoogleTags}></script> */}
+          {publicRuntimeConfig.PRODUCTION && (
+            <>
+              <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163351726-1"></script>
+              <script dangerouslySetInnerHTML={this.setGoogleTags()}></script>
+            </>
+          )}
         </Head>
         <body>
           <Main />

@@ -70,7 +70,7 @@ const Card = ({ blog }) => {
 
       <div className="details">
         <Link href={`/${blog.slug}`}><h5 style={{ cursor: 'pointer' }}>{blog.title}</h5></Link>
-        <p className="m-0">{blog.mdesc}...</p>
+        <p className="m-0" style={{overflow: 'hidden'}}>{blog.mdesc}...</p>
         <p className="text-muted pt-2 mb-1">
           <small>Posted by <Link href={`/profile/${blog.postedBy.uniqueUsername}`}><DefaultLink>{blog.postedBy.username}</DefaultLink></Link> | {followLink()} | {moment(blog.updatedAt).fromNow()}</small>
           <span className="ml-2 ml-sm-3 mr-2">{blog.claps.length}</span>
