@@ -59,7 +59,7 @@ const UserProfile = ({ user, blogs }) => {
             <Col xs="12" md="8">
 
               <div className="card p-4">
-                <div className="d-flex align-items-center">
+                <div className="d-flex flex-wrap align-items-center">
                   <h3 className="m-0 mr-3">{user.name}</h3>
                   <Avatar className="mr-3" src={`${API}/user/photo/${user.uniqueUsername}`} alt={user.username} onError={setDefaultSrc} />
                   <div className="flex-grow-1">

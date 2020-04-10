@@ -16,6 +16,7 @@ const buttonStyles = css`
 `;
 
 const buttonOutlineStyles = css`
+  background-color: white;
   padding: 7px 12px;
   border-radius: 5px;
   color: ${props => props.theme.primary.main}!important;
@@ -103,10 +104,10 @@ export const TagBtn = styled.a`
   background-color: #efefef;
   border: 1px solid #efefef;
   border-radius: 50px;
-  font-size: 12px;
+  font-size: 15px;
   padding: 7px 17px;
   @media (min-width: 768px) {
-    font-size: 14px;
+    font-size: 15px;
     padding: 10px 20px;
   }
   white-space: nowrap;

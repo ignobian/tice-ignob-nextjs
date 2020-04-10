@@ -90,7 +90,7 @@ const singleBlog = ({ blog }) => {
   }
 
   const showComments = () => (
-    <div>
+    <div className="w-100">
       <DisqusThread id={blog._id} title={blog.title} path={`/blog/${blog.slug}`} />
     </div>
   )
@@ -132,10 +132,10 @@ const singleBlog = ({ blog }) => {
   );
 
   const showClap = () => (
-    <>
-      <span className="mr-2" style={{fontSize: '22px'}}>{count}</span>
+    <div>
+      <span className="mr-2">{count}</span>
       <ClapImg onClick={handleClap} width="36" src="/images/clap.svg" alt="Clap"/>
-    </>
+    </div>
   );
 
   return (
@@ -156,13 +156,11 @@ const singleBlog = ({ blog }) => {
 
 
               <Col xs="12" md={{size: 10, offset: 1}} className="mt-md-4 mt-3 d-flex align-items-center">
-                <div className="flex-grow-1">
+                <div>
                   {showCategories(blog)}
                   {showTags(blog)}
                 </div>
-                <div>
-                  <ReportBtn blog={blog} />
-                </div>
+  
               </Col>
 
               <Col xs="12" md={{size: 10, offset: 1}} style={{overflowX: 'hidden'}}>
@@ -173,25 +171,28 @@ const singleBlog = ({ blog }) => {
                 {renderHtml(blog.body)}
               </Col>
 
+              <Col className="mt-4 d-flex justify-content-end" xs="12" md={{size: 10, offset: 1}}>
+                <ReportBtn blog={blog} />
+              </Col>
+
             </Row>
-          </Container>
 
-          <div className="container pb-5">
-            <div className="text-center py-5 h2">
-              <hr/>
-              <h4>Related</h4>
-              <div className="d-flex flex-wrap justify-content-center">
-                {showRelated(related)}
-              </div>
-            </div>
-          </div>
+            <Row className="text-center py-3">
+              <Col xs="12">
+                <hr/>
+                <h4>Related</h4>
+                <div className="d-flex flex-wrap justify-content-center">
+                  {showRelated(related)}
+                </div>
+              </Col>
+            </Row>
 
-          <div className="container pb-5">
-            <div className="text-center py-5 h2">
+            <Row className="text-center py-5">
               <hr/>
               {showComments()}
-            </div>
-          </div>
+
+            </Row>
+          </Container>
 
         </main>
       </Layout>

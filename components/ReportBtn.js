@@ -82,7 +82,7 @@ const ReportBtn = ({ blog }) => {
   return (
     <>
       {showLoading()}
-      <SecondaryButton onClick={handleClick} style={{fontSize: 12}}>Report</SecondaryButton>
+      <SecondaryButton onClick={handleClick}>Report</SecondaryButton>
       {showModal()}
       {successModal && showSuccessModal()}
     </>

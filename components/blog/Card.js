@@ -11,6 +11,7 @@ const GridContainer = styled.div`
   grid-template-columns: 1fr;
   padding-bottom: 20px;
   margin-bottom: 30px;
+  overflow-x: hidden;
   @media (min-width: 768px) {
     grid-template-columns: 170px 1fr;
   }
@@ -73,8 +74,10 @@ const Card = ({ blog }) => {
         <p className="m-0" style={{overflow: 'hidden'}}>{blog.mdesc}...</p>
         <p className="text-muted pt-2 mb-1">
           <small>Posted by <Link href={`/profile/${blog.postedBy.uniqueUsername}`}><DefaultLink>{blog.postedBy.username}</DefaultLink></Link> | {followLink()} | {moment(blog.updatedAt).fromNow()}</small>
-          <span className="ml-2 ml-sm-3 mr-2">{blog.claps.length}</span>
-          <img width="27" src="/images/clap.svg" alt="claps"/>
+          <div className="d-block d-sm-inline d-md-block d-lg-inline my-2 mt-lg-0">
+            <span className="ml-2 ml-sm-3 mr-2">{blog.claps.length}</span>
+            <img width="27" src="/images/clap.svg" alt="claps"/>
+          </div>
         </p>
         <div className="d-flex flex-wrap">
           {showCategories(blog)}
