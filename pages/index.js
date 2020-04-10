@@ -11,6 +11,7 @@ import { DefaultLink } from "../components/Link";
 import FeaturedBlogs from '../components/home/FeaturedBlogs';
 import { list } from "../actions/blog";
 import { isAuth } from "../actions/auth";
+import { H2 } from '../components/Typography';
 
 const Index = ({ categories, tags, blogs }) => {
   const head = () => (
@@ -39,7 +40,7 @@ const Index = ({ categories, tags, blogs }) => {
         <div className="container">
           <div className="row text-center">
             <div className="col-12 mt-5">
-              <h2 className="font-weight-bold" style={{fontSize: '2.9em'}}>Get to know about what matters to you.</h2>
+              <H2 className="font-weight-bold">Get to know about what matters to you.</H2>
             </div>
 
             <div className="col-12 mt-5">

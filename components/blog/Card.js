@@ -8,16 +8,35 @@ import { ClapImg } from '../ClapImg';
 import { DefaultLink } from '../Link';
 import FollowButton from '../FollowButton';
 
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+  @media (min-width: 768px) {
+    grid-template-columns: 170px 1fr;
+  }
+`;
+
+const FeaturedImg = styled.img`
+  height: 150px;
+  width: 100%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  @media (min-width: 350px) {
+    height: 200px;
+  }
+  @media (min-width: 768px) {
+    height: auto;
+    width: 100%;
+    padding-right: 20px;
+  }
+`;
+
 const SmallCategoryBtn = styled(CategoryBtn)`
   font-size: 15px;
   margin: 0;
   margin-right: 10px;
-`;
-
-const SmallTagBtn = styled(TagBtn)`
-  font-size: 15px;
-  margin: 0;
-  margin-right: 5px;
 `;
 
 const Card = ({ blog }) => {
@@ -39,23 +58,24 @@ const Card = ({ blog }) => {
     blog.tags.map((tag, i) => (
       <div key={i} className="my-3">
         <Link href={`/tags/${tag}`}>
-          <SmallTagBtn>{tag}</SmallTagBtn>
+          <TagBtn className="mr-2">{tag}</TagBtn>
         </Link>
       </div>
     ))
   )
 
   return (
-    <div className="border-bottom mt-4 pb-5 d-flex" style={{overflow: 'hidden'}}>
+    <GridContainer>
       <div>
-        <img className="mr-3" width="120" src={`${API}/blog/photo/${blog.slug}`} alt={blog.title}/>
+        <Link href={`/${blog.slug}`}><DefaultLink><FeaturedImg src={`${API}/blog/photo/${blog.slug}`} alt={blog.title}/></DefaultLink></Link>
       </div>
-      <div>
+
+      <div className="details">
         <Link href={`/${blog.slug}`}><h5 style={{ cursor: 'pointer' }}>{blog.title}</h5></Link>
         <p className="m-0">{blog.mdesc}...</p>
         <p className="text-muted pt-2 mb-1">
           <small>Posted by <Link href={`/profile/${blog.postedBy.uniqueUsername}`}><DefaultLink>{blog.postedBy.username}</DefaultLink></Link> | {followLink()} | {moment(blog.updatedAt).fromNow()}</small>
-          <span className="ml-3 mr-2">{blog.claps.length}</span>
+          <span className="ml-2 ml-sm-3 mr-2">{blog.claps.length}</span>
           <img width="27" src="/images/clap.svg" alt="claps"/>
         </p>
         <div className="d-flex flex-wrap">
@@ -67,8 +87,11 @@ const Card = ({ blog }) => {
             <ButtonOutlineLink>Read more</ButtonOutlineLink>
           </Link>
         </div>
+
       </div>
-    </div>
+
+
+    </GridContainer>
   );
 }
 

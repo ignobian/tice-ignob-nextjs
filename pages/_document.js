@@ -42,7 +42,7 @@ class MyDocument extends Document {
           />
           <link rel="stylesheet" href="/css/styles.css"/>
           {this.props.styleTags}
-          <script dangerouslySetInnerHTML={this.setGoogleTags}></script>
+          {/* <script dangerouslySetInnerHTML={this.setGoogleTags}></script> */}
         </Head>
         <body>
           <Main />

@@ -82,7 +82,10 @@ export const CategoryBtn = styled.a`
   background-color: #fdfdfd;
   color: #333!important;
   border-radius: 50px;
-  font-size: 20px;
+  font-size: 16px;
+  @media (min-width: 768px) {
+    font-size: 20px;
+  }
   padding: 10px 20px;
   font-weight: light;
   white-space: nowrap;
@@ -99,8 +102,12 @@ export const TagBtn = styled.a`
   background-color: #efefef;
   border: 1px solid #efefef;
   border-radius: 50px;
-  font-size: 13px;
-  padding: 10px 20px;
+  font-size: 12px;
+  padding: 7px 17px;
+  @media (min-width: 768px) {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
   white-space: nowrap;
   /* border: 1px solid ${props => props.theme.primary.main}; */
   transition: border 150ms ease-out, background-color 150ms ease-out;
