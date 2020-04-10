@@ -60,13 +60,13 @@ const UserProfile = ({ user, blogs }) => {
 
               <div className="card p-4">
                 <div className="d-flex flex-wrap align-items-center">
-                  <h3 className="m-0 mr-3">{user.name}</h3>
-                  <Avatar className="mr-3" src={`${API}/user/photo/${user.uniqueUsername}`} alt={user.username} onError={setDefaultSrc} />
-                  <div className="flex-grow-1">
+                  <h3 className="m-0 mr-3 mt-2">{user.name}</h3>
+                  <Avatar className="mr-3 mt-2" src={`${API}/user/photo/${user.uniqueUsername}`} alt={user.username} onError={setDefaultSrc} />
+                  <div className="flex-grow-1 mt-2">
                     <FollowButton user={user} />
                   </div>
-                  <p className="m-0">{user.claps}</p>
-                  <ClapImg style={{ width: 26, marginLeft: 8 }} />
+                  <p className="m-0 mt-2" >{user.claps}</p>
+                  <ClapImg className="mt-2" style={{ width: 26, marginLeft: 8, marginTop: '0.5rem' }} />
                 </div>
                 <hr/>
                 <div className="details">
