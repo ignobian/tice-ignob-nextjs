@@ -9,6 +9,7 @@ import { Container, Row, Col } from 'reactstrap';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import Loading from '../components/Loading';
+import { H1 } from '../components/Typography';
 
 const FollowingFeed = () => {
   const head = () => (
@@ -69,9 +70,15 @@ const FollowingFeed = () => {
           <Container fluid>
             <Row>
 
-              <Col md={{size: 10, offset: 1}} className="py-3 d-flex align-items-center">
-                <h1 style={{ opacity: 0.8 }}>Following Feed</h1>
-                <p className="m-0 ml-3">({following} following)</p>
+              <Col xs="12" md={{size: 10, offset: 1}} className="py-3 d-flex align-items-center">
+                <Row className="w-100 align-items-center">
+                  <Col xs="12" md="6" lg="4">
+                    <H1 style={{ opacity: 0.8 }}>Following Feed</H1>
+                  </Col>
+                  <Col xs="12" md="6" lg="8">
+                    <p className="m-0 ml-md-3">({following} following)</p>
+                  </Col> 
+                </Row>
               </Col>
 
               <Col md={{size: 10, offset: 1}}>

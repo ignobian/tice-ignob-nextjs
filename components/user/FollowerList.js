@@ -8,6 +8,8 @@ import { Button, ButtonLink } from '../Button';
 import Loading from '../Loading';
 import Link from 'next/link';
 import FollowButton from '../FollowButton';
+import { H2 } from '../Typography';
+import { Row, Col } from 'reactstrap';
 
 const Li = styled.li`
   display: flex;
@@ -16,7 +18,8 @@ const Li = styled.li`
   box-shadow: 1px 1px 3px rgba(0,0,0,.2);
   border-radius: 5px;
   padding: 20px;
-  h4 {
+  margin-bottom: 10px;
+  h5 {
     flex-grow: 1;
     margin-bottom: 0;
     margin-left: 15px;
@@ -47,12 +50,16 @@ const FollowerList = () => {
   const showFollowers = () => (
     followers.map(follower => (
       <Li>
-        <Avatar src={`${API}/user/photo/${follower.uniqueUsername}`} />
-        <h4>{follower.username}</h4>
-        <Link href={`/profile/${follower.uniqueUsername}`}><ButtonLink>View profile</ButtonLink></Link>
-        <div className="ml-3">
-          <FollowButton user={follower} />
-        </div>
+        <Avatar width="20" height="20" src={`${API}/user/photo/${follower.uniqueUsername}`} />
+        <h5>{follower.username}</h5>
+        <Row className="justify-content-end">
+          <Col xs="12" md="6" className="d-flex justify-content-end">
+            <Link href={`/profile/${follower.uniqueUsername}`}><ButtonLink>View profile</ButtonLink></Link>
+          </Col>
+          <Col xs="12" md="6" className="d-flex justify-content-end mt-2 mt-md-0">
+            <FollowButton user={follower} />
+          </Col>
+        </Row>
       </Li>
     ))
   )
@@ -61,7 +68,7 @@ const FollowerList = () => {
 
   return (
     <>
-      <h2 className="my-5">My Followers ({followers.length})</h2>
+      <H2 className="my-5">My Followers ({followers.length})</H2>
       <ul className="my-3">
         {showLoading()}
         {showFollowers()}

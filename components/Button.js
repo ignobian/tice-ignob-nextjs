@@ -29,6 +29,7 @@ const buttonOutlineStyles = css`
 `;
 
 const secondaryButtonStyles = css`
+  background-color: white;
   padding: 7px 12px;
   border-radius: 5px;
   color: ${props => props.theme.secondary.main};

@@ -8,17 +8,20 @@ import { useState } from 'react';
 import { SecondaryButton, SecondaryButtonLink } from '../Button';
 import { DisplaySm } from '../responsive/Display';
 
-const Container = styled.div`
+const GridContainer = styled.div`
   /* height: 70px; */
   padding: 20px;
   background-color: white;
-  border-radius: 50px;
+  border-radius:10px;
   box-shadow: 1px 1px 5px rgba(0,0,0,.2);
-  display: flex;
+  display: grid;
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 180px;
+  }
   align-items: center;
   transition: box-shadow 200ms ease-out;
-  h4 {
-    margin: 0;
+  h5 {
+    margin-top: 10px;
   }
   p {
     margin: 0;
@@ -76,28 +79,24 @@ const SmallCardUpdateDelete = ({ blog, onDelete }) => {
   )
 
   return (
-    <Container className="mt-2">
-      {isImage && (
-        <Link href={`/${blog.slug}`}>
-          <Img src={`${API}/blog/photo/${blog.slug}`} onError={hideImage} alt=""/>
-        </Link>
-      )}
+    <GridContainer>
+      <div>
+        {isImage && (
+          <Link href={`/${blog.slug}`}>
+            <Img src={`${API}/blog/photo/${blog.slug}`} onError={hideImage} alt=""/>
+          </Link>
+        )}
 
-      <Link href={`/${blog.slug}`}><h4 className="flex-grow-1" style={{cursor: 'pointer'}}>{blog.title}</h4></Link>
+        <p><small>Published {moment(blog.updatedAt).fromNow()}</small></p>
 
-      <DisplaySm>
-        <div className="mr-2">
-          <p><small>Published {moment(blog.updatedAt).fromNow()}</small></p>
-        </div>
-      </DisplaySm>
+        <Link href={`/${blog.slug}`}><h5 style={{cursor: 'pointer'}}>{blog.title}</h5></Link>
+      </div>
 
-
-      <div className="d-flex flex-wrap align-items-center">
+      <div className="d-flex flex-wrap align-items-center justify-content-end">
         {showUpdateButton(blog)}
         {showDeleteButton(blog)}
       </div>
-
-    </Container>
+    </GridContainer>
   );
 }
 

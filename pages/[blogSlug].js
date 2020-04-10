@@ -17,6 +17,7 @@ import { isAuth } from '../actions/auth';
 import FollowButton from '../components/FollowButton';
 import { Container, Row, Col } from 'reactstrap';
 import ReportBtn from '../components/ReportBtn';
+import { H1 } from '../components/Typography';
 
 const Banner = styled.div`
   height: 300px;
@@ -95,19 +96,23 @@ const singleBlog = ({ blog }) => {
   )
 
   const showCategories = blog => (
-    blog.categories.map((c, i) => (
-      <Link key={i} href={`/categories/${c.slug}`}>
-        <CategoryBtn className="m-0 mr-2"># {c.name}</CategoryBtn>
-      </Link>
-    ))
+    <div className="d-flex flex-wrap">
+      {blog.categories.map((c, i) => (
+        <Link key={i} href={`/categories/${c.slug}`}>
+          <CategoryBtn style={{fontSize: 17}} className="m-0 mr-2"># {c.name}</CategoryBtn>
+        </Link>
+      ))}
+    </div>
   );
   
   const showTags = blog => (
-    blog.tags.map((t, i) => (
-      <Link key={i} href={`/tags/${t}`}>
-        <TagBtn className="m-0 mr-2">{t}</TagBtn>
-      </Link>
-    ))
+    <div className="d-flex flex-wrap mt-2">
+      {blog.tags.map((t, i) => (
+        <Link key={i} href={`/tags/${t}`}>
+          <TagBtn className="m-0 mr-2">{t}</TagBtn>
+        </Link>
+      ))}
+    </div>
   );
 
   const showRelated = blogs => (
@@ -117,11 +122,11 @@ const singleBlog = ({ blog }) => {
   );
 
   const showAuthor = (user) => (
-    <div className="d-flex align-items-center my-3">
+    <div className="d-flex flex-wrap align-items-center my-3">
       <Avatar className="mr-2" src={`${API}/user/photo/${user.uniqueUsername}`} onError={setDefaultSrc} />
       <Link href={`/profile/${user.uniqueUsername}`}><DefaultLink>{user.username}</DefaultLink></Link>
-      <span className="ml-2">| <FollowButton noborder user={user} /></span>
-      <span className="ml-2 text-muted flex-grow-1"> | Posted {moment(blog.createdAt).fromNow()}</span>
+      <span className="ml-2">| <FollowButton noborder user={user} />  | </span>
+      <span className="ml-2 text-muted flex-grow-1">Posted {moment(blog.createdAt).fromNow()}</span>
       {showClap()}
     </div>
   );
@@ -150,7 +155,7 @@ const singleBlog = ({ blog }) => {
               </Col>
 
 
-              <Col xs="12" md={{size: 10, offset: 1}} className="mt-4 d-flex align-items-center">
+              <Col xs="12" md={{size: 10, offset: 1}} className="mt-md-4 mt-3 d-flex align-items-center">
                 <div className="flex-grow-1">
                   {showCategories(blog)}
                   {showTags(blog)}
@@ -161,7 +166,7 @@ const singleBlog = ({ blog }) => {
               </Col>
 
               <Col xs="12" md={{size: 10, offset: 1}} style={{overflowX: 'hidden'}}>
-                <h1 className="my-4">{blog.title}</h1>
+                <H1 className="my-4">{blog.title}</H1>
               </Col>
 
               <Col xs="12" md={{size: 10, offset: 1}}>

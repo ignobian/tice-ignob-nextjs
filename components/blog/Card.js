@@ -1,10 +1,8 @@
 import Link from 'next/link';
 import moment from 'moment';
-import renderHTML from 'react-render-html';
 import { API } from '../../config';
 import { ButtonOutlineLink, CategoryBtn, TagBtn, NoButton } from '../Button';
 import styled from 'styled-components';
-import { ClapImg } from '../ClapImg';
 import { DefaultLink } from '../Link';
 import FollowButton from '../FollowButton';
 

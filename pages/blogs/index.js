@@ -7,6 +7,8 @@ import { listBlogsWithCategoriesAndTags } from '../../actions/blog';
 import Card from '../../components/blog/Card';
 import { APP_NAME, DOMAIN, FB_APP_ID } from '../../config';
 import { CategoryBtn, TagBtn, SecondaryButton } from '../../components/Button';
+import { Container, Row, Col } from 'reactstrap';
+import { H1 } from '../../components/Typography';
 
 const Blogs = ({ blogs, categories, tags, totalBlogs, blogsLimit, blogsSkip, router }) => {
   const head = () => (
@@ -63,37 +65,51 @@ const Blogs = ({ blogs, categories, tags, totalBlogs, blogsLimit, blogsSkip, rou
   const showAllCategories = () => (
     categories.map((c, i) => (
       <Link href={`/categories/${c.slug}`} key={i}>
-        <CategoryBtn className="ml-2"># {c.name}</CategoryBtn>
+        <CategoryBtn className="ml-2 mb-3"># {c.name}</CategoryBtn>
       </Link>
     ))
   );
 
+  const showAllTags = () => (
+    tags.map((t, i) => (
+      <Link href={`/categories/${t.slug}`} key={i}>
+        <TagBtn className="ml-2 mb-3">{t.name}</TagBtn>
+      </Link>
+    ))
+  );
 
   return (
     <>
       {head()}
       <Layout>
         <main>
-          <div className="container-fluid">
+          <Container fluid>
             <header>
-              <div className="col-md-12 pt-5 pb-3">
-                <h1 className="font-weight-bold text-center">Browse on what you're interested in</h1>
-              </div>
-              <section className="text-center">
-                <div className="my-4 pb-5 border-bottom">{showAllCategories()}</div>
-              </section>
+              <Row>
+                <Col xs="12" className="pt-5 pb-3">
+                  <H1 className="font-weight-bold text-center">Browse on what you're interested in</H1>
+                </Col>
+
+                <Col xs="12" className="pb-3">
+                  <div className="d-flex flex-wrap justify-content-center my-4 pb-1">
+                    {showAllCategories()}
+                  </div>
+
+                  <div className="d-flex flex-wrap justify-content-center my-4 pb-1">
+                    {showAllTags()}
+                  </div>
+                </Col>
+              </Row>
             </header>
-          </div>
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-12 col-md-8 offset-md-2">
+            <Row>
+              <Col xs="12" md={{size: 8, offset: 2}}>
                 {showLoadedBlogs()}
                 <div className="text-center py-5">
                   {loadMoreBtn()}
                 </div>
-              </div>
-            </div>
-          </div>
+              </Col>
+            </Row>
+          </Container>
         </main>
       </Layout>
     </>
@@ -108,9 +124,9 @@ Blogs.getInitialProps = () => {
     if (data.error) {
       console.log(data.error);
     } else {
-      const { blogs, categories, size} = data;
+      const { blogs, categories, tags, size} = data;
       return {
-        blogs, categories, totalBlogs: size, blogsLimit: limit, blogsSkip: skip
+        blogs, categories, tags, totalBlogs: size, blogsLimit: limit, blogsSkip: skip
       };
     }
   });

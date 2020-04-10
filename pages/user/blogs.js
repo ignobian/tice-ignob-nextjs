@@ -8,6 +8,8 @@ import { isAuth, getCookie } from '../../actions/auth';
 import Private from '../../components/auth/Private';
 import Layout from '../../components/Layout';
 import { SecondaryButtonLink } from '../../components/Button';
+import { Container, Row, Col } from 'reactstrap';
+import { H2 } from '../../components/Typography';
 
 const UserBlogs = () => {
   const head = () => (
@@ -67,17 +69,20 @@ const UserBlogs = () => {
     <Private>
       {head()}
       <Layout>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12 col-md-10 col-lg-8 offset-md-1 offset-lg-2 py-4 d-flex align-items-center justify-content-between">
-              <h2 className="pl-3">Manage my blogs</h2>
-              <Link href="/blogs/new"><SecondaryButtonLink className="mr-3">Create blog</SecondaryButtonLink></Link>
-            </div>
-            <div className="col-12 col-md-10 col-lg-8 offset-md-1 offset-lg-2">
+        <Container fluid>
+          <Row>
+
+            <Col xs="12" md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="py-4">
+              <H2 className="mb-4">Manage my blogs</H2>
+              <Link href="/blogs/new"><SecondaryButtonLink>Create blog</SecondaryButtonLink></Link>
+            </Col>
+
+            <Col xs="12" md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}}>
               {listBlogs()}
-            </div>
-          </div>
-        </div>
+            </Col>
+
+          </Row>
+        </Container>
       </Layout>
     </Private>
   );
