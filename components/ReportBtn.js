@@ -58,7 +58,7 @@ const ReportBtn = ({ blog }) => {
         <Label htmlFor="type">Specify type of report:</Label>
         <Input id="type" type="select" onChange={handleChange('name')} value={name}>
           {reportTypes.map(type => (
-            <option>{type}</option>
+            <option key={type}>{type}</option>
           ))}
         </Input>
       </FormGroup>

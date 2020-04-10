@@ -269,8 +269,8 @@ const CreateUpdateBlog = ({ router }) => {
   )
 
   const blogForm = () => {
-    const titleMin = 50;
-    const titleMax = 60;
+    const titleMin = 49;
+    const titleMax = 61;
     const titleCount = title.length;
 
     // for the body (based on words)

@@ -32,14 +32,16 @@ const Banner = styled.div`
 const singleBlog = ({ blog }) => {
   const head = () => (
     <Head>
-      <title>{blog.title} - {APP_NAME}</title>
+      <title>{blog.title}</title>
       <meta name="description" content={blog.mdesc} />
+      <meta name="keywords" content={blog.tags.join(',')} />
+      <meta name="author" content={blog.postedBy.name} />
 
-      <link rel="canonical" href={`${DOMAIN}/blogs/${blog.slug}`} />
-      <meta property="og:title" content={`${blog.title} - ${APP_NAME}`} />
+      <link rel="canonical" href={`${DOMAIN}/${blog.slug}`} />
+      <meta property="og:title" content={`${blog.title}`} />
       <meta property="og:description" content={blog.mdesc} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`${DOMAIN}/blog/${blog.slug}`} />
+      <meta property="og:url" content={`${DOMAIN}/${blog.slug}`} />
       <meta property="og:site_name" content={APP_NAME} />
 
       <meta property="og:image" content={`${API}/blog/photo/${blog.slug}`} />
