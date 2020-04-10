@@ -2,6 +2,10 @@ import Document, { Html, Head, Main, NextScript } from 'next/document';
 // import styled components
 import { ServerStyleSheet } from 'styled-components';
 
+// import config
+import getConfig from 'next/config';
+const { publicRuntimeConfig } = getConfig();
+
 class MyDocument extends Document {
   static getInitialProps({ renderPage }) {
     // create instance of ServerStyleSheet
@@ -16,6 +20,16 @@ class MyDocument extends Document {
     return { ...page, styleTags };
   }
 
+  setGoogleTags() {
+    if (publicRuntimeConfig.PRODUCTION) {
+      return {
+        __html: `
+        
+        `
+      }
+    }
+  }
+
   render() {
     return (
       <Html lang="en">
@@ -28,6 +42,7 @@ class MyDocument extends Document {
           />
           <link rel="stylesheet" href="/css/styles.css"/>
           {this.props.styleTags}
+          <script dangerouslySetInnerHTML={this.setGoogleTags}></script>
         </Head>
         <body>
           <Main />
