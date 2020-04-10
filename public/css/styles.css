@@ -32,3 +32,11 @@ a {
   max-height: 500px;
   object-fit: cover;
 }
+
+.facebook-login-btn {
+  padding: 10px 20px;
+  border: none;
+  color: white;
+  background-color: #4267B2;
+  font-size: 14px;
+}

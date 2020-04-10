@@ -4,6 +4,7 @@ const buttonStyles = css`
   color: white!important;
   padding: 7px 12px;
   border-radius: 5px;
+  border: none;
   background-color: ${props => props.theme.primary.main};
   box-shadow: 1px 1px 5px rgba(0,0,0,.3);
   transition: background-color 200ms ease-out, box-shadow 200ms ease-out;

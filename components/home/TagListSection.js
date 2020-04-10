@@ -2,13 +2,10 @@ import { TagBtn } from '../Button';
 import Link from 'next/link';
 
 const TagListSection = ({ tags }) => {
-
-  console.log(tags);
-
   const listTags = () => (
     tags && tags.map((t, i) => (
-      <div className="py-3 mx-1">
-        <Link key={i} href={`/tags/${t.slug}`}>
+      <div key={i} className="py-3 mx-1">
+        <Link href={`/tags/${t.slug}`}>
           <TagBtn>{t.name}</TagBtn>
         </Link>
       </div>

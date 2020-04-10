@@ -66,7 +66,9 @@ const ProfileUpdate = () => {
     userData.set('name', name);
     userData.set('email', email);
     userData.set('about', about);
-    userData.set('photo', photo);
+    if (photo) {
+      userData.set('photo', photo);
+    }
 
     update(token, userData).then(data => {
       if (data.error) {

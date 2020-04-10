@@ -5,6 +5,9 @@ import { Button } from '../Button';
 import { DefaultLink } from '../Link';
 import Loading from '../Loading';
 import Link from 'next/link';
+import LoginGoogle from './LoginGoogle';
+import LoginFacebook from './LoginFacebook';
+import { Row, Col } from 'reactstrap';
 
 const SigninComponent = () => {
   const [ values, setValues ] = useState({
@@ -90,6 +93,15 @@ const SigninComponent = () => {
       {showError()}
       {showLoading()}
       {showMessage()}
+      <Row className="mt-5">
+        <Col xs="6">
+          <LoginGoogle />
+        </Col>
+
+        <Col xs="6" className="d-flex justify-content-end">
+          <LoginFacebook />
+        </Col>
+      </Row>
       {showForm && signinForm()}
     </>
   );

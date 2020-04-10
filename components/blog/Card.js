@@ -27,8 +27,8 @@ const Card = ({ blog }) => {
 
   const showCategories = blog => (
     blog.categories.map((category, i) => (
-      <div className="my-3">
-        <Link key={i} href={`/categories/${category.slug}`}>
+      <div key={i} className="my-3">
+        <Link href={`/categories/${category.slug}`}>
           <SmallCategoryBtn># {category.name}</SmallCategoryBtn>
         </Link>
       </div>
@@ -37,8 +37,8 @@ const Card = ({ blog }) => {
 
   const showTags = blog => (
     blog.tags.map((tag, i) => (
-      <div className="my-3">
-        <Link key={i} href={`/tags/${tag}`}>
+      <div key={i} className="my-3">
+        <Link href={`/tags/${tag}`}>
           <SmallTagBtn>{tag}</SmallTagBtn>
         </Link>
       </div>
