@@ -76,6 +76,9 @@ export const NoButton = styled.button`
   border: none;
   background-color: transparent;
   border-radius: 5px;
+  &:focus {
+    outline: none;
+  }
   color: ${props => props.theme.bodyColor};
 `;
 

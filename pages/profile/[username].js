@@ -9,6 +9,22 @@ import Card from '../../components/blog/Card';
 import { Container, Row, Col } from 'reactstrap';
 import ClapImg from '../../components/ClapImg';
 import FollowButton from '../../components/FollowButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import styled from 'styled-components';
+
+const Stats = styled.div`
+  display: flex;
+  .left {
+    text-align: right;
+  }
+  .right {
+    margin-left: 5px;
+    img, svg {
+      display: block;
+      height: 24px;
+    }
+  }
+`;
 
 const UserProfile = ({ user, blogs }) => {
   const setDefaultSrc = e => {
@@ -59,20 +75,29 @@ const UserProfile = ({ user, blogs }) => {
             <Col xs="12" md="8">
 
               <div className="card p-4">
-                <div className="d-flex flex-wrap align-items-center">
-                  <h3 className="m-0 mr-3 mt-2">{user.name}</h3>
-                  <Avatar className="mr-3 mt-2" src={`${API}/user/photo/${user.uniqueUsername}`} alt={user.username} onError={setDefaultSrc} />
-                  <div className="flex-grow-1 mt-2">
-                    <FollowButton user={user} />
-                  </div>
-                  <p className="m-0 mt-2" >{user.claps}</p>
-                  <ClapImg className="mt-2" style={{ width: 26, marginLeft: 8, marginTop: '0.5rem' }} />
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h3 className="m-0">{user.name}</h3>
+                  <Avatar src={`${API}/user/photo/${user.uniqueUsername}`} alt={user.username} onError={setDefaultSrc} />
+                </div>
+                <div className="d-flex justify-content-between align-items-center">
+                  <FollowButton user={user} />
+
+                  <Stats>
+                    <div className="left">
+                      <p className="m-0 mr-1">{user.claps}</p>
+                      <p className="m-0 mr-1">{user.impressions.length}</p>
+                      <p className="m-0 mr-1">{user.shares.length}</p>
+                    </div>
+                    <div className="right">
+                      <ClapImg style={{ width: 26 }} />
+                      <FontAwesomeIcon width="20" icon={['far', 'eye']} />
+                      <FontAwesomeIcon style={{marginLeft: 2}} width="14" icon={['fas', 'share-alt']} />
+                    </div>
+                  </Stats>
                 </div>
                 <hr/>
-                <div className="details">
-                  <p className="text-muted">Joined {moment(user.createdAt).fromNow()}</p>
-                  <p>{user.about}</p>
-                </div>
+                <p className="text-muted">Joined {moment(user.createdAt).fromNow()}</p>
+                <p>{user.about}</p>
 
               </div>
 

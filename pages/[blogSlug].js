@@ -3,6 +3,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import { getBlog, listRelated, addClap } from '../actions/blog';
+import { addShare } from '../actions/share';
+import { addImpression } from '../actions/reach';
 import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../config';
 import moment from 'moment';
 import renderHtml from 'react-render-html';
@@ -12,8 +14,8 @@ import { DefaultLink } from '../components/Link';
 import styled from 'styled-components';
 import { Avatar } from '../components/Avatar';
 import { ClapImg } from '../components/ClapImg';
-import { CategoryBtn, TagBtn } from '../components/Button';
-import { isAuth } from '../actions/auth';
+import { CategoryBtn, TagBtn, NoButton } from '../components/Button';
+import { isAuth, getCookie } from '../actions/auth';
 import FollowButton from '../components/FollowButton';
 import { Container, Row, Col } from 'reactstrap';
 import ReportBtn from '../components/ReportBtn';
@@ -63,6 +65,8 @@ const singleBlog = ({ blog }) => {
     </Head>
   );
 
+  const token = isAuth() ? getCookie('token') : null;
+
   const [related, setRelated] = useState([]);
   const [error, setError] = useState('');
   const [count, setCount] = useState(0);
@@ -70,10 +74,22 @@ const singleBlog = ({ blog }) => {
   useEffect(() => {
     loadRelated();
     setClaps();
+    initImpression();
   }, []);
 
   const setClaps = () => {
     setCount(blog.claps.length);
+  }
+
+  const initImpression = () => {
+    // add an impression to the backend
+    const blogId = blog._id;
+    const blogPostedById = blog.postedBy._id;
+    addImpression(blogId, blogPostedById, token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      }
+    });
   }
 
   const loadRelated = () => {
@@ -94,6 +110,20 @@ const singleBlog = ({ blog }) => {
         // update the clap with plus one
         setError('');
         setCount(count + 1);
+      }
+    });
+  }
+
+  const handleShare = (type, link) => e => {
+    // add a share to the backend
+    const blogId = blog._id;
+    const blogPostedById = blog.postedBy._id;
+    addShare(type, blogId, blogPostedById, token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        // open window in a new tab with the sharable link
+        window.open(link, '_blank');
       }
     });
   }
@@ -130,19 +160,20 @@ const singleBlog = ({ blog }) => {
 
   const showRelated = blogs => (
     blogs.map((b, i) => (
-      <RelatedBlog blog={b} />
+      <RelatedBlog key={i} blog={b} />
     ))
   );
 
   const showSocialIcons = () => {
-    const twitterLink = `https://twitter.com/intent/tweet?text=${blog.title} by @${blog.postedBy.username} ${DOMAIN}/${blog.slug}`;
-    const linkedinLink = `https://www.linkedin.com/sharing/share-offsite/?url=${DOMAIN}/${blog.slug}`;
-    const facebookLink = `https://www.facebook.com/v3.3/dialog/share?app_id=${FB_APP_ID}&${DOMAIN}/${blog.slug}&display=page&redirect_uri=${DOMAIN}/${blog.slug}?facebook=true`
+    const url = `${DOMAIN}/${blog.slug}`;
+    const twitterLink = `https://twitter.com/intent/tweet?text=${blog.title} by @${blog.postedBy.username} ${url}`;
+    const linkedinLink = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+    const facebookLink = `https://www.facebook.com/v3.3/dialog/share?app_id=${FB_APP_ID}&${url}&display=page&redirect_uri=${url}?facebook=true`
     return (
       <SocialIconsContainer>
-        <DefaultLink href={twitterLink}><FontAwesomeIcon icon={['fab', 'twitter']}/></DefaultLink>
-        <DefaultLink href={linkedinLink}><FontAwesomeIcon icon={['fab', 'linkedin']}/></DefaultLink>
-        <DefaultLink href={facebookLink}><FontAwesomeIcon icon={['fab', 'facebook-square']}/></DefaultLink>
+        <NoButton className="p-0 pr-1" onClick={handleShare('twitter', twitterLink)}><DefaultLink><FontAwesomeIcon icon={['fab', 'twitter']}/></DefaultLink></NoButton>
+        <NoButton className="p-0 pr-1" onClick={handleShare('linkedin', linkedinLink)}><DefaultLink><FontAwesomeIcon icon={['fab', 'linkedin']}/></DefaultLink></NoButton>
+        <NoButton className="p-0 pr-1" onClick={handleShare('facebook', facebookLink)}><DefaultLink><FontAwesomeIcon icon={['fab', 'facebook-square']}/></DefaultLink></NoButton>
       </SocialIconsContainer>
     )
   }

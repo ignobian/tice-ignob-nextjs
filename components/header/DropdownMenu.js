@@ -37,7 +37,8 @@ const DropdownMenu = () => {
         <li className="border-bottom pb-3"><Link href="/following"><DefaultLink>Following feed</DefaultLink></Link></li>
         <li><DefaultLink href="/blogs/new">Create blog</DefaultLink></li>
         <li><Link href="/user/blogs"><DefaultLink>Manage my blogs</DefaultLink></Link></li>
-        <li className="border-bottom pb-3"><Link href="/user/followers"><DefaultLink>My Followers</DefaultLink></Link></li>
+        <li><Link href="/user/followers"><DefaultLink>My Followers</DefaultLink></Link></li>
+        <li className="border-bottom pb-3"><Link href="/user/stats"><DefaultLink>My Stats</DefaultLink></Link></li>
         <li className="border-bottom pb-3"><Link href="/user/update"><DefaultLink>Update profile</DefaultLink></Link></li>
         <li><NoButton className="p-0" onClick={() => signout(() => Router.push(`/`))}>Sign out</NoButton></li>
       </ul>

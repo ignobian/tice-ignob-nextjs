@@ -12,7 +12,8 @@ import { SecondaryButtonLink } from '../../components/Button';
 import AdminSearchBlogs from '../../components/admin/AdminSearchBlogs';
 import { DisplaySmallerThanLg } from '../../components/responsive/Display';
 import Admin from '../../components/auth/Admin';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, Table } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Dashboard = () => {
 
@@ -27,7 +28,7 @@ const Dashboard = () => {
     error: '',
     users: [],
     reports: [],
-    orderOptions: ['claps', 'blogs', 'name']
+    orderOptions: ['claps', 'blogs', 'impressions', 'shares', 'name']
   });
 
   const { error, users, reports, orderOptions } = values;
@@ -39,11 +40,17 @@ const Dashboard = () => {
       if (data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        const users = data
+        // convert impressions and shares to just the length of the array
+        const users = data.map(user => {
+          user.impressions = user.impressions.length;
+          user.shares = user.shares.length;
+          return user
+        });
+
         getReports(token).then(data => {
           if (data.error) {
             setValues({ ...values, error: data.error });
-          } else {
+          } else {            
             setValues({ ...values, error: '', users: users.sort(sortBy('-claps')), reports: data });
           }
         });
@@ -56,7 +63,7 @@ const Dashboard = () => {
   }, []);
 
   const handleChange = e => {
-    // sort oppositely when selecting claps or blogs (from big to small) otherwise from small to big (a-z)
+    // sort oppositely when selecting claps, impressions, shares or blogs (from big to small) otherwise from small to big (a-z)
     const sortTerm = e.target.value === 'name' ? e.target.name : '-' + e.target.value
     const newArr = users.sort(sortBy(sortTerm));
     setValues({ ...values, error: '', users: newArr });
@@ -73,33 +80,33 @@ const Dashboard = () => {
     </div>
   )
 
-  const listUsers = () => (
-    users.map((user, i) => (
-      <tr key={i}>
-        <td>{user.username}</td>
-        <td>{user.name}</td>
-        <td>{user.claps}</td>
-        <td>{user.blogs.length}</td>
-        <td><Link href={`/profile/${user.uniqueUsername}`}><SecondaryButtonLink>View profile</SecondaryButtonLink></Link></td>
-      </tr>
-    ))
-  )
-
   const showUsersTable = () => (
-    <table className="table">
+    <Table>
       <thead>
         <tr>
           <th>Username</th>
           <th>Full name</th>
           <th><ClapImg src="/images/clap.svg" alt="claps" /></th>
+          <th><FontAwesomeIcon width="20" icon={['far', 'eye']} /></th>
+          <th><FontAwesomeIcon width="16" icon={['fas', 'share-alt']} /></th>
           <th>Amount of blogs</th>
           <th></th>
         </tr>
 
-        {listUsers()}
+        {users.map((user, i) => (
+          <tr key={i}>
+            <td>{user.username}</td>
+            <td>{user.name}</td>
+            <td>{user.claps}</td>
+            <td>{user.impressions}</td>
+            <td>{user.shares}</td>
+            <td>{user.blogs.length}</td>
+            <td><Link href={`/profile/${user.uniqueUsername}`}><SecondaryButtonLink>View</SecondaryButtonLink></Link></td>
+          </tr>
+        ))}
 
       </thead>
-    </table>
+    </Table>
   );
 
   const showAdminSearchBlogs = () => (
@@ -129,7 +136,10 @@ const Dashboard = () => {
 
               {showOptionSelect()}
 
-              {showUsersTable()}
+              <div style={{overflowX: 'scroll'}}>
+                {showUsersTable()}
+              </div>
+
 
               <hr/>
               <div className="my-3">

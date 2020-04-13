@@ -5,13 +5,16 @@ config.autoAddCss = false; // skip auto adding
 
 // import icons
 import { faFacebookSquare, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import { faEye } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
   faSearch,
   faFacebookSquare,
   faLinkedin,
-  faTwitter
+  faTwitter,
+  faEye,
+  faShareAlt
 );
 
 class MyApp extends App {

@@ -74,3 +74,13 @@ export const toggleFollower = (userId, token) => {
   .then(res => res.json())
   .catch(err => console.log(err))
 }
+
+export const loadUserStats = token => {
+  return fetch(`${API}/user/stats`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}
