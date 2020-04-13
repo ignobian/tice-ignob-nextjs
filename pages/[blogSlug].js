@@ -170,7 +170,7 @@ const singleBlog = ({ blog }) => {
     const linkedinLink = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
     const facebookLink = `https://www.facebook.com/v3.3/dialog/share?app_id=${FB_APP_ID}&${url}&display=page&redirect_uri=${url}?facebook=true`
     return (
-      <SocialIconsContainer>
+      <SocialIconsContainer className="d-md-inline">
         <NoButton className="p-0 pr-1" onClick={handleShare('twitter', twitterLink)}><DefaultLink><FontAwesomeIcon icon={['fab', 'twitter']}/></DefaultLink></NoButton>
         <NoButton className="p-0 pr-1" onClick={handleShare('linkedin', linkedinLink)}><DefaultLink><FontAwesomeIcon icon={['fab', 'linkedin']}/></DefaultLink></NoButton>
         <NoButton className="p-0 pr-1" onClick={handleShare('facebook', facebookLink)}><DefaultLink><FontAwesomeIcon icon={['fab', 'facebook-square']}/></DefaultLink></NoButton>
@@ -182,11 +182,12 @@ const singleBlog = ({ blog }) => {
     <div className="d-flex my-3">
       <Avatar className="mr-3" src={`${API}/user/photo/${user.uniqueUsername}`} onError={setDefaultSrc} />
       <div className="flex-grow-1">
-        <div>
+        <div className="d-md-inline">
           <Link href={`/profile/${user.uniqueUsername}`}><DefaultLink>{user.username}</DefaultLink></Link>
           <span className="ml-2">| <FollowButton noborder user={user} /></span>
         </div>
-        <div>
+        <div className="d-md-inline mr-md-4">
+          <span className="d-none d-md-inline mr-md-2"> | </span>
           <span>Posted {moment(blog.createdAt).fromNow()}</span>
         </div>
         {showSocialIcons()}
