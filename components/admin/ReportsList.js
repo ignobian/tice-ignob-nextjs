@@ -59,21 +59,7 @@ const ReportsList = () => {
       })
     }
   }
-
-  const onRemoveBlogPost = blog => e => {
-    const answer = window.confirm(`Are you sure you want to remove ${blog.title}?`);
-
-    if (answer) {
-      removeBlog(blog.slug, token).then(data => {
-        if (data.error) {
-          console.log(data.error);
-        } else {
-          initReports();
-        }
-      });
-    }
-  }
-
+  
   const showReports = () => (
     reports.map(report => (
       <ReportItem>
@@ -94,7 +80,7 @@ const ReportsList = () => {
           </div>
         </div>
 
-        <Button onClick={onRemoveBlogPost(report.blog)} className="mr-4" color="danger" outline>Delete post</Button>
+        <Button href={`/user/update/${report.blog.slug}`} className="mr-4" outline color="info">Update post</Button>
 
         <div className="mr-4">
           <p className="mb-1 text-muted">Reported by:</p>

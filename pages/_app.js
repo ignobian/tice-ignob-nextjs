@@ -4,9 +4,15 @@ import { config, library } from '@fortawesome/fontawesome-svg-core';
 config.autoAddCss = false; // skip auto adding
 
 // import icons
+import { faFacebookSquare, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faSearch);
+library.add(
+  faSearch,
+  faFacebookSquare,
+  faLinkedin,
+  faTwitter
+);
 
 class MyApp extends App {
   render() {

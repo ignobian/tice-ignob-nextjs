@@ -46,6 +46,9 @@ class MyDocument extends Document {
           {this.props.styleTags}
           {publicRuntimeConfig.PRODUCTION && (
             <>
+              {/* Google adsense code */}
+              <script data-ad-client="ca-pub-7599944658110193" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+              {/* Google analytics code */}
               <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163351726-1"></script>
               <script dangerouslySetInnerHTML={this.setGoogleTags()}></script>
             </>

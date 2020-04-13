@@ -18,6 +18,7 @@ import FollowButton from '../components/FollowButton';
 import { Container, Row, Col } from 'reactstrap';
 import ReportBtn from '../components/ReportBtn';
 import { H1 } from '../components/Typography';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Banner = styled.div`
   height: 300px;
@@ -26,6 +27,13 @@ const Banner = styled.div`
     object-fit: cover;
     width: 100%;
     height: 100%;
+  }
+`;
+
+const SocialIconsContainer = styled.div`
+  svg {
+    width: 18px;
+    margin-right: 10px;
   }
 `;
 
@@ -126,13 +134,35 @@ const singleBlog = ({ blog }) => {
     ))
   );
 
+  const showSocialIcons = () => {
+    const twitterLink = `https://twitter.com/intent/tweet?text=${blog.title} by @${blog.postedBy.username} ${DOMAIN}/${blog.slug}`;
+    const linkedinLink = `https://www.linkedin.com/sharing/share-offsite/?url=${DOMAIN}/${blog.slug}`;
+    const facebookLink = `https://www.facebook.com/v3.3/dialog/share?app_id=${FB_APP_ID}&${DOMAIN}/${blog.slug}&display=page&redirect_uri=${DOMAIN}/${blog.slug}?facebook=true`
+    return (
+      <SocialIconsContainer>
+        <DefaultLink href={twitterLink}><FontAwesomeIcon icon={['fab', 'twitter']}/></DefaultLink>
+        <DefaultLink href={linkedinLink}><FontAwesomeIcon icon={['fab', 'linkedin']}/></DefaultLink>
+        <DefaultLink href={facebookLink}><FontAwesomeIcon icon={['fab', 'facebook-square']}/></DefaultLink>
+      </SocialIconsContainer>
+    )
+  }
+
   const showAuthor = (user) => (
-    <div className="d-flex flex-wrap align-items-center my-3">
-      <Avatar className="mr-2" src={`${API}/user/photo/${user.uniqueUsername}`} onError={setDefaultSrc} />
-      <Link href={`/profile/${user.uniqueUsername}`}><DefaultLink>{user.username}</DefaultLink></Link>
-      <span className="ml-2">| <FollowButton noborder user={user} />  | </span>
-      <span className="ml-2 text-muted flex-grow-1">Posted {moment(blog.createdAt).fromNow()}</span>
-      {showClap()}
+    <div className="d-flex my-3">
+      <Avatar className="mr-3" src={`${API}/user/photo/${user.uniqueUsername}`} onError={setDefaultSrc} />
+      <div className="flex-grow-1">
+        <div>
+          <Link href={`/profile/${user.uniqueUsername}`}><DefaultLink>{user.username}</DefaultLink></Link>
+          <span className="ml-2">| <FollowButton noborder user={user} /></span>
+        </div>
+        <div>
+          <span>Posted {moment(blog.createdAt).fromNow()}</span>
+        </div>
+        {showSocialIcons()}
+      </div>
+      <div className="align-self-center">
+        {showClap()}
+      </div>
     </div>
   );
 
