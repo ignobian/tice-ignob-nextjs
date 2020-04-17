@@ -60,10 +60,6 @@ export const signout = (next) => {
   removeCookie('token');
   removeLocalStorage('user');
   next();
-
-  return fetch(`${API}/signout`)
-  .then(res => console.log('signout success'))
-  .catch(err => console.log(err));
 }
 
 // set cookie
