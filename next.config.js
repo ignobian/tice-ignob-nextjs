@@ -2,7 +2,7 @@ const withCSS = require('@zeit/next-css');
 
 module.exports = withCSS({
   publicRuntimeConfig: {
-    APP_NAME: 'Ignob.com',
+    APP_NAME: 'Ignob',
     API_DEVELOPMENT: 'http://localhost:3001/v1',
     API_PRODUCTION: 'https://ignob-backend-rails-api.herokuapp.com/v1',
     PRODUCTION: process.env.NODE_ENV === 'production',
