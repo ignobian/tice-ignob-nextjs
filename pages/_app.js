@@ -5,10 +5,13 @@ config.autoAddCss = false; // skip auto adding
 
 import { wakeUp } from '../actions/general';
 
+import { CLOUDINARY_CLOUDNAME } from '../config';
+
 // import icons
 import { faFacebookSquare, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faSearch, faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { faEye } from '@fortawesome/free-regular-svg-icons';
+import CloudinaryContext from 'cloudinary-react/lib/components/CloudinaryContext/CloudinaryContext';
 
 library.add(
   faSearch,
@@ -28,7 +31,11 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props;
-    return <Component {...pageProps} />
+    return (
+    <CloudinaryContext cloudName={CLOUDINARY_CLOUDNAME}>
+      <Component {...pageProps} />
+    </CloudinaryContext>
+    )
   }
 }
 

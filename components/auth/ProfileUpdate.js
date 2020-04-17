@@ -9,6 +9,7 @@ import Loading from '../Loading';
 import { Form, FormGroup, InputGroup, Label, Input, Container, Row, Col } from 'reactstrap';
 import Error from '../Error';
 import Message from '../Message';
+import { Image, Transformation } from 'cloudinary-react';
 
 const ProfileUpdate = () => {
   const [values, setValues] = useState({
@@ -21,11 +22,12 @@ const ProfileUpdate = () => {
     success: false,
     loading: false,
     photo: '',
-    photoPreview: ''
+    photoPreview: '',
+    cloudinaryPhoto: '',
   });
 
   const token = getCookie('token');
-  const { username, firstName, lastName, email, about, error, success, loading, photo, photoPreview } = values;
+  const { username, firstName, lastName, email, about, error, success, loading, photo, photoPreview, cloudinaryPhoto } = values;
 
   // get user information with getProfile
   useEffect(() => {
@@ -93,6 +95,12 @@ const ProfileUpdate = () => {
     }
   }
 
+  const showCloudinaryProfilePhoto = () => (
+    <Image width="200" style={{borderRadius: '50%'}} publicId={cloudinaryPhoto.key} >
+      <Transformation width="400" crop="fill" />
+    </Image>
+  )
+
   const showForm = () => (
     <Form onSubmit={handleSubmit} className="mt-4">
 
@@ -142,6 +150,7 @@ const ProfileUpdate = () => {
         <Col xs="12" md="4">
           <h2 className="d-block d-md-none my-4">Update profile</h2>
           {showProfilePhotoPreview()}
+          {cloudinaryPhoto && showCloudinaryProfilePhoto()}
         </Col>
 
         <Col xs="12" md="8">
