@@ -3,6 +3,7 @@ import { isAuth, preSignup } from '../../actions/auth';
 import Router from 'next/router';
 import { Button } from '../Button';
 import Loading from '../Loading';
+import Error from '../Error';
 import { Form, Input, FormGroup, Row, Col, InputGroup } from 'reactstrap';
 
 const SignupComponent = () => {
@@ -58,7 +59,7 @@ const SignupComponent = () => {
   }
 
   const showLoading = () => loading && <Loading/>;
-  const showError = () => error && <div className="alert alert-danger">{error}</div>;
+  const showError = () => error && <Error content={error} />;
   const showMessage = () => message && <div className="text-muted">{message}</div>;
 
   const signupForm = () => {
