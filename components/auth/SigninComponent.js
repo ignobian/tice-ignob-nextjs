@@ -36,13 +36,8 @@ const SigninComponent = () => {
     signin(user)
     .then(data => {
       if (data.error) {
-        setValues({ ...values, 
-          error: data.error,
-          loading: false
-        });
+        setValues({ ...values, error: data.error, loading: false });
       } else {
-        // save user token to cookie
-        // save user info to localstorage
         // authenticate user
         authenticate(data, () => {
           Router.push('/');
@@ -83,7 +78,6 @@ const SigninComponent = () => {
           <Link href="/user/password/forgot"><DefaultLink>Forgot password?</DefaultLink></Link>
           <Button type="submit">Sign in</Button>
         </div>
-
 
       </Form>
     )

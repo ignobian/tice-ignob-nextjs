@@ -2,6 +2,7 @@ import fetch from 'isomorphic-fetch';
 import cookie from 'js-cookie';
 import { API } from '../config';
 import Router from 'next/router';
+import { setInStorage } from '../helpers/storage';
 
 export const handleResponse = response => {
   if (response.status === 401) {
@@ -43,7 +44,7 @@ export const signup = token => {
 };
 
 export const signin = (user) => {
-  return fetch(`${API}/signin`, {
+  return fetch(`${API}/sessions`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -108,7 +109,7 @@ export const removeLocalStorage = (key) => {
 // authenticate user by pass data to cookie and localstorage
 export const authenticate = (data, next) => {
   setCookie('token', data.token);
-  setLocalStorage('user', data.user);
+  setInStorage('user', data.user);
   next();
 }
 
