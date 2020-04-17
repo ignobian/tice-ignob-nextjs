@@ -105,7 +105,7 @@ const CreateUpdateBlog = ({ router }) => {
     const blog = {
       title,
       body,
-      categories: checkedCategories,
+      categories: checkedCategories.map(category => category.id),
       tags
     }
     if (photo) {
@@ -118,11 +118,7 @@ const CreateUpdateBlog = ({ router }) => {
         if (data.error) {
           setValues({ ...values, loading: false, error: data.error });
         } else {
-          setValues({ ...values, loading: false, error: '', success: `${data.title} is created!`, photo: '', photoPreview: ''});
-          setTitle('');
-          setBody('');
-          // clear the title in the local storage
-          clearStorage('title');
+          setValues({ ...values, loading: false, error: '', success: `${data.title} is created!`});
           // redirect to the update page of this blog post
           Router.push(`/${data.slug}`);
         }
@@ -159,11 +155,7 @@ const CreateUpdateBlog = ({ router }) => {
     } else if (name === 'tags') {
       handleTag(value);
     } else {
-      setValues({
-        ...values,
-        [name]: value,
-        error: ''
-      });
+      setValues({ ...values, [name]: value, error: '' });
     }
   }
 
@@ -193,8 +185,10 @@ const CreateUpdateBlog = ({ router }) => {
   
   const handleCategory = category => {
     if (checkedCategories.includes(category)) {
-      const categories = checkedCategories.filter(ccategory => ccategory === category);
+      const categories = checkedCategories.filter(ccategory => ccategory !== category);
       setCheckedCategories(categories);
+    } else {
+      setCheckedCategories(checkedCategories.concat(category))
     }
   }
   
