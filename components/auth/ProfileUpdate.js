@@ -2,12 +2,13 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import { getCookie, isAuth, updateUser } from '../../actions/auth';
-import { getProfile, update } from '../../actions/user';
+import { getUserForEdit, update } from '../../actions/user';
 import { API } from '../../config';
 import { SecondaryButtonLabel, Button } from '../Button';
-import { DisplayMd, DisplaySmallerThanMd } from '../responsive/Display';
 import Loading from '../Loading';
-import { Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
+import { Form, FormGroup, InputGroup, Label, Input, Container, Row, Col } from 'reactstrap';
+import Error from '../Error';
+import Message from '../Message';
 
 const ProfileUpdate = () => {
   const [values, setValues] = useState({
@@ -26,20 +27,17 @@ const ProfileUpdate = () => {
   const token = getCookie('token');
   const { username, firstName, lastName, email, about, error, success, loading, photo, photoPreview } = values;
 
-  const init = () => {
-    getProfile(token).then(data => {
-      if (data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        const { username, uniqueUsername, name, email, about } = data;
-        setValues({ ...values, username, uniqueUsername, name, email, about })
-      }
-    });
-  }
-
   // get user information with getProfile
   useEffect(() => {
-    init();
+    setValues({ ...values, loading: true });
+
+    getUserForEdit(token).then(data => {
+      if (data.error) {
+        setValues({ ...values, error: data.error, loading: false });
+      } else {
+        setValues({ ...values, ...data })
+      }
+    });
   }, []);
 
   const handleChange = name => e => {
@@ -64,11 +62,12 @@ const ProfileUpdate = () => {
     // create user data
     const userData = new FormData();
     userData.set('username', username);
-    userData.set('name', name);
+    userData.set('first_name', firstName);
+    userData.set('last_name', lastName);
     userData.set('email', email);
     userData.set('about', about);
     if (photo) {
-      userData.set('photo', photo);
+      userData.set('photo', photoPreview);
     }
 
     update(token, userData).then(data => {
@@ -102,10 +101,16 @@ const ProfileUpdate = () => {
         <Input type="file" onChange={handleChange('photo')} accept="image/*" hidden />
       </SecondaryButtonLabel>
 
-      <FormGroup>
-        <Label htmlFor="username" className="text-muted">Username</Label>
-        <Input id="username" onChange={handleChange('username')} value={username} />
-      </FormGroup>
+      <InputGroup className="mb-3 mt-2">
+        <div className="input-group-prepend">
+          <div className="input-group-text">@</div>
+        </div>
+        <Input 
+          type="text"
+          placeholder="Username"
+          onChange={handleChange('username')}
+          value={username} />
+      </InputGroup>
 
       <FormGroup>
         <Label htmlFor="firstName" className="text-muted">First name</Label>

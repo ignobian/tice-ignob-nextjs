@@ -7,8 +7,8 @@ export const userPublicProfile = (username) => {
   .catch(err => console.log(err));
 };
 
-export const getProfile = token => {
-  return fetch(`${API}/user/profile`, {
+export const getUserForEdit = token => {
+  return fetch(`${API}/users/edit`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -20,7 +20,7 @@ export const getProfile = token => {
 };
 
 export const getFollowers = token => {
-  return fetch(`${API}/user/followers`, {
+  return fetch(`${API}/users/followers`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -32,7 +32,7 @@ export const getFollowers = token => {
 }
 
 export const update = (token, user) => {
-  return fetch(`${API}/user/update`, {
+  return fetch(`${API}/users/update`, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
