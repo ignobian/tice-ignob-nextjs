@@ -80,7 +80,7 @@ const CreateUpdateBlog = ({ router }) => {
   }, [router]);
 
   const initUpdateBlog = (blog) => {
-    setCheckedCategories(blog.categories.map(record => record._id));
+    setCheckedCategories(blog.categories.map(record => record.id));
     setTags(blog.tags);
     setTitle(blog.title);
     setBody(blog.body);
@@ -191,44 +191,10 @@ const CreateUpdateBlog = ({ router }) => {
     }
   }
   
-  const handleToggle = (id, option) => {
-    // clear previous error
-    setValues({ ...values, error: '' });
-    if (option === 'category') {
-      // handle category change
-      const clickedCategory = checkedCategories.indexOf(id);
-      const all = [...checkedCategories]
-      // check if it didnt find
-      if (clickedCategory === -1) {
-        // if not, then push into state
-        all.push(id);
-      } else {
-        // if so, then remove from state
-        all.splice(clickedCategory, 1);
-      }
-      setCheckedCategories(all);
-    } else {
-      // handle tag change
-      const clickedTag = checkedTags.indexOf(id);
-      const all = [...checkedTags]
-      // check if it didnt find
-      if (clickedTag === -1) {
-        // if not, then push into state
-        all.push(id);
-      } else {
-        // if so, then remove from state
-        all.splice(clickedTag, 1);
-      }
-      setCheckedTags(all);
-    }
-  }
-
-  // check if category/tag is in array of state
-  const isInState = (id, option) => {
-    if (option === 'category') {
-      return checkedCategories.includes(id);
-    } else {
-      return checkedTags.includes(id);
+  const handleCategory = category => {
+    if (checkedCategories.includes(category)) {
+      const categories = checkedCategories.filter(ccategory => ccategory === category);
+      setCheckedCategories(categories);
     }
   }
   
@@ -244,11 +210,11 @@ const CreateUpdateBlog = ({ router }) => {
   const showSuccess = () => success && <p className="alert alert-success">{success}</p>;
   
   const showCategories = () => (
-    <ul style={{maxHeight: '150px', overflowY: 'scroll'}}>
-      {categories && categories.map((c, i) => (
-        <li key={i} className="list-unstyled">
-          <input checked={isInState(c._id, 'category')} onChange={() => handleToggle(c._id, 'category')} id={c.name} type="checkbox" className="mr-2"/>
-          <label className="form-check-label" htmlFor={c.name}>{c.name}</label>
+    <ul style={{maxHeight: '150px', overflowY: 'scroll', paddingLeft: 23}}>
+      {categories && categories.map(category => (
+        <li key={category.id}>
+          <Input checked={checkedCategories.includes(category)} onChange={() => handleCategory(category)} id={category.name} type="checkbox" className="mr-2"/>
+          <Label className="form-check-label" htmlFor={category.name}>{category.name}</Label>
         </li>
       ))}
     </ul>
