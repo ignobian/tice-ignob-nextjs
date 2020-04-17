@@ -28,24 +28,29 @@ const SignupComponent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setValues({ ...values, loading: true, error: false });
-    const user = { name, email, password };
+    // check if password and confirmation are the same
+    if (password === passwordConfirmation) {
+      setValues({ ...values, loading: true, error: '' });
 
-    preSignup(user)
-    .then(data => {
-      if (data.error) {
-        setValues({ ...values, 
-          error: data.error,
-          loading: false
-        });
-      } else {
-        setValues({...values,
-          loading: false,
-          message: data.message,
-          showForm: false
-        });
+      const user = {
+        username,
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        password
       }
-    });
+
+      preSignup(user).then(data => {
+        if (data.error) {
+          setValues({ ...values, error: data.error, loading: false });
+        } else {
+          setValues({...values, loading: false, message: data.message, showForm: false });
+        }
+      });
+      
+    } else {
+      setValues({ ...values, error: 'Passwords don\'t match', password: '', passwordConfirmation: '' });
+    }
   }
   
   const handleChange = name => (e) => {
