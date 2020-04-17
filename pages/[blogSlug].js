@@ -21,6 +21,7 @@ import { Container, Row, Col } from 'reactstrap';
 import ReportBtn from '../components/ReportBtn';
 import { H1 } from '../components/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Error from '../components/Error';
 
 const Banner = styled.div`
   height: 300px;
@@ -39,7 +40,9 @@ const SocialIconsContainer = styled.div`
   }
 `;
 
-const singleBlog = ({ blog }) => {
+const singleBlog = ({ blog, error }) => {
+  if (error) return <Error content={error} />
+
   const keywords = blog.tags.concat(blog.keywords || []);
   keywords.unshift(blog.title);
 
@@ -48,7 +51,7 @@ const singleBlog = ({ blog }) => {
       <title>{blog.title}</title>
       <meta name="description" content={blog.mdesc} />
       <meta name="keywords" content={keywords.join(',').substr(0, 255)} />
-      <meta name="author" content={blog.postedBy.name} />
+      <meta name="author" content={blog.user.name} />
 
       <link rel="canonical" href={`${DOMAIN}/${blog.slug}`} />
       <meta property="og:title" content={`${blog.title}`} />
@@ -68,7 +71,6 @@ const singleBlog = ({ blog }) => {
   const token = isAuth() ? getCookie('token') : null;
 
   const [related, setRelated] = useState([]);
-  const [error, setError] = useState('');
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -83,8 +85,8 @@ const singleBlog = ({ blog }) => {
 
   const initImpression = () => {
     // add an impression to the backend
-    const blogId = blog._id;
-    const blogPostedById = blog.postedBy._id;
+    const blogId = blog.id;
+    const blogPostedById = blog.user.id;
     addImpression(blogId, blogPostedById, token).then(data => {
       if (data.error) {
         console.log(data.error);
@@ -95,7 +97,7 @@ const singleBlog = ({ blog }) => {
   const loadRelated = () => {
     listRelated(blog).then(data => {
       if (data.error) {
-        console.log(err);
+        console.log(data.error);
       } else {
         setRelated(data);
       }
@@ -116,8 +118,8 @@ const singleBlog = ({ blog }) => {
 
   const handleShare = (type, link) => e => {
     // add a share to the backend
-    const blogId = blog._id;
-    const blogPostedById = blog.postedBy._id;
+    const blogId = blog.id;
+    const blogPostedById = blog.user.id;
     addShare(type, blogId, blogPostedById, token).then(data => {
       if (data.error) {
         console.log(data.error);
@@ -134,14 +136,14 @@ const singleBlog = ({ blog }) => {
 
   const showComments = () => (
     <div className="w-100">
-      <DisqusThread id={blog._id} title={blog.title} path={`/blog/${blog.slug}`} />
+      <DisqusThread id={blog.id} title={blog.title} path={`/blog/${blog.slug}`} />
     </div>
   )
 
   const showCategories = blog => (
     <div className="d-flex flex-wrap">
-      {blog.categories.map((c, i) => (
-        <Link key={i} href={`/categories/${c.slug}`}>
+      {blog.categories.map(c => (
+        <Link key={c.id} href={`/categories/${c.slug}`}>
           <CategoryBtn style={{fontSize: 17}} className="m-0 mr-2"># {c.name}</CategoryBtn>
         </Link>
       ))}
@@ -150,23 +152,23 @@ const singleBlog = ({ blog }) => {
   
   const showTags = blog => (
     <div className="d-flex flex-wrap mt-2">
-      {blog.tags.map((t, i) => (
-        <Link key={i} href={`/tags/${t}`}>
-          <TagBtn className="m-0 mr-2">{t}</TagBtn>
+      {blog.tags.map(t => (
+        <Link key={t.id} href={`/tags/${t.slug}`}>
+          <TagBtn className="m-0 mr-2">{t.name}</TagBtn>
         </Link>
       ))}
     </div>
   );
 
   const showRelated = blogs => (
-    blogs.map((b, i) => (
-      <RelatedBlog key={i} blog={b} />
+    blogs.map(b => (
+      <RelatedBlog key={b.id} blog={b} />
     ))
   );
 
   const showSocialIcons = () => {
     const url = `${DOMAIN}/${blog.slug}`;
-    const twitterLink = `https://twitter.com/intent/tweet?text=${blog.title} by @${blog.postedBy.username} ${url}`;
+    const twitterLink = `https://twitter.com/intent/tweet?text=${blog.title} by @${blog.user.username} ${url}`;
     const linkedinLink = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
     const facebookLink = `https://www.facebook.com/v3.3/dialog/share?app_id=${FB_APP_ID}&${url}&display=page&redirect_uri=${url}?facebook=true`
     return (
@@ -180,10 +182,10 @@ const singleBlog = ({ blog }) => {
 
   const showAuthor = (user) => (
     <div className="d-flex my-3">
-      <Avatar className="mr-3" src={`${API}/user/photo/${user.uniqueUsername}`} onError={setDefaultSrc} />
+      <Avatar className="mr-3" src={`${API}/user/photo/${user.username}`} onError={setDefaultSrc} />
       <div className="flex-grow-1">
         <div className="d-md-inline">
-          <Link href={`/profile/${user.uniqueUsername}`}><DefaultLink>{user.username}</DefaultLink></Link>
+          <Link href={`/profile/${user.username}`}><DefaultLink>{user.username}</DefaultLink></Link>
           <span className="ml-2">| <FollowButton noborder user={user} /></span>
         </div>
         <div className="d-md-inline mr-md-4">
@@ -218,7 +220,7 @@ const singleBlog = ({ blog }) => {
             <Row>
 
               <Col xs="12" md={{size: 10, offset: 1}}>
-                {showAuthor(blog.postedBy)}
+                {showAuthor(blog.user)}
               </Col>
 
 
@@ -271,7 +273,7 @@ const singleBlog = ({ blog }) => {
 singleBlog.getInitialProps = ({ query }) => {
   return getBlog(query.blogSlug).then(data => {
     if (data.error) {
-      console.log(data.error);
+      return { error: data.error }
     } else {
       return { blog: data }
     }
