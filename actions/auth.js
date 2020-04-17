@@ -30,7 +30,7 @@ export const preSignup = (user) => {
 };
 
 export const signup = token => {
-  return fetch(`${API}/signup`, {
+  return fetch(`${API}/registrations`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

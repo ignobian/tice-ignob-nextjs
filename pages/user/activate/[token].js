@@ -47,7 +47,7 @@ const ActivateAccount = ({ router }) => {
                 <h5 className="mt-5">Getting things ready...</h5>
               ) : (
                 <>
-                  <p className="text-muted mt-5 mb-3">Something went wrong...</p>
+                  <p className="text-muted mt-5 mb-3">{error}</p>
                   <p className="text-muted">Please <Link href="/signup"><DefaultLink>sign up</DefaultLink></Link> again</p>
                 </>
               )}
