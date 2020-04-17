@@ -7,15 +7,16 @@ import { API } from '../../config';
 import { SecondaryButtonLabel, Button } from '../Button';
 import { DisplayMd, DisplaySmallerThanMd } from '../responsive/Display';
 import Loading from '../Loading';
+import { Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
 
 const ProfileUpdate = () => {
   const [values, setValues] = useState({
     username: '',
-    uniqueUsername: '',
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     about: '',
-    error: false,
+    error: '',
     success: false,
     loading: false,
     photo: '',
@@ -23,7 +24,7 @@ const ProfileUpdate = () => {
   });
 
   const token = getCookie('token');
-  const { username, uniqueUsername, name, email, about, error, success, loading, photo, photoPreview } = values;
+  const { username, firstName, lastName, email, about, error, success, loading, photo, photoPreview } = values;
 
   const init = () => {
     getProfile(token).then(data => {
@@ -81,71 +82,72 @@ const ProfileUpdate = () => {
     });
   }
 
-  const showError = () => error && <div className="alert alert-danger">{error}</div>
-  const showSuccess = () => success && <div className="alert alert-success">{success}</div>
+  const showError = () => error && <Error content={error} />
+  const showSuccess = () => success && <Message color='success' content={success} />
   const showLoading = () => loading && <Loading/>
 
   const showProfilePhotoPreview = () => {
     if (photoPreview) {
       return <img width="150" className="p-3" src={photoPreview} alt=""/>
     } else {
-      return <img width="150" className="p-3" src={`${API}/user/photo/${uniqueUsername}`} alt=""/>
+      return <img width="150" className="p-3" src={`${API}/user/photo/${username}`} alt=""/>
     }
   }
 
   const showForm = () => (
-    <form onSubmit={handleSubmit} className="mt-4">
+    <Form onSubmit={handleSubmit} className="mt-4">
 
       <SecondaryButtonLabel>
         Upload profile photo
-        <input type="file" onChange={handleChange('photo')} accept="image/*" hidden />
+        <Input type="file" onChange={handleChange('photo')} accept="image/*" hidden />
       </SecondaryButtonLabel>
 
-      <div className="form-group">
-        <label htmlFor="username" className="text-muted">Username</label>
-        <input id="username" onChange={handleChange('username')} value={username} type="text" className="form-control" />
-      </div>
+      <FormGroup>
+        <Label htmlFor="username" className="text-muted">Username</Label>
+        <Input id="username" onChange={handleChange('username')} value={username} />
+      </FormGroup>
 
-      <div className="form-group">
-        <label htmlFor="name" className="text-muted">Name</label>
-        <input id="name" onChange={handleChange('name')} value={name} type="text" className="form-control" />
-      </div>
+      <FormGroup>
+        <Label htmlFor="firstName" className="text-muted">First name</Label>
+        <Input id="firstName" onChange={handleChange('firstName')} value={firstName} />
+      </FormGroup>
 
-      <div className="form-group">
-        <label htmlFor="email" className="text-muted">Email</label>
-        <input id="email" onChange={handleChange('email')} value={email} type="email" className="form-control" />
-      </div>
+      <FormGroup>
+        <Label htmlFor="lastName" className="text-muted">Last name</Label>
+        <Input id="lastName" onChange={handleChange('lastName')} value={lastName} />
+      </FormGroup>
 
-      <div className="form-group">
-        <label htmlFor="about" className="text-muted">About</label>
-        <textarea id="about" value={about} onChange={handleChange('about')} className="form-control"></textarea>
-      </div>
+      <FormGroup>
+        <Label htmlFor="email" className="text-muted">Email</Label>
+        <Input id="email" onChange={handleChange('email')} value={email} type="email" />
+      </FormGroup>
+
+      <FormGroup>
+        <Label htmlFor="about" className="text-muted">About</Label>
+        <Input type="textarea" id="about" value={about} onChange={handleChange('about')} />
+      </FormGroup>
 
       <Button type="submit">Update</Button>
-    </form>
+    </Form>
   )
 
   return (
-    <div className="container">
-      <div className="row mb-5">
-        <div className="col-md-4">
-          <DisplaySmallerThanMd className="my-4">
-            <h2>Update profile</h2>
-          </DisplaySmallerThanMd>
+    <Container>
+      <Row className="mb-5">
+        <Col xs="12" md="4">
+          <h2 className="d-block d-md-none my-4">Update profile</h2>
           {showProfilePhotoPreview()}
-        </div>
+        </Col>
 
-        <div className="col-md-8">
-          <DisplayMd className="my-4">
-            <h2>Update profile</h2>
-          </DisplayMd>
+        <Col xs="12" md="8">
+          <h2 className="d-none d-md-block my-4">Update profile</h2>
           {showError()}
           {showSuccess()}
           {showLoading()}
           {showForm()}
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   )
 }
 
