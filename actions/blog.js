@@ -34,7 +34,7 @@ export const listBlogsWithCategoriesAndTags = (skip, limit) => {
 };
 
 export const getBlog = slug => {
-  return fetch(`${API}/blog/${slug}`)
+  return fetch(`${API}/blogs/${slug}`)
     .then(res => res.json())
     .catch(err => console.log(err))
 }

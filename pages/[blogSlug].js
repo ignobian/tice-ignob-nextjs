@@ -267,15 +267,15 @@ const singleBlog = ({ blog }) => {
   )
 };
 
-// // ssr
-// singleBlog.getInitialProps = ({ query }) => {
-//   return getBlog(query.blogSlug).then(data => {
-//     if (data.error) {
-//       console.log(data.error);
-//     } else {
-//       return { blog: data }
-//     }
-//   });
-// }
+// ssr
+singleBlog.getInitialProps = ({ query }) => {
+  return getBlog(query.blogSlug).then(data => {
+    if (data.error) {
+      console.log(data.error);
+    } else {
+      return { blog: data }
+    }
+  });
+}
 
 export default singleBlog;
