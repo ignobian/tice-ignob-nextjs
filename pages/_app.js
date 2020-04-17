@@ -3,6 +3,8 @@ import App from 'next/app';
 import { config, library } from '@fortawesome/fontawesome-svg-core';
 config.autoAddCss = false; // skip auto adding
 
+import { wakeUp } from '../actions/general';
+
 // import icons
 import { faFacebookSquare, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faSearch, faShareAlt } from '@fortawesome/free-solid-svg-icons';
@@ -18,6 +20,12 @@ library.add(
 );
 
 class MyApp extends App {
+  componentDidMount() {
+    wakeUp().then(data => {
+      console.log(data);
+    });
+  }
+
   render() {
     const { Component, pageProps } = this.props;
     return <Component {...pageProps} />
