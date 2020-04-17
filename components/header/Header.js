@@ -10,7 +10,7 @@ import Search from '../blog/Search';
 import DropdownMenu from './DropdownMenu';
 import styled from 'styled-components';
 import { ButtonLink, NoButton } from '../Button';
-import { Avatar } from '../Avatar';
+import { Image, Transformation } from 'cloudinary-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // display the progress bar at the top
@@ -77,6 +77,17 @@ const Header = (props) => {
     )
   )
 
+  const showAvatar = user => (
+    user.photo ? (
+      <Image width="40" height="40" style={{borderRadius: '50%', objectFit: 'cover'}} publicId={user.photo.key}>
+        <Transformation width="300" crop="fill" />
+      </Image>
+    ) : (
+      // show default image
+      <img src="/images/default.png" width="40" height="40" style={{borderRadius: '50%'}} alt={user.username}/>
+    )
+  )
+
   return (
     <>
       <Navbar>
@@ -93,9 +104,7 @@ const Header = (props) => {
           </>
         )}
 
-        {isAuth() && (
-          <Avatar src={`${API}/user/photo/${isAuth().uniqueUsername}`} onError={setDefaultUrl} alt="avatar" onClick={toggleDropdown} />
-        )}
+        {isAuth() && showAvatar(isAuth())}
 
         </Navbar>
 

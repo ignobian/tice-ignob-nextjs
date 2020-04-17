@@ -72,12 +72,14 @@ const ProfileUpdate = () => {
       userData.set('photo', photoPreview);
     }
 
+    window.scrollTo(0,0);
+
     update(token, userData).then(data => {
       if (data.error) {
         setValues({ ...values, error: data.error, loading: false, success: false });
       } else {
-        updateUser(data, () => {
-          setValues({ ...values , loading: false, error: '', success: 'User successfully updated!' });
+        updateUser(data.user, () => {
+          setValues({ ...values , loading: false, error: '', success: data.message });
         });        
       }
     });
