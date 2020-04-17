@@ -54,8 +54,8 @@ const CreateUpdateBlog = ({ router }) => {
     success: '',
     loading: false,
     photo: '',
-    tagField: '',
     photoPreview: '',
+    tagField: '',
     hidePublishButton: false,
     isEdit: false,
     slug: ''
@@ -101,19 +101,20 @@ const CreateUpdateBlog = ({ router }) => {
     e.preventDefault();
     // set loading to true
     setValues({ ...values, loading: true });
-    // create the formdata object
-    const data = new FormData();
-    data.set('title', title);
-    data.set('body', body);
-    data.set('categories', checkedCategories);
-    data.set('tags', tags);
+    // create the object
+    const blog = {
+      title,
+      body,
+      categories: checkedCategories,
+      tags
+    }
     if (photo) {
-      data.set('photo', photo);
+      blog.photo = photoPreview;
     }
 
     if (isEdit === false) {
       // publish the blog if create
-      createBlog(data, token).then(data => {
+      createBlog(blog, token).then(data => {
         if (data.error) {
           setValues({ ...values, loading: false, error: data.error });
         } else {
@@ -128,7 +129,7 @@ const CreateUpdateBlog = ({ router }) => {
       });
     } else {
       // update blog
-      updateBlog(data, token, slug).then(data => {
+      updateBlog(blog, token, slug).then(data => {
         if (data.error) {
           setValues({ ...values, loading: false, error: data.error });
         } else {

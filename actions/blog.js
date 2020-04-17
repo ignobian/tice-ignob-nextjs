@@ -4,13 +4,14 @@ import queryString from 'query-string';
 import { handleResponse } from './auth';
 
 export const createBlog = (blog, token) => {
-  return fetch(`${API}/blog`, {
+  return fetch(`${API}/blogs`, {
     method: 'POST',
     headers: {
+      'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: blog
+    body: JSON.stringify(blog)
   })
   .then(res => {
     handleResponse(res);
