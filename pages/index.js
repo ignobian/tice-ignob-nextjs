@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Layout from "../components/Layout";
 import Head from 'next/head';
 import Link from 'next/link';
@@ -11,6 +12,7 @@ import { DefaultLink } from "../components/Link";
 import FeaturedBlogs from '../components/home/FeaturedBlogs';
 import { list } from "../actions/blog";
 import { isAuth } from "../actions/auth";
+import { wakeUp } from "../actions/general";
 import { H2 } from '../components/Typography';
 
 const Index = ({ categories, tags, blogs }) => {
@@ -32,6 +34,13 @@ const Index = ({ categories, tags, blogs }) => {
       <meta name="robots" content="index,follow" />
     </Head>
   );
+
+  useEffect(() => {
+    // wake the backend up
+    wakeUp().then(data => {
+      console.log(data);
+    });
+  }, []);
 
   return (
     <>
