@@ -49,7 +49,7 @@ const ProfileUpdate = () => {
       const reader = new FileReader();
 
       reader.onload = (e) => {
-        setValues({ ...values, photo: value, photoPreview: e.target.result });
+        setValues({ ...values, photo: value, photoPreview: e.target.result, cloudinaryPhoto: '' });
       }
       reader.readAsDataURL(value);
     } else {
@@ -87,16 +87,10 @@ const ProfileUpdate = () => {
   const showSuccess = () => success && <Message color='success' content={success} />
   const showLoading = () => loading && <Loading/>
 
-  const showProfilePhotoPreview = () => {
-    if (photoPreview) {
-      return <img width="150" className="p-3" src={photoPreview} alt=""/>
-    } else {
-      return <img width="150" className="p-3" src={`${API}/user/photo/${username}`} alt=""/>
-    }
-  }
+  const showProfilePhotoPreview = () => <img width="150" className="p-2" src={photoPreview} alt=""/>
 
   const showCloudinaryProfilePhoto = () => (
-    <Image width="200" style={{borderRadius: '50%'}} publicId={cloudinaryPhoto.key} >
+    <Image width="150" className="p-2" publicId={cloudinaryPhoto.key} >
       <Transformation width="400" crop="fill" />
     </Image>
   )
@@ -149,14 +143,14 @@ const ProfileUpdate = () => {
       <Row className="mb-5">
         <Col xs="12" md="4">
           <h2 className="d-block d-md-none my-4">Update profile</h2>
+          {showError()}
+          {showSuccess()}
           {showProfilePhotoPreview()}
           {cloudinaryPhoto && showCloudinaryProfilePhoto()}
         </Col>
 
         <Col xs="12" md="8">
           <h2 className="d-none d-md-block my-4">Update profile</h2>
-          {showError()}
-          {showSuccess()}
           {showLoading()}
           {showForm()}
         </Col>
