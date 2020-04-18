@@ -52,7 +52,7 @@ export const list = () => {
 }
 
 export const removeBlog = (slug, token) => {
-  return fetch(`${API}/blog/${slug}`, {
+  return fetch(`${API}/blogs/${slug}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
