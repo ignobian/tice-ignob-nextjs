@@ -83,8 +83,7 @@ const singleBlog = ({ blog, serverError }) => {
   const initImpression = () => {
     // add an impression to the backend
     const blogId = blog.id;
-    const blogPostedById = blog.user.id;
-    addImpression(blogId, blogPostedById, token).then(data => {
+    addImpression(blogId, token).then(data => {
       if (data.error) {
         console.log(data.error);
       }
