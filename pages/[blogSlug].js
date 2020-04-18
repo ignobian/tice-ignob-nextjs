@@ -104,7 +104,7 @@ const singleBlog = ({ blog, serverError }) => {
   const handleClap = () => {
       addClap(blog, token).then(data => {
       if (data.error) {
-        setError(data.error);
+        console.log(data.error);
       } else {
         // update the clap with plus one
         setError('');
