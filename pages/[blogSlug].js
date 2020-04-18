@@ -22,6 +22,7 @@ import ReportBtn from '../components/ReportBtn';
 import { H1 } from '../components/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Error from '../components/Error';
+import { Image, Transformation } from 'cloudinary-react';
 
 const Banner = styled.div`
   height: 300px;
@@ -75,13 +76,9 @@ const singleBlog = ({ blog, error }) => {
 
   useEffect(() => {
     loadRelated();
-    setClaps();
+    setCount(blog.claps);
     initImpression();
   }, []);
-
-  const setClaps = () => {
-    setCount(blog.claps.length);
-  }
 
   const initImpression = () => {
     // add an impression to the backend
@@ -213,7 +210,9 @@ const singleBlog = ({ blog, error }) => {
       <Layout>
         <main>
           <Banner>
-            <img src={`${API}/blog/photo/${blog.slug}`} alt={blog.title} />
+            <Image publicId={blog.photo.key} alt={blog.title}>
+              <Transformation width='1920' crop="fill" />
+            </Image>
           </Banner>
 
           <Container>
