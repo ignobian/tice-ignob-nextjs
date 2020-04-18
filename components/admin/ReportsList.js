@@ -51,7 +51,7 @@ const ReportsList = () => {
     const answer = window.confirm(`Are you sure?`);
 
     if (answer) {
-      removeReport(report._id, token).then(data => {
+      removeReport(report.id, token).then(data => {
         if (data.error) {
           console.log(data.error);
         } else {
@@ -97,10 +97,10 @@ const ReportsList = () => {
             </div>
           </div>
 
+          <Button href={`/user/update/${report.blog.slug}`} className="mr-4" outline color="info">Update post</Button>
 
         </div>
 
-        <Button href={`/user/update/${report.blog.slug}`} className="mr-4" outline color="info">Update post</Button>
         <SecondaryButton onClick={onRemoveReport(report)} style={{borderRadius: '50%'}}>X</SecondaryButton>
 
       </ReportItem>
