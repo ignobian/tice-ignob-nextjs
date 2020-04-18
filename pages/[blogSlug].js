@@ -116,8 +116,7 @@ const singleBlog = ({ blog, error }) => {
   const handleShare = (type, link) => e => {
     // add a share to the backend
     const blogId = blog.id;
-    const blogPostedById = blog.user.id;
-    addShare(type, blogId, blogPostedById, token).then(data => {
+    addShare(type, blogId, token).then(data => {
       if (data.error) {
         console.log(data.error);
       } else {
