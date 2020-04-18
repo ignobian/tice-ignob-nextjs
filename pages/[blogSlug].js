@@ -102,15 +102,19 @@ const singleBlog = ({ blog, serverError }) => {
   }
 
   const handleClap = () => {
+    if (token) {
       addClap(blog, token).then(data => {
-      if (data.error) {
-        console.log(data.error);
-      } else {
-        // update the clap with plus one
-        setError('');
-        setCount(count + 1);
-      }
-    });
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          // update the clap with plus one
+          setError('');
+          setCount(count + 1);
+        }
+      });
+    } else {
+      console.log('Please login to perform this action')
+    }
   }
 
   const handleShare = (type, link) => e => {

@@ -13,7 +13,7 @@ export const addShare = (type, blogId, token) => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ type, blog_id: blogId })
+    body: JSON.stringify({ share_type: type, blog_id: blogId })
   })
   .then(res => res.json())
   .catch(err => console.log(err));
