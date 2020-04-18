@@ -10,6 +10,7 @@ import { API } from '../../config';
 import { DefaultLink } from '../Link';
 import { SecondaryButton } from '../Button';
 import { Button } from 'reactstrap';
+import { Image, Transformation } from 'cloudinary-react';
 
 const ReportItem = styled.li`
   display: flex;
@@ -63,35 +64,45 @@ const ReportsList = () => {
   const showReports = () => (
     reports.map(report => (
       <ReportItem>
-        <img style={{ borderRadius: 5, width: 50, marginRight: 20 }} src={`${API}/blog/photo/${report.blog.slug}`} alt={report.blog.title} />
-        <Link href={`/${report.blog.slug}`}>
-          <DefaultLink>
-            <h5 className="m-0 pr-2">{report.blog.title.length > 18 ? report.blog.title.substring(0, 18) + '..' : report.blog.title}</h5>
-          </DefaultLink>
-        </Link>
+        <Image style={{borderRadius: 5, width: 50, marginRight: 20}} publicId={report.blog.photo && report.blog.photo.key}>
+          <Transformation width="200" crop="fill" />
+        </Image>
 
-        <p className="m-0 text-muted flex-grow-1"><i>({report.name})</i></p>
+        <div>
+          <Link href={`/${report.blog.slug}`}>
+            <DefaultLink>
+              <h5 className="m-0 pr-2">{report.blog.title.length > 18 ? report.blog.title.substring(0, 18) + '..' : report.blog.title}</h5>
+            </DefaultLink>
+          </Link>
 
-        <div className="mr-4">
-          <p className="mb-1 text-muted">Posted by:</p>
-          <div className="d-flex align-items-center">
-            <img style={{ borderRadius: '50%', width: 50, marginRight: 10 }} src={`${API}/user/photo/${report.blog.postedBy.uniqueUsername}`} />
-            <Link href={`/profile/${report.blog.postedBy.uniqueUsername}`}><DefaultLink>{report.blog.postedBy.username}</DefaultLink></Link>
+          <p className="m-0 text-muted flex-grow-1"><i>({report.name})</i></p>
+
+          <div className="mr-4">
+            <p className="mb-1 text-muted">Posted by:</p>
+            <div className="d-flex align-items-center">
+              <Image style={{borderRadius: '50%', width: 30, marginRight: 10}} publicId={report.blog.user.photo && report.blog.user.photo.key}>
+                <Transformation width="200" crop="fill" />
+              </Image>
+              <Link href={`/profile/${report.blog.user.username}`}><DefaultLink>{report.blog.user.username}</DefaultLink></Link>
+            </div>
           </div>
+
+          <div className="mr-4">
+            <p className="mb-1 text-muted">Reported by:</p>
+            <div className="d-flex align-items-center">
+              <Image style={{borderRadius: '50%', width: 30, marginRight: 10}} publicId={report.blog.user.photo && report.blog.user.photo.key}>
+                <Transformation width="200" crop="fill" />
+              </Image>
+              <Link href={`/profile/${report.user.username}`}><DefaultLink>{report.user.username}</DefaultLink></Link>
+            </div>
+          </div>
+
+
         </div>
 
         <Button href={`/user/update/${report.blog.slug}`} className="mr-4" outline color="info">Update post</Button>
-
-        <div className="mr-4">
-          <p className="mb-1 text-muted">Reported by:</p>
-          <div className="d-flex align-items-center">
-            <img style={{ borderRadius: '50%', width: 30, marginRight: 10 }} src={`${API}/user/photo/${report.reportedBy.uniqueUsername}`} />
-            <Link href={`/profile/${report.reportedBy.uniqueUsername}`}><DefaultLink>{report.reportedBy.username}</DefaultLink></Link>
-          </div>
-        </div>
-
-
         <SecondaryButton onClick={onRemoveReport(report)} style={{borderRadius: '50%'}}>X</SecondaryButton>
+
       </ReportItem>
     ))
   )

@@ -16,7 +16,7 @@ export const createReport = (data, token) => {
   return fetch(`${API}/reports`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${gtoken}`,
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
