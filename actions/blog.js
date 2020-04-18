@@ -67,13 +67,13 @@ export const removeBlog = (slug, token) => {
 };
 
 export const updateBlog = (blog, token, slug) => {
-  return fetch(`${API}/blog/${slug}`, {
+  return fetch(`${API}/blogs/${slug}`, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: blog
+    body: JSON.stringify(blog)
   })
   .then(res => () => {
     handleResponse(res);
