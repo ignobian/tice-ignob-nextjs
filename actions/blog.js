@@ -91,7 +91,7 @@ export const listSearch = (params) => {
 }
 
 export const listFromUser = token => {
-  return fetch(`${API}/user/blogs`, {
+  return fetch(`${API}/blogs/from-self`, {
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`
