@@ -12,7 +12,7 @@ import RelatedBlog from '../components/blog/RelatedBlog';
 import DisqusThread from '../components/DisqusThread';
 import { DefaultLink } from '../components/Link';
 import styled from 'styled-components';
-import { Avatar } from '../components/Avatar';
+import Error from '../components/Error';
 import { ClapImg } from '../components/ClapImg';
 import { CategoryBtn, TagBtn, NoButton } from '../components/Button';
 import { isAuth, getCookie } from '../actions/auth';
@@ -21,7 +21,6 @@ import { Container, Row, Col } from 'reactstrap';
 import ReportBtn from '../components/ReportBtn';
 import { H1 } from '../components/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Error from '../components/Error';
 import { Image, Transformation } from 'cloudinary-react';
 
 const Banner = styled.div`
@@ -41,8 +40,8 @@ const SocialIconsContainer = styled.div`
   }
 `;
 
-const singleBlog = ({ blog, error }) => {
-  if (error) return <Error content={error} />
+const singleBlog = ({ blog, serverError }) => {
+  if (serverError) return <Error content={serverError} />
 
   const keywords = blog.tags.concat(blog.keywords || []);
   keywords.unshift(blog.title);
@@ -73,6 +72,7 @@ const singleBlog = ({ blog, error }) => {
 
   const [related, setRelated] = useState([]);
   const [count, setCount] = useState(0);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     loadRelated();
@@ -102,7 +102,7 @@ const singleBlog = ({ blog, error }) => {
   }
 
   const handleClap = () => {
-      addClap(blog, isAuth()).then(data => {
+      addClap(blog, token).then(data => {
       if (data.error) {
         setError(data.error);
       } else {
@@ -124,10 +124,6 @@ const singleBlog = ({ blog, error }) => {
         window.open(link, '_blank');
       }
     });
-  }
-
-  const setDefaultSrc = e => {
-    e.target.src = '/images/default.png';
   }
 
   const showComments = () => (
@@ -178,7 +174,9 @@ const singleBlog = ({ blog, error }) => {
 
   const showAuthor = (user) => (
     <div className="d-flex my-3">
-      <Avatar className="mr-3" src={`${API}/user/photo/${user.username}`} onError={setDefaultSrc} />
+      <Image style={{borderRadius: '50%', width: 40, height: 40, objectFit: 'cover'}} publicId={user.photo && user.photo.key} className="mr-3">
+        <Transformation width="100" crop="fill" />
+      </Image>
       <div className="flex-grow-1">
         <div className="d-md-inline">
           <Link href={`/profile/${user.username}`}><DefaultLink>{user.username}</DefaultLink></Link>
@@ -203,6 +201,8 @@ const singleBlog = ({ blog, error }) => {
     </div>
   );
 
+  const showError = () => error &&  <Error content={error} />
+
   return (
     <>
       {head()}
@@ -213,6 +213,8 @@ const singleBlog = ({ blog, error }) => {
               <Transformation width='1920' crop="fill" />
             </Image>
           </Banner>
+
+          {showError()}
 
           <Container>
             <Row>

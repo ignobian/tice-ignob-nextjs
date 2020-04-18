@@ -108,15 +108,14 @@ export const listFromUser = token => {
   .catch(err => console.log(err))
 }
 
-export const addClap = (blog, user) => {
-  if (user) {
+export const addClap = (blog, token) => {
+  if (token) {
     return fetch(`${API}/blogs/${blog.slug}/add-clap`, {
       method: 'PUT',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ user_id: user.id })
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+      }
     })
     .then(res => res.json())
     .catch(err => console.log(err))
