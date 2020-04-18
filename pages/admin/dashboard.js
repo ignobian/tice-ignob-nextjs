@@ -41,12 +41,8 @@ const Dashboard = () => {
         setValues({ ...values, error: data.error });
       } else {
         // convert impressions and shares to just the length of the array
-        const users = data.map(user => {
-          user.impressions = user.impressions.length;
-          user.shares = user.shares.length;
-          return user
-        });
-
+        const users = data;
+        
         getReports(token).then(data => {
           if (data.error) {
             setValues({ ...values, error: data.error });
