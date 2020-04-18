@@ -24,7 +24,7 @@ const Blog = ({ router }) => {
                 <h2 className="pl-3">Update blog</h2>
               </div>
               <div className="col-12">
-                <BlogCreateUpdate/>
+                <BlogCreateUpdate slug={router.query.slug} />
               </div>
             </div>
           </div>

@@ -3,6 +3,7 @@ import Router, { withRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import stripHtml from 'string-strip-html';
 import { Input, Label, FormGroup, Form, Container, Row, Col } from 'reactstrap';
+import { Image, Transformation } from 'cloudinary-react';
 
 // components
 import { Button, SecondaryButtonLabel } from '../Button';
@@ -23,7 +24,7 @@ import '../../node_modules/react-quill/dist/quill.snow.css';
 import { API } from '../../config';
 import Loading from '../Loading';
 
-const CreateUpdateBlog = ({ router }) => {
+const CreateUpdateBlog = ({ slug }) => {
   // local storage fetching
   const titleFromLS = () => {
     if (typeof window === 'undefined') return '';
@@ -55,19 +56,19 @@ const CreateUpdateBlog = ({ router }) => {
     loading: false,
     photo: '',
     photoPreview: '',
+    cloudinaryPhoto: null,
     tagField: '',
     hidePublishButton: false,
-    isEdit: false,
-    slug: ''
+    isEdit: false
   });
 
-  const { error, tagField, sizeError, success, loading, hidePublishButton, photo, photoPreview, isEdit, slug } = values;
+  const { error, tagField, sizeError, success, loading, hidePublishButton, cloudinaryPhoto, photo, photoPreview, isEdit } = values;
   const token = getCookie('token');
 
   useEffect(() => {
     // check if its an edit blog
-    if (router.query.slug) {
-      getBlog(router.query.slug).then(data => {
+    if (slug) {
+      getBlog(slug).then(data => {
         if (data.error) {
           setValues({ ...values, error: data.error });
         } else {
@@ -77,14 +78,14 @@ const CreateUpdateBlog = ({ router }) => {
       })
     }
     initCategories();
-  }, [router]);
+  }, [slug]);
 
-  const initUpdateBlog = (blog) => {
-    setCheckedCategories(blog.categories.map(record => record.id));
-    setTags(blog.tags);
+  const initUpdateBlog = blog => {
+    setCheckedCategories(blog.categories);
+    setTags(blog.tags.map(t => t.name));
     setTitle(blog.title);
     setBody(blog.body);
-    setValues({...values, isEdit: true, slug: blog.slug});
+    setValues({...values, isEdit: true, cloudinaryPhoto: blog.photo || null });
   }
 
   const initCategories = () => {
@@ -142,7 +143,7 @@ const CreateUpdateBlog = ({ router }) => {
       const reader = new FileReader();
 
       reader.onload = (e) => {
-        setValues({ ...values, photo: value, photoPreview: e.target.result });
+        setValues({ ...values, photo: value, photoPreview: e.target.result, cloudinaryPhoto: null });
       }
       reader.readAsDataURL(value);
     }
@@ -161,7 +162,7 @@ const CreateUpdateBlog = ({ router }) => {
 
   const handleTag = (value) => {
     const typedCharacter = value.substring(value.length - 1);
-    console.log(typedCharacter)
+
     if (typedCharacter === ',') {
       const tag = value.substring(0, value.length - 1);
       setTags(tags.concat(tag));
@@ -271,11 +272,18 @@ const CreateUpdateBlog = ({ router }) => {
     <FormGroup>
       <div className="featured-image-container">
         {showFeaturedImage()}
+        {showCloudinaryImage()}
       </div>
       <small className="text-muted">Max size: 1mb</small><br/>
       <SecondaryButtonLabel htmlFor="photo">Upload featured image</SecondaryButtonLabel>
       <input id="photo" onChange={handleChange('photo')} type="file" accept="image/*" hidden />
     </FormGroup>
+  )
+
+  const showCloudinaryImage = () => (
+    <Image publicId={cloudinaryPhoto && cloudinaryPhoto.key} height="100">
+      <Transformation width="200" crop="fill" />
+    </Image>
   )
 
   const showFeaturedImage = () => {
@@ -316,4 +324,4 @@ const CreateUpdateBlog = ({ router }) => {
   );
 }
 
-export default withRouter(CreateUpdateBlog);
+export default CreateUpdateBlog;
