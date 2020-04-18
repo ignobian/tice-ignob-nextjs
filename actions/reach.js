@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import { API } from '../config';
 
 export const addImpression = (blogId, token) => {
-  let route = '/impressions/add-not-signed-in';
+  let route = '/impressions/not-signed-in';
   if (token) {
     route = '/impressions';
   }
