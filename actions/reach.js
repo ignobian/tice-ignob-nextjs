@@ -1,10 +1,10 @@
 import fetch from 'isomorphic-fetch';
 import { API } from '../config';
 
-export const addImpression = (blogId, postedById, token) => {
-  let route = '/reach-not-signed-in';
+export const addImpression = (blogId, token) => {
+  let route = '/impressions/add-not-signed-in';
   if (token) {
-    route = '/reach';
+    route = '/impressions';
   }
   return fetch(`${API}${route}`, {
     method: 'POST',
@@ -13,7 +13,7 @@ export const addImpression = (blogId, postedById, token) => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ blogId, postedById })
+    body: JSON.stringify({ blog_id: blogId })
   })
   .then(res => res.json())
   .catch(err => console.log(err));
