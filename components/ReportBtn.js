@@ -4,6 +4,7 @@ import { Modal, ModalHeader, ModalBody, Form, FormGroup, Input, Label } from 're
 import { isAuth, getCookie } from '../actions/auth';
 import Router from 'next/router';
 import Loading from './Loading';
+import Message from './Message';
 import { createReport } from '../actions/report';
 
 const ReportBtn = ({ blog }) => {
@@ -36,7 +37,12 @@ const ReportBtn = ({ blog }) => {
 
     setValues({ ...values, loading: true });
 
-    createReport({ blogId: blog._id, name, token }).then(data => {
+    const newReport = {
+      blog_id: blog.id,
+      name
+    }
+
+    createReport(newReport, token).then(data => {
       if (data.error) {
         console.log(data.error);
         setValues({ ...values, loading: false });
@@ -50,7 +56,7 @@ const ReportBtn = ({ blog }) => {
   }
 
   const showLoading = () => loading && <Loading />;
-  const showMessage = () => message && <p className="alert alert-success">{message}</p>;
+  const showMessage = () => message && <Message content={message} color='success' />;
 
   const showForm = () => (
     <Form onSubmit={handleSubmit}>
