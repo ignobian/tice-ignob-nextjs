@@ -62,7 +62,7 @@ export const getUsersForXML = () => {
 }
 
 export const toggleFollower = (userId, token) => {
-  return fetch(`${API}/user/toggle-follower`, {
+  return fetch(`${API}/users/toggle-follower`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
