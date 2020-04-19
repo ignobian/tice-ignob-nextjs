@@ -82,9 +82,8 @@ export const updateBlog = (blog, token, slug) => {
   .catch(err => console.log(err));
 };
 
-export const listSearch = (params) => {
+export const listSearch = params => {
   let query = queryString.stringify({search: params});
-
   return fetch(`${API}/blogs/search?${query}`)
   .then(res => res.json())
   .catch(err => console.log(err))
