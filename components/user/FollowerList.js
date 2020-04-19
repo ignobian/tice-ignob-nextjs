@@ -10,6 +10,7 @@ import Link from 'next/link';
 import FollowButton from '../FollowButton';
 import { H2 } from '../Typography';
 import { Row, Col } from 'reactstrap';
+import { Image, Transformation } from 'cloudinary-react';
 
 const Li = styled.li`
   display: flex;
@@ -50,11 +51,13 @@ const FollowerList = () => {
   const showFollowers = () => (
     followers.map(follower => (
       <Li>
-        <Avatar width="20" height="20" src={`${API}/user/photo/${follower.uniqueUsername}`} />
+        <Image style={{width: 20, height: 20, borderRadius: '50%'}} publicId={follower.photo && follower.photo.key}>
+          <Transformation width="100" />
+        </Image>
         <h5>{follower.username}</h5>
         <Row className="justify-content-end">
           <Col xs="12" md="6" className="d-flex justify-content-end">
-            <Link href={`/profile/${follower.uniqueUsername}`}><ButtonLink>View profile</ButtonLink></Link>
+            <Link href={`/profile/${follower.username}`}><ButtonLink>View profile</ButtonLink></Link>
           </Col>
           <Col xs="12" md="6" className="d-flex justify-content-end mt-2 mt-md-0">
             <FollowButton user={follower} />
