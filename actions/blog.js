@@ -21,7 +21,7 @@ export const createBlog = (blog, token) => {
 };
 
 export const listBlogsWithCategoriesAndTags = (skip, limit) => {
-  return fetch(`${API}/blogs-categories-tags`, {
+  return fetch(`${API}/blogs/with-categories-tags`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

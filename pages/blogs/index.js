@@ -51,7 +51,7 @@ const Blogs = ({ blogs, categories, tags, totalBlogs, blogsLimit, blogsSkip, rou
   }
 
   const loadMoreBtn = () => (
-    size > 0 && size >= limit && <SecondaryButton onClick={loadMore}>Load more</SecondaryButton>
+    size > 0 && size > limit && <SecondaryButton onClick={loadMore}>Load more</SecondaryButton>
   )
 
   const showLoadedBlogs = () => (
