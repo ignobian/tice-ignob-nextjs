@@ -33,7 +33,7 @@ const FollowingFeed = () => {
 
   const [values, setValues] = useState({
     blogs: [],
-    following: '',
+    following: 0,
     loading: false
   });
 
@@ -48,7 +48,7 @@ const FollowingFeed = () => {
         console.log(data.error);
         setValues({ ...values, loading: false })
       } else {
-        setValues({ ...values, blogs: data.blogs.sort(sortBy('-createdAt')), following: data.following, loading: false });
+        setValues({ ...values, blogs: data.blogs, following: data.following, loading: false });
       }
     });
   }, []);
