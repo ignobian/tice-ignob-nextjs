@@ -125,6 +125,7 @@ const UserProfile = ({ user, blogs }) => {
 // ssr
 UserProfile.getInitialProps = ({ query }) => {
   return userPublicProfile(query.username).then(data => {
+    console.log(data);
     if (data.error) {
       console.log(data.error);
     } else {

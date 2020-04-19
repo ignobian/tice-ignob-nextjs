@@ -14,12 +14,13 @@ export const emailContactForm = data => {
   .catch(err => console.log(err));
 };
 
-export const emailBlogAuthorForm = data => {
-  return fetch(`${API}/contact-blog-author`, {
+export const emailBlogAuthorForm = (data, token) => {
+  return fetch(`${API}/users/contact-blog-author`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
     },
     body: JSON.stringify(data)
   })

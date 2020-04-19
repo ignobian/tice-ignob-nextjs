@@ -49,10 +49,10 @@ const FollowButton = ({ user, noborder }) => {
     });
   }
 
-  if (noborder) return <NoButton style={{opacity: (isFollowing || isSelf) ? 0.6 : 1 }} onMouseLeave={toggleHoverText} onMouseEnter={toggleHoverText} onClick={onToggleFollower}>{followText} ({userFollowers})</NoButton>
+  if (noborder) return <NoButton disabled={isSelf} style={{opacity: (isFollowing || isSelf) ? 0.6 : 1 }} onMouseLeave={toggleHoverText} onMouseEnter={toggleHoverText} onClick={onToggleFollower}>{followText} ({userFollowers})</NoButton>
 
   return (
-    <SecondaryButton style={{opacity: (isFollowing || isSelf) ? 0.6 : 1 }} onMouseLeave={toggleHoverText} onMouseEnter={toggleHoverText} onClick={onToggleFollower}>{followText} ({userFollowers})</SecondaryButton>
+    <SecondaryButton disabled={isSelf} style={{opacity: (isFollowing || isSelf) ? 0.6 : 1 }} onMouseLeave={toggleHoverText} onMouseEnter={toggleHoverText} onClick={onToggleFollower}>{followText} ({userFollowers})</SecondaryButton>
   )
 }
 
