@@ -81,6 +81,7 @@ const CreateUpdateBlog = ({ slug }) => {
   }, [slug]);
 
   const initUpdateBlog = blog => {
+    console.log(blog);
     setCheckedCategories(blog.categories);
     setTags(blog.tags.map(t => t.name));
     setTitle(blog.title);
@@ -193,13 +194,6 @@ const CreateUpdateBlog = ({ slug }) => {
     }
   }
   
-  // storage
-  const clearStorage = key => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(key, '');
-    }
-  }
-
   const showLoading = () => loading && <Loading/>
   const showError = () => error && <p className="alert alert-danger">{error}</p>;
   const showSuccess = () => success && <p className="alert alert-success">{success}</p>;
@@ -287,7 +281,7 @@ const CreateUpdateBlog = ({ slug }) => {
   )
 
   const showFeaturedImage = () => {
-    const src = photoPreview ? photoPreview : `${API}/blog/photo/${slug}`;
+    const src = photoPreview ? photoPreview : ``;
     return (
       <img className="mb-2" height="100" src={src} alt=""/>
     );
