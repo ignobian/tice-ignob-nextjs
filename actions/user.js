@@ -76,7 +76,7 @@ export const toggleFollower = (userId, token) => {
 }
 
 export const loadUserStats = token => {
-  return fetch(`${API}/user/stats`, {
+  return fetch(`${API}/users/stats`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
