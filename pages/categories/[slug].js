@@ -3,7 +3,6 @@ import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../../config';
 import Layout from '../../components/Layout';
 import { getCategory } from '../../actions/category';
 import Card from '../../components/blog/Card';
-import sortBy from 'sort-by';
 
 const Category = ({ category, blogs }) => {
   const head = () => (
@@ -12,7 +11,7 @@ const Category = ({ category, blogs }) => {
       <meta name="description" content={`Best programming tutorials on ${category.name}`}/>
 
       <link rel="canonical" href={`${DOMAIN}/categories/${category.slug}`} />
-      <meta property="og:title" content={`Category ${category.title} - ${APP_NAME}`} />
+      <meta property="og:title" content={`Category ${category.name} - ${APP_NAME}`} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={`${DOMAIN}/categories/${category.slug}`} />
       <meta property="og:site_name" content={APP_NAME} />
@@ -57,10 +56,11 @@ const Category = ({ category, blogs }) => {
 // ssr
 Category.getInitialProps = ({ query }) => {
   return getCategory(query.slug).then(data => {
+    console.log(data);
     if (data.error) {
       console.log(data.error);
     } else {
-      return { category: data.category, blogs: data.blogs.sort(sortBy('-createdAt')) }
+      return { category: data.category, blogs: data.blogs }
     }
   });
 }
