@@ -71,6 +71,7 @@ export const updateBlog = (blog, token, slug) => {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
     body: JSON.stringify(blog)

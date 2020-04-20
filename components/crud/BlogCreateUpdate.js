@@ -82,7 +82,7 @@ const CreateUpdateBlog = ({ slug }) => {
 
   const initUpdateBlog = blog => {
     console.log(blog);
-    setCheckedCategories(blog.categories);
+    setCheckedCategories(blog.categories.map(cat => cat.id));
     setTags(blog.tags.map(t => t.name));
     setTitle(blog.title);
     setBody(blog.body);
@@ -107,7 +107,7 @@ const CreateUpdateBlog = ({ slug }) => {
     const blog = {
       title,
       body,
-      categories: checkedCategories.map(category => category.id),
+      categories: checkedCategories,
       tags
     }
     if (photo) {
@@ -186,11 +186,11 @@ const CreateUpdateBlog = ({ slug }) => {
   }
   
   const handleCategory = category => {
-    if (checkedCategories.includes(category)) {
-      const categories = checkedCategories.filter(ccategory => ccategory !== category);
+    if (checkedCategories.includes(category.id)) {
+      const categories = checkedCategories.filter(id => id !== category.id);
       setCheckedCategories(categories);
     } else {
-      setCheckedCategories(checkedCategories.concat(category))
+      setCheckedCategories(checkedCategories.concat(category.id))
     }
   }
   
@@ -202,7 +202,7 @@ const CreateUpdateBlog = ({ slug }) => {
     <ul style={{maxHeight: '150px', overflowY: 'scroll', paddingLeft: 23}}>
       {categories && categories.map(category => (
         <li key={category.id}>
-          <Input checked={checkedCategories.includes(category)} onChange={() => handleCategory(category)} id={category.name} type="checkbox" className="mr-2"/>
+          <Input checked={checkedCategories.includes(category.id)} onChange={() => handleCategory(category)} id={category.name} type="checkbox" className="mr-2"/>
           <Label className="form-check-label" htmlFor={category.name}>{category.name}</Label>
         </li>
       ))}
@@ -275,9 +275,11 @@ const CreateUpdateBlog = ({ slug }) => {
   )
 
   const showCloudinaryImage = () => (
-    <Image publicId={cloudinaryPhoto && cloudinaryPhoto.key} height="100">
-      <Transformation width="200" crop="fill" />
-    </Image>
+    cloudinaryPhoto && (
+      <Image publicId={cloudinaryPhoto && cloudinaryPhoto.key} height="100">
+        <Transformation width="200" crop="fill" />
+      </Image>
+    )
   )
 
   const showFeaturedImage = () => {
