@@ -32,7 +32,7 @@ export const getTags = () => {
 };
 
 export const getTag = slug => {
-  return fetch(`${API}/tag/${slug}`)
+  return fetch(`${API}/tags/${slug}`)
   .then(res => res.json())
   .catch(err => console.log(err));
 };
