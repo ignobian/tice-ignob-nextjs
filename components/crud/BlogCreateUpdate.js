@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Router, { withRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import stripHtml from 'string-strip-html';
@@ -23,6 +23,8 @@ import { QuillModules, QuillFormats } from '../../helpers/quill';
 import '../../node_modules/react-quill/dist/quill.snow.css';
 import { API } from '../../config';
 import Loading from '../Loading';
+import Error from '../Error';
+import Message from '../Message';
 
 const CreateUpdateBlog = ({ slug }) => {
   // local storage fetching
@@ -34,10 +36,10 @@ const CreateUpdateBlog = ({ slug }) => {
   }
 
   const blogFromLS = () => {
-    if (typeof window === 'undefined') return false;
+    if (typeof window === 'undefined') return '';
     if (localStorage.getItem('blog')) {
       return JSON.parse(localStorage.getItem('blog'));
-    } else return false;
+    } else return '';
   }
 
   // state
@@ -103,6 +105,7 @@ const CreateUpdateBlog = ({ slug }) => {
     e.preventDefault();
     // set loading to true
     setValues({ ...values, loading: true });
+    window.scrollTo(0,0);
     // create the object
     const blog = {
       title,
@@ -195,8 +198,8 @@ const CreateUpdateBlog = ({ slug }) => {
   }
   
   const showLoading = () => loading && <Loading/>
-  const showError = () => error && <p className="alert alert-danger">{error}</p>;
-  const showSuccess = () => success && <p className="alert alert-success">{success}</p>;
+  const showError = () => error && <Error content={error} />
+  const showSuccess = () => success && <Message content={success} color='success' />;
   
   const showCategories = () => (
     <ul style={{maxHeight: '150px', overflowY: 'scroll', paddingLeft: 23}}>
@@ -232,7 +235,7 @@ const CreateUpdateBlog = ({ slug }) => {
     // for the body (based on words)
     const bodyWordMin = 300;
     const bodyWordCount = stripHtml(body || '').split(' ').length;
-
+    
     return (
       <Form onSubmit={handleSubmit}>
         <FormGroup>
@@ -248,7 +251,7 @@ const CreateUpdateBlog = ({ slug }) => {
         </FormGroup>
 
         <FormGroup className="mb-1">
-          <ReactQuill modules={QuillModules} formats={QuillFormats} value={body} placeholder="Write something..." onChange={handleBody} />
+          <ReactQuill onChange={handleBody} modules={QuillModules} formats={QuillFormats} defaultValue={blogFromLS()} placeholder="Write something..." />
         </FormGroup>
 
         <div className="d-flex justify-content-end mb-3 w-100">
@@ -293,9 +296,9 @@ const CreateUpdateBlog = ({ slug }) => {
     <Container fluid>
       <Row>
         <Col xs="12" md="8">
-          {blogForm()}
-          {showSuccess()}
           {showError()}
+          {showSuccess()}
+          {blogForm()}
           {showLoading()}
           <DisplaySmallerThanMd>
             <hr/>

@@ -212,7 +212,7 @@ const singleBlog = ({ blog, serverError }) => {
       <Layout>
         <main>
           <Banner>
-            <Image publicId={blog.photo.key} alt={blog.title}>
+            <Image publicId={blog.photo && blog.photo.key} alt={blog.title}>
               <Transformation width='1920' crop="fill" />
             </Image>
           </Banner>
@@ -239,7 +239,7 @@ const singleBlog = ({ blog, serverError }) => {
                 <H1 className="my-4">{blog.title}</H1>
               </Col>
 
-              <Col xs="12" md={{size: 10, offset: 1}}>
+              <Col xs="12" md={{size: 10, offset: 1}} style={{overFlowX: 'hidden'}}>
                 {renderHtml(blog.body)}
               </Col>
 
