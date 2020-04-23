@@ -51,7 +51,7 @@ const BodyContainer = styled.div`
 const singleBlog = ({ blog, serverError, isServerRendered }) => {
   if (serverError) return <Error content={serverError} />
 
-  const keywords = blog.tags.concat(blog.keywords || []);
+  const keywords = blog.tags.map(tag => tag.name).concat(blog.keywords || []);
   keywords.unshift(blog.title);
 
   const head = () => (
@@ -68,8 +68,8 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
       <meta property="og:url" content={`${DOMAIN}/${blog.slug}`} />
       <meta property="og:site_name" content={APP_NAME} />
 
-      <meta property="og:image" content={`${API}/blog/photo/${blog.slug}`} />
-      <meta property="og:image:secure_url" content={`${API}/blog/photo/${blog.slug}`} />
+      <meta property="og:image" content={`http://res.cloudinary.com/ticekralt/image/upload/c_fill,w_1020/${blog.photo && blog.photo.key}`} />
+      <meta property="og:image:secure_url" content={`http://res.cloudinary.com/ticekralt/image/upload/c_fill,w_1020/${blog.photo && blog.photo.key}`} />
       <meta property="og:image:type" content="image/jpg" />
       {/* TODO: <meta property="fb:app_id" content={FB_APP_ID} /> */}
       <meta name="robots" content="index,follow" />

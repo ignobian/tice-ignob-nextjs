@@ -2,15 +2,18 @@ import { API } from '../../config';
 import stripHtml from 'string-strip-html';
 import Link from 'next/link';
 import moment from 'moment';
+import { Image, Transformation} from 'cloudinary-react';
 
 const RelatedBlog = ({ blog }) => (
   <>
     <div className="ui-card">
-      <img onError="this.onerror=null; this.src='seoImage.png'" src={`${API}/blog/photo/${blog.slug}`} alt={blog.title} className="ui-card-featured-image"/>
+      <Image className="ui-card-featured-image" style={{width: '100%'}} publicId={blog.photo && blog.photo.key}>
+        <Transformation width="300" crop="fill" />
+      </Image>
       <div className="details pt-3">
         <h5>{blog.title}</h5>
         <p className="text-muted">{stripHtml(blog.excerpt).substring(0, 100)}...</p>
-        <p>Created by <Link href={`/profile/${blog.postedBy.username}`}><a>{blog.postedBy.username}</a></Link> | Published {moment(blog.createdAt).fromNow()}</p>
+        <p>Created by <Link href={`/profile/${blog.user.username}`}><a>{blog.user.username}</a></Link> | Published {moment(blog.createdAt).fromNow()}</p>
         <Link href={`/${blog.slug}`}><a className="btn-link">Read more</a></Link>
       </div>
     </div>
