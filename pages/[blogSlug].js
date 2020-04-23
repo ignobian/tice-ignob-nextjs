@@ -81,6 +81,7 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
   const [related, setRelated] = useState([]);
   const [count, setCount] = useState(0);
   const [error, setError] = useState('');
+  const [showingComments, setShowingComments] = useState(false);
 
   useEffect(() => {
     loadRelated();
@@ -91,6 +92,11 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
     if (isServerRendered) {
       overrideCache(`${API}/blogs/${blog.slug}`, blog);
     }
+
+    // set comments on (increase page load by turning them off first)
+    setTimeout(() => {
+      setShowingComments(true);
+    }, 100);
   }, []);
 
   const initImpression = () => {
@@ -276,7 +282,7 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
 
             <Row className="text-center py-5">
               <hr/>
-              {showComments()}
+              {showingComments && showComments()}
 
             </Row>
           </Container>
