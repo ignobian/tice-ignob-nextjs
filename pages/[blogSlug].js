@@ -220,7 +220,7 @@ const singleBlog = ({ blog, serverError }) => {
         <main>
           <Banner>
             <Image publicId={blog.photo && blog.photo.key} alt={blog.title}>
-              <Transformation width='1920' crop="fill" />
+              <Transformation width='1320' crop="fill" />
             </Image>
           </Banner>
 
