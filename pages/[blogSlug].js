@@ -51,7 +51,7 @@ const BodyContainer = styled.div`
 const singleBlog = ({ blog, serverError, isServerRendered }) => {
   if (serverError) return <Error content={serverError} />
 
-  const keywords = blog.tags.concat(blog.keywords || []);
+  const keywords = blog.tags.map(tag => tag.name).concat(blog.keywords || []);
   keywords.unshift(blog.title);
 
   const head = () => (
