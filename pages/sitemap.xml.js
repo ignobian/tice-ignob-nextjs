@@ -1,9 +1,6 @@
 import React from 'react';
 import { DOMAIN } from '../config';
-import { list } from '../actions/blog';
-import { getCategories } from '../actions/category';
-import { getTags } from '../actions/tag';
-import { getUsersForXML } from '../actions/user';
+import { listXML } from '../actions/general';
 
 const generateBlogsXml = (blogs) => {
   let latestPost = 0;
@@ -48,7 +45,7 @@ const sitemapXml = ({ blogs, categories, tags, users }) => {
   const { postsXml, latestPost } = generateBlogsXml(blogs);
   const categoriesXml = generateXml(categories, 'categories', 0.6);
   const tagsXml = generateXml(tags, 'tags', 0.5);
-  const usersXml = generateXml(users, 'profile', 0.4, 'uniqueUsername');
+  const usersXml = generateXml(users, 'profile', 0.4, 'username');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -94,10 +91,7 @@ const sitemapXml = ({ blogs, categories, tags, users }) => {
 
 export default class Sitemap extends React.Component {
   static async getInitialProps({ res }) {
-    const blogs = await list();
-    const categories = await getCategories();
-    const tags = await getTags();
-    const users = await getUsersForXML();
+    const { blogs, categories, tags, users } = await listXML();
     res.setHeader("Content-Type", "text/xml");
     res.write(sitemapXml({ blogs, categories, tags, users }));
     res.end();

@@ -6,3 +6,9 @@ export const wakeUp = () => {
   .then(res => res.json())
   .catch(err => console.log(err));
 };
+
+export const listXML = () => {
+  return fetch(`${API}/list-for-xml`)
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}
