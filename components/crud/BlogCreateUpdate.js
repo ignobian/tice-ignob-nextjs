@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Router, { withRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import stripHtml from 'string-strip-html';
 import { Input, Label, FormGroup, Form, Container, Row, Col } from 'reactstrap';
+import { Image, Transformation } from 'cloudinary-react';
 
 // components
 import { Button, SecondaryButtonLabel } from '../Button';
@@ -22,8 +23,10 @@ import { QuillModules, QuillFormats } from '../../helpers/quill';
 import '../../node_modules/react-quill/dist/quill.snow.css';
 import { API } from '../../config';
 import Loading from '../Loading';
+import Error from '../Error';
+import Message from '../Message';
 
-const CreateUpdateBlog = ({ router }) => {
+const CreateUpdateBlog = ({ slug }) => {
   // local storage fetching
   const titleFromLS = () => {
     if (typeof window === 'undefined') return '';
@@ -33,10 +36,10 @@ const CreateUpdateBlog = ({ router }) => {
   }
 
   const blogFromLS = () => {
-    if (typeof window === 'undefined') return false;
+    if (typeof window === 'undefined') return '';
     if (localStorage.getItem('blog')) {
       return JSON.parse(localStorage.getItem('blog'));
-    } else return false;
+    } else return '';
   }
 
   // state
@@ -54,20 +57,20 @@ const CreateUpdateBlog = ({ router }) => {
     success: '',
     loading: false,
     photo: '',
-    tagField: '',
     photoPreview: '',
+    cloudinaryPhoto: null,
+    tagField: '',
     hidePublishButton: false,
-    isEdit: false,
-    slug: ''
+    isEdit: false
   });
 
-  const { error, tagField, sizeError, success, loading, hidePublishButton, photo, photoPreview, isEdit, slug } = values;
+  const { error, tagField, sizeError, success, loading, hidePublishButton, cloudinaryPhoto, photo, photoPreview, isEdit } = values;
   const token = getCookie('token');
 
   useEffect(() => {
     // check if its an edit blog
-    if (router.query.slug) {
-      getBlog(router.query.slug).then(data => {
+    if (slug) {
+      getBlog(slug).then(data => {
         if (data.error) {
           setValues({ ...values, error: data.error });
         } else {
@@ -77,14 +80,15 @@ const CreateUpdateBlog = ({ router }) => {
       })
     }
     initCategories();
-  }, [router]);
+  }, [slug]);
 
-  const initUpdateBlog = (blog) => {
-    setCheckedCategories(blog.categories.map(record => record._id));
-    setTags(blog.tags);
+  const initUpdateBlog = blog => {
+    console.log(blog);
+    setCheckedCategories(blog.categories.map(cat => cat.id));
+    setTags(blog.tags.map(t => t.name));
     setTitle(blog.title);
     setBody(blog.body);
-    setValues({...values, isEdit: true, slug: blog.slug});
+    setValues({...values, isEdit: true, cloudinaryPhoto: blog.photo || null });
   }
 
   const initCategories = () => {
@@ -101,34 +105,32 @@ const CreateUpdateBlog = ({ router }) => {
     e.preventDefault();
     // set loading to true
     setValues({ ...values, loading: true });
-    // create the formdata object
-    const data = new FormData();
-    data.set('title', title);
-    data.set('body', body);
-    data.set('categories', checkedCategories);
-    data.set('tags', tags);
+    window.scrollTo(0,0);
+    // create the object
+    const blog = {
+      title,
+      body,
+      categories: checkedCategories,
+      tags
+    }
     if (photo) {
-      data.set('photo', photo);
+      blog.photo = photoPreview;
     }
 
     if (isEdit === false) {
       // publish the blog if create
-      createBlog(data, token).then(data => {
+      createBlog(blog, token).then(data => {
         if (data.error) {
           setValues({ ...values, loading: false, error: data.error });
         } else {
-          setValues({ ...values, loading: false, error: '', success: `${data.title} is created!`, photo: '', photoPreview: ''});
-          setTitle('');
-          setBody('');
-          // clear the title in the local storage
-          clearStorage('title');
+          setValues({ ...values, loading: false, error: '', success: `${data.title} is created!`});
           // redirect to the update page of this blog post
           Router.push(`/${data.slug}`);
         }
       });
     } else {
       // update blog
-      updateBlog(data, token, slug).then(data => {
+      updateBlog(blog, token, slug).then(data => {
         if (data.error) {
           setValues({ ...values, loading: false, error: data.error });
         } else {
@@ -145,7 +147,7 @@ const CreateUpdateBlog = ({ router }) => {
       const reader = new FileReader();
 
       reader.onload = (e) => {
-        setValues({ ...values, photo: value, photoPreview: e.target.result });
+        setValues({ ...values, photo: value, photoPreview: e.target.result, cloudinaryPhoto: null });
       }
       reader.readAsDataURL(value);
     }
@@ -158,17 +160,13 @@ const CreateUpdateBlog = ({ router }) => {
     } else if (name === 'tags') {
       handleTag(value);
     } else {
-      setValues({
-        ...values,
-        [name]: value,
-        error: ''
-      });
+      setValues({ ...values, [name]: value, error: '' });
     }
   }
 
   const handleTag = (value) => {
     const typedCharacter = value.substring(value.length - 1);
-    console.log(typedCharacter)
+
     if (typedCharacter === ',') {
       const tag = value.substring(0, value.length - 1);
       setTags(tags.concat(tag));
@@ -190,64 +188,25 @@ const CreateUpdateBlog = ({ router }) => {
     }
   }
   
-  const handleToggle = (id, option) => {
-    // clear previous error
-    setValues({ ...values, error: '' });
-    if (option === 'category') {
-      // handle category change
-      const clickedCategory = checkedCategories.indexOf(id);
-      const all = [...checkedCategories]
-      // check if it didnt find
-      if (clickedCategory === -1) {
-        // if not, then push into state
-        all.push(id);
-      } else {
-        // if so, then remove from state
-        all.splice(clickedCategory, 1);
-      }
-      setCheckedCategories(all);
+  const handleCategory = category => {
+    if (checkedCategories.includes(category.id)) {
+      const categories = checkedCategories.filter(id => id !== category.id);
+      setCheckedCategories(categories);
     } else {
-      // handle tag change
-      const clickedTag = checkedTags.indexOf(id);
-      const all = [...checkedTags]
-      // check if it didnt find
-      if (clickedTag === -1) {
-        // if not, then push into state
-        all.push(id);
-      } else {
-        // if so, then remove from state
-        all.splice(clickedTag, 1);
-      }
-      setCheckedTags(all);
-    }
-  }
-
-  // check if category/tag is in array of state
-  const isInState = (id, option) => {
-    if (option === 'category') {
-      return checkedCategories.includes(id);
-    } else {
-      return checkedTags.includes(id);
+      setCheckedCategories(checkedCategories.concat(category.id))
     }
   }
   
-  // storage
-  const clearStorage = key => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(key, '');
-    }
-  }
-
   const showLoading = () => loading && <Loading/>
-  const showError = () => error && <p className="alert alert-danger">{error}</p>;
-  const showSuccess = () => success && <p className="alert alert-success">{success}</p>;
+  const showError = () => error && <Error content={error} />
+  const showSuccess = () => success && <Message content={success} color='success' />;
   
   const showCategories = () => (
-    <ul style={{maxHeight: '150px', overflowY: 'scroll'}}>
-      {categories && categories.map((c, i) => (
-        <li key={i} className="list-unstyled">
-          <input checked={isInState(c._id, 'category')} onChange={() => handleToggle(c._id, 'category')} id={c.name} type="checkbox" className="mr-2"/>
-          <label className="form-check-label" htmlFor={c.name}>{c.name}</label>
+    <ul style={{maxHeight: '150px', overflowY: 'scroll', paddingLeft: 23}}>
+      {categories && categories.map(category => (
+        <li key={category.id}>
+          <Input checked={checkedCategories.includes(category.id)} onChange={() => handleCategory(category)} id={category.name} type="checkbox" className="mr-2"/>
+          <Label className="form-check-label" htmlFor={category.name}>{category.name}</Label>
         </li>
       ))}
     </ul>
@@ -276,7 +235,7 @@ const CreateUpdateBlog = ({ router }) => {
     // for the body (based on words)
     const bodyWordMin = 300;
     const bodyWordCount = stripHtml(body || '').split(' ').length;
-
+    
     return (
       <Form onSubmit={handleSubmit}>
         <FormGroup>
@@ -292,7 +251,7 @@ const CreateUpdateBlog = ({ router }) => {
         </FormGroup>
 
         <FormGroup className="mb-1">
-          <ReactQuill modules={QuillModules} formats={QuillFormats} value={body} placeholder="Write something..." onChange={handleBody} />
+          <ReactQuill onChange={handleBody} modules={QuillModules} formats={QuillFormats} defaultValue={blogFromLS()} placeholder="Write something..." />
         </FormGroup>
 
         <div className="d-flex justify-content-end mb-3 w-100">
@@ -310,6 +269,7 @@ const CreateUpdateBlog = ({ router }) => {
     <FormGroup>
       <div className="featured-image-container">
         {showFeaturedImage()}
+        {showCloudinaryImage()}
       </div>
       <small className="text-muted">Max size: 1mb</small><br/>
       <SecondaryButtonLabel htmlFor="photo">Upload featured image</SecondaryButtonLabel>
@@ -317,8 +277,16 @@ const CreateUpdateBlog = ({ router }) => {
     </FormGroup>
   )
 
+  const showCloudinaryImage = () => (
+    cloudinaryPhoto && (
+      <Image publicId={cloudinaryPhoto && cloudinaryPhoto.key} height="100">
+        <Transformation width="200" crop="fill" />
+      </Image>
+    )
+  )
+
   const showFeaturedImage = () => {
-    const src = photoPreview ? photoPreview : `${API}/blog/photo/${slug}`;
+    const src = photoPreview ? photoPreview : ``;
     return (
       <img className="mb-2" height="100" src={src} alt=""/>
     );
@@ -328,9 +296,9 @@ const CreateUpdateBlog = ({ router }) => {
     <Container fluid>
       <Row>
         <Col xs="12" md="8">
-          {blogForm()}
-          {showSuccess()}
           {showError()}
+          {showSuccess()}
+          {blogForm()}
           {showLoading()}
           <DisplaySmallerThanMd>
             <hr/>
@@ -355,4 +323,4 @@ const CreateUpdateBlog = ({ router }) => {
   );
 }
 
-export default withRouter(CreateUpdateBlog);
+export default CreateUpdateBlog;

@@ -2,43 +2,44 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import { getCookie, isAuth, updateUser } from '../../actions/auth';
-import { getProfile, update } from '../../actions/user';
+import { getUserForEdit, update } from '../../actions/user';
 import { API } from '../../config';
 import { SecondaryButtonLabel, Button } from '../Button';
-import { DisplayMd, DisplaySmallerThanMd } from '../responsive/Display';
 import Loading from '../Loading';
+import { Form, FormGroup, InputGroup, Label, Input, Container, Row, Col } from 'reactstrap';
+import Error from '../Error';
+import Message from '../Message';
+import { Image, Transformation } from 'cloudinary-react';
 
 const ProfileUpdate = () => {
   const [values, setValues] = useState({
     username: '',
-    uniqueUsername: '',
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     about: '',
-    error: false,
+    error: '',
     success: false,
     loading: false,
     photo: '',
-    photoPreview: ''
+    photoPreview: '',
+    cloudinaryPhoto: '',
   });
 
   const token = getCookie('token');
-  const { username, uniqueUsername, name, email, about, error, success, loading, photo, photoPreview } = values;
-
-  const init = () => {
-    getProfile(token).then(data => {
-      if (data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        const { username, uniqueUsername, name, email, about } = data;
-        setValues({ ...values, username, uniqueUsername, name, email, about })
-      }
-    });
-  }
+  const { username, firstName, lastName, email, about, error, success, loading, photo, photoPreview, cloudinaryPhoto } = values;
 
   // get user information with getProfile
   useEffect(() => {
-    init();
+    setValues({ ...values, loading: true });
+
+    getUserForEdit(token).then(data => {
+      if (data.error) {
+        setValues({ ...values, error: data.error, loading: false });
+      } else {
+        setValues({ ...values, ...data })
+      }
+    });
   }, []);
 
   const handleChange = name => e => {
@@ -48,7 +49,7 @@ const ProfileUpdate = () => {
       const reader = new FileReader();
 
       reader.onload = (e) => {
-        setValues({ ...values, photo: value, photoPreview: e.target.result });
+        setValues({ ...values, photo: value, photoPreview: e.target.result, cloudinaryPhoto: '' });
       }
       reader.readAsDataURL(value);
     } else {
@@ -63,89 +64,100 @@ const ProfileUpdate = () => {
     // create user data
     const userData = new FormData();
     userData.set('username', username);
-    userData.set('name', name);
+    userData.set('first_name', firstName);
+    userData.set('last_name', lastName);
     userData.set('email', email);
     userData.set('about', about);
     if (photo) {
-      userData.set('photo', photo);
+      userData.set('photo', photoPreview);
     }
+
+    window.scrollTo(0,0);
 
     update(token, userData).then(data => {
       if (data.error) {
         setValues({ ...values, error: data.error, loading: false, success: false });
       } else {
-        updateUser(data, () => {
-          setValues({ ...values , loading: false, error: '', success: 'User successfully updated!' });
+        updateUser(data.user, () => {
+          setValues({ ...values , loading: false, error: '', success: data.message });
         });        
       }
     });
   }
 
-  const showError = () => error && <div className="alert alert-danger">{error}</div>
-  const showSuccess = () => success && <div className="alert alert-success">{success}</div>
+  const showError = () => error && <Error content={error} />
+  const showSuccess = () => success && <Message color='success' content={success} />
   const showLoading = () => loading && <Loading/>
 
-  const showProfilePhotoPreview = () => {
-    if (photoPreview) {
-      return <img width="150" className="p-3" src={photoPreview} alt=""/>
-    } else {
-      return <img width="150" className="p-3" src={`${API}/user/photo/${uniqueUsername}`} alt=""/>
-    }
-  }
+  const showProfilePhotoPreview = () => <img width="150" className="p-2" src={photoPreview} alt=""/>
+
+  const showCloudinaryProfilePhoto = () => (
+    <Image width="150" className="p-2" publicId={cloudinaryPhoto.key} >
+      <Transformation width="400" crop="fill" />
+    </Image>
+  )
 
   const showForm = () => (
-    <form onSubmit={handleSubmit} className="mt-4">
+    <Form onSubmit={handleSubmit} className="mt-4">
 
       <SecondaryButtonLabel>
         Upload profile photo
-        <input type="file" onChange={handleChange('photo')} accept="image/*" hidden />
+        <Input type="file" onChange={handleChange('photo')} accept="image/*" hidden />
       </SecondaryButtonLabel>
 
-      <div className="form-group">
-        <label htmlFor="username" className="text-muted">Username</label>
-        <input id="username" onChange={handleChange('username')} value={username} type="text" className="form-control" />
-      </div>
+      <InputGroup className="mb-3 mt-2">
+        <div className="input-group-prepend">
+          <div className="input-group-text">@</div>
+        </div>
+        <Input 
+          type="text"
+          placeholder="Username"
+          onChange={handleChange('username')}
+          value={username} />
+      </InputGroup>
 
-      <div className="form-group">
-        <label htmlFor="name" className="text-muted">Name</label>
-        <input id="name" onChange={handleChange('name')} value={name} type="text" className="form-control" />
-      </div>
+      <FormGroup>
+        <Label htmlFor="firstName" className="text-muted">First name</Label>
+        <Input id="firstName" onChange={handleChange('firstName')} value={firstName} />
+      </FormGroup>
 
-      <div className="form-group">
-        <label htmlFor="email" className="text-muted">Email</label>
-        <input id="email" onChange={handleChange('email')} value={email} type="email" className="form-control" />
-      </div>
+      <FormGroup>
+        <Label htmlFor="lastName" className="text-muted">Last name</Label>
+        <Input id="lastName" onChange={handleChange('lastName')} value={lastName} />
+      </FormGroup>
 
-      <div className="form-group">
-        <label htmlFor="about" className="text-muted">About</label>
-        <textarea id="about" value={about} onChange={handleChange('about')} className="form-control"></textarea>
-      </div>
+      <FormGroup>
+        <Label htmlFor="email" className="text-muted">Email</Label>
+        <Input id="email" onChange={handleChange('email')} value={email} type="email" />
+      </FormGroup>
+
+      <FormGroup>
+        <Label htmlFor="about" className="text-muted">About</Label>
+        <Input type="textarea" id="about" value={about} onChange={handleChange('about')} />
+      </FormGroup>
 
       <Button type="submit">Update</Button>
-    </form>
+    </Form>
   )
 
   return (
-    <div className="container">
-      <div className="row mb-5">
-        <div className="col-md-4">
-          <DisplaySmallerThanMd className="my-4">
-            <h2>Update profile</h2>
-          </DisplaySmallerThanMd>
-          {showProfilePhotoPreview()}
-        </div>
-
-        <div className="col-md-8">
-          <DisplayMd className="my-4">
-            <h2>Update profile</h2>
-          </DisplayMd>
+    <Container>
+      <Row className="mb-5">
+        <Col xs="12" md="4">
+          <h2 className="d-block d-md-none my-4">Update profile</h2>
           {showError()}
           {showSuccess()}
+          {showProfilePhotoPreview()}
+          {cloudinaryPhoto && showCloudinaryProfilePhoto()}
+        </Col>
+
+        <Col xs="12" md="8">
+          <h2 className="d-none d-md-block my-4">Update profile</h2>
           {showLoading()}
           {showForm()}
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   )
 }
 

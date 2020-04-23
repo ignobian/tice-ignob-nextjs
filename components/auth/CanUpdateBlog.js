@@ -16,10 +16,10 @@ const CanUpdateBlog = ({ slug, children }) => {
         if (data.error) {
           return console.log(data.error)
         } else {
-          isAuthorized = data.postedBy.uniqueUsername === isAuth().uniqueUsername;
+          isAuthorized = data.user.id === isAuth().id;
         }
   
-        if (!isAuthorized || isAuth() !== 1) {
+        if (!isAuthorized || isAuth() !== 'admin') {
           Router.push('/');
         }
       });

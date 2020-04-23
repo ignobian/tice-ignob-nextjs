@@ -3,19 +3,18 @@ import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../../config';
 import Layout from '../../components/Layout';
 import { getTag } from '../../actions/tag';
 import Card from '../../components/blog/Card';
-import sortBy from 'sort-by';
 
-const Tag = ({ tagName, blogs }) => {
+const Tag = ({ tag, blogs }) => {
   const head = () => (
     <Head>
-      <title>Tag {tagName} - {APP_NAME}</title>
+      <title>Tag {tag.name} - {APP_NAME}</title>
 
-      <meta name="description" content={`Best programming tutorials on ${tagName}`}/>
+      <meta name="description" content={`Best programming tutorials on ${tag.name}`}/>
 
-      <link rel="canonical" href={`${DOMAIN}/tags/${tagName}`} />
-      <meta property="og:title" content={`Tag ${tagName} - ${APP_NAME}`} />
+      <link rel="canonical" href={`${DOMAIN}/tags/${tag.slug}`} />
+      <meta property="og:title" content={`Tag ${tag.name} - ${APP_NAME}`} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`${DOMAIN}/tags/${tagName}`} />
+      <meta property="og:url" content={`${DOMAIN}/tags/${tag.slug}`} />
       <meta property="og:site_name" content={APP_NAME} />
 
       <meta property="og:image" content={`${DOMAIN}/images/seoImage.png`} />
@@ -41,7 +40,7 @@ const Tag = ({ tagName, blogs }) => {
             <div className="row">
 
               <div className="col-md-8 offset-md-2 py-5 border-bottom">
-                <h1 style={{fontWeight: '100', fontSize: '4em', opacity: 0.6}}>{tagName}</h1>
+                <h1 style={{fontWeight: '100', fontSize: '4em', opacity: 0.6}}>{tag.name}</h1>
               </div>
 
               <div className="col-md-8 offset-md-2">
@@ -59,10 +58,11 @@ const Tag = ({ tagName, blogs }) => {
 // ssr
 Tag.getInitialProps = ({ query }) => {
   return getTag(query.slug).then(data => {
+    console.log(data);
     if (data.error) {
       console.log(data.error);
     } else {
-      return { tagName: data.tag, blogs: data.blogs.sort(sortBy('-updatedAt')) }
+      return { tag: data.tag, blogs: data.blogs }
     }
   });
 }

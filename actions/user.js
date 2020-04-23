@@ -1,14 +1,14 @@
 import fetch from 'isomorphic-fetch';
 import { API } from '../config';
 
-export const userPublicProfile = (username) => {
-  return fetch(`${API}/user/${username}`)
+export const userPublicProfile = username => {
+  return fetch(`${API}/users/${username}`)
   .then(res => res.json())
   .catch(err => console.log(err));
 };
 
-export const getProfile = token => {
-  return fetch(`${API}/user/profile`, {
+export const getUserForEdit = token => {
+  return fetch(`${API}/users/edit`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -20,7 +20,7 @@ export const getProfile = token => {
 };
 
 export const getFollowers = token => {
-  return fetch(`${API}/user/followers`, {
+  return fetch(`${API}/users/followers`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -32,7 +32,7 @@ export const getFollowers = token => {
 }
 
 export const update = (token, user) => {
-  return fetch(`${API}/user/update`, {
+  return fetch(`${API}/users/update`, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
@@ -62,7 +62,7 @@ export const getUsersForXML = () => {
 }
 
 export const toggleFollower = (userId, token) => {
-  return fetch(`${API}/user/toggle-follower`, {
+  return fetch(`${API}/users/toggle-follower`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export const toggleFollower = (userId, token) => {
 }
 
 export const loadUserStats = token => {
-  return fetch(`${API}/user/stats`, {
+  return fetch(`${API}/users/stats`, {
     headers: {
       Authorization: `Bearer ${token}`
     }

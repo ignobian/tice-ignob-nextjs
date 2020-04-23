@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { SecondaryButton } from '../Button';
 import Loading from '../Loading';
+import Error from '../Error';
 import { emailBlogAuthorForm } from '../../actions/form';
-import { isAuth } from '../../actions/auth';
+import { isAuth, getCookie } from '../../actions/auth';
+import Router from 'next/router';
 
 const ContactAuthorForm = ({ author }) => {
   const [values, setValues] = useState({
@@ -25,23 +27,30 @@ const ContactAuthorForm = ({ author }) => {
     if (!isAuth()) {
       setValues({ ...values, error: 'You have to be signed in to use the contact form', success: '', loading: false });
     } else {
-      emailBlogAuthorForm({
-        fromEmail: isAuth().email,
-        toEmail: author.email,
-        name: isAuth().name,
-        message: message
-      })
-      .then(data => {
+      const token = getCookie('token');
+
+      const data = {
+        author_id: author.id,
+        message
+      }
+
+      emailBlogAuthorForm(data, token).then(data => {
         if (data.error) {
-          setValues({ ...values, error: data.error, success: '', loading: false })
+          // check if the error is because of unauthorized
+          if (data.error === 'Not authorized to perform this action') {
+            // redirect to signin
+            Router.push('/signin');
+          } else {
+            setValues({ ...values, error: data.error, success: '', loading: false })
+          }
         } else {
           setValues({ ...values, error: '', success: data.success, loading: false, message: '', showForm: false })
         }
-      })
+      });
     }
   }
 
-  const showError = () => error && <div className="alert alert-danger">{error}</div>
+  const showError = () => error && <Error content={error} />
   const showSuccess = () => success && <div className="text-muted">{success}</div>
   const showLoading = () => loading && <Loading/>
 

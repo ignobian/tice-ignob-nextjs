@@ -9,10 +9,9 @@ import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../config';
 import moment from 'moment';
 import renderHtml from 'react-render-html';
 import RelatedBlog from '../components/blog/RelatedBlog';
-import DisqusThread from '../components/DisqusThread';
 import { DefaultLink } from '../components/Link';
 import styled from 'styled-components';
-import { Avatar } from '../components/Avatar';
+import Error from '../components/Error';
 import { ClapImg } from '../components/ClapImg';
 import { CategoryBtn, TagBtn, NoButton } from '../components/Button';
 import { isAuth, getCookie } from '../actions/auth';
@@ -21,6 +20,9 @@ import { Container, Row, Col } from 'reactstrap';
 import ReportBtn from '../components/ReportBtn';
 import { H1 } from '../components/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Image, Transformation } from 'cloudinary-react';
+import cacheFetch, { overrideCache } from '../helpers/cacheFetch';
+import BlogComments from '../components/blog/BlogComments';
 
 const Banner = styled.div`
   height: 300px;
@@ -39,7 +41,16 @@ const SocialIconsContainer = styled.div`
   }
 `;
 
-const singleBlog = ({ blog }) => {
+const BodyContainer = styled.div`
+  overflow-x: hidden;
+  img {
+    max-width: 100%;
+  }
+`;
+
+const singleBlog = ({ blog, serverError, isServerRendered }) => {
+  if (serverError) return <Error content={serverError} />
+
   const keywords = blog.tags.concat(blog.keywords || []);
   keywords.unshift(blog.title);
 
@@ -48,7 +59,7 @@ const singleBlog = ({ blog }) => {
       <title>{blog.title}</title>
       <meta name="description" content={blog.mdesc} />
       <meta name="keywords" content={keywords.join(',').substr(0, 255)} />
-      <meta name="author" content={blog.postedBy.name} />
+      <meta name="author" content={blog.user.name} />
 
       <link rel="canonical" href={`${DOMAIN}/${blog.slug}`} />
       <meta property="og:title" content={`${blog.title}`} />
@@ -68,24 +79,24 @@ const singleBlog = ({ blog }) => {
   const token = isAuth() ? getCookie('token') : null;
 
   const [related, setRelated] = useState([]);
-  const [error, setError] = useState('');
   const [count, setCount] = useState(0);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     loadRelated();
-    setClaps();
+    setCount(blog.claps);
     initImpression();
-  }, []);
 
-  const setClaps = () => {
-    setCount(blog.claps.length);
-  }
+    // handle overriding client cache if the page is server rendered
+    if (isServerRendered) {
+      overrideCache(`${API}/blogs/${blog.slug}`, blog);
+    }
+  }, []);
 
   const initImpression = () => {
     // add an impression to the backend
-    const blogId = blog._id;
-    const blogPostedById = blog.postedBy._id;
-    addImpression(blogId, blogPostedById, token).then(data => {
+    const blogId = blog.id;
+    addImpression(blogId, token).then(data => {
       if (data.error) {
         console.log(data.error);
       }
@@ -95,7 +106,7 @@ const singleBlog = ({ blog }) => {
   const loadRelated = () => {
     listRelated(blog).then(data => {
       if (data.error) {
-        console.log(err);
+        console.log(data.error);
       } else {
         setRelated(data);
       }
@@ -103,22 +114,25 @@ const singleBlog = ({ blog }) => {
   }
 
   const handleClap = () => {
-      addClap(blog, isAuth()).then(data => {
-      if (data.error) {
-        setError(data.error);
-      } else {
-        // update the clap with plus one
-        setError('');
-        setCount(count + 1);
-      }
-    });
+    if (token) {
+      addClap(blog, token).then(data => {
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          // update the clap with plus one
+          setError('');
+          setCount(count + 1);
+        }
+      });
+    } else {
+      console.log('Please login to perform this action')
+    }
   }
 
   const handleShare = (type, link) => e => {
     // add a share to the backend
-    const blogId = blog._id;
-    const blogPostedById = blog.postedBy._id;
-    addShare(type, blogId, blogPostedById, token).then(data => {
+    const blogId = blog.id;
+    addShare(type, blogId, token).then(data => {
       if (data.error) {
         console.log(data.error);
       } else {
@@ -128,20 +142,10 @@ const singleBlog = ({ blog }) => {
     });
   }
 
-  const setDefaultSrc = e => {
-    e.target.src = '/images/default.png';
-  }
-
-  const showComments = () => (
-    <div className="w-100">
-      <DisqusThread id={blog._id} title={blog.title} path={`/blog/${blog.slug}`} />
-    </div>
-  )
-
   const showCategories = blog => (
     <div className="d-flex flex-wrap">
-      {blog.categories.map((c, i) => (
-        <Link key={i} href={`/categories/${c.slug}`}>
+      {blog.categories.map(c => (
+        <Link key={c.id} href={`/categories/${c.slug}`}>
           <CategoryBtn style={{fontSize: 17}} className="m-0 mr-2"># {c.name}</CategoryBtn>
         </Link>
       ))}
@@ -150,23 +154,23 @@ const singleBlog = ({ blog }) => {
   
   const showTags = blog => (
     <div className="d-flex flex-wrap mt-2">
-      {blog.tags.map((t, i) => (
-        <Link key={i} href={`/tags/${t}`}>
-          <TagBtn className="m-0 mr-2">{t}</TagBtn>
+      {blog.tags.map(t => (
+        <Link key={t.id} href={`/tags/${t.slug}`}>
+          <TagBtn className="m-0 mr-2">{t.name}</TagBtn>
         </Link>
       ))}
     </div>
   );
 
   const showRelated = blogs => (
-    blogs.map((b, i) => (
-      <RelatedBlog key={i} blog={b} />
+    blogs.map(b => (
+      <RelatedBlog key={b.id} blog={b} />
     ))
   );
 
   const showSocialIcons = () => {
     const url = `${DOMAIN}/${blog.slug}`;
-    const twitterLink = `https://twitter.com/intent/tweet?text=${blog.title} by @${blog.postedBy.username} ${url}`;
+    const twitterLink = `https://twitter.com/intent/tweet?text=${blog.title} by @${blog.user.username} ${url}`;
     const linkedinLink = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
     const facebookLink = `https://www.facebook.com/v3.3/dialog/share?app_id=${FB_APP_ID}&${url}&display=page&redirect_uri=${url}?facebook=true`
     return (
@@ -180,10 +184,12 @@ const singleBlog = ({ blog }) => {
 
   const showAuthor = (user) => (
     <div className="d-flex my-3">
-      <Avatar className="mr-3" src={`${API}/user/photo/${user.uniqueUsername}`} onError={setDefaultSrc} />
+      <Image style={{borderRadius: '50%', width: 40, height: 40, objectFit: 'cover'}} publicId={user.photo && user.photo.key} className="mr-3">
+        <Transformation width="100" crop="fill" />
+      </Image>
       <div className="flex-grow-1">
         <div className="d-md-inline">
-          <Link href={`/profile/${user.uniqueUsername}`}><DefaultLink>{user.username}</DefaultLink></Link>
+          <Link href={`/profile/${user.username}`}><DefaultLink>{user.username}</DefaultLink></Link>
           <span className="ml-2">| <FollowButton noborder user={user} /></span>
         </div>
         <div className="d-md-inline mr-md-4">
@@ -205,20 +211,26 @@ const singleBlog = ({ blog }) => {
     </div>
   );
 
+  const showError = () => error &&  <Error content={error} />
+
   return (
     <>
       {head()}
       <Layout>
         <main>
           <Banner>
-            <img src={`${API}/blog/photo/${blog.slug}`} alt={blog.title} />
+            <Image publicId={blog.photo && blog.photo.key} alt={blog.title}>
+              <Transformation width='1020' crop="fill" />
+            </Image>
           </Banner>
+
+          {showError()}
 
           <Container>
             <Row>
 
               <Col xs="12" md={{size: 10, offset: 1}}>
-                {showAuthor(blog.postedBy)}
+                {showAuthor(blog.user)}
               </Col>
 
 
@@ -235,7 +247,9 @@ const singleBlog = ({ blog }) => {
               </Col>
 
               <Col xs="12" md={{size: 10, offset: 1}}>
-                {renderHtml(blog.body)}
+                <BodyContainer>
+                  {renderHtml(blog.body)}
+                </BodyContainer>
               </Col>
 
               <Col className="mt-4 d-flex justify-content-end" xs="12" md={{size: 10, offset: 1}}>
@@ -256,8 +270,7 @@ const singleBlog = ({ blog }) => {
 
             <Row className="text-center py-5">
               <hr/>
-              {showComments()}
-
+              <BlogComments blog={blog} />
             </Row>
           </Container>
 
@@ -268,14 +281,18 @@ const singleBlog = ({ blog }) => {
 };
 
 // ssr
-singleBlog.getInitialProps = ({ query }) => {
-  return getBlog(query.blogSlug).then(data => {
-    if (data.error) {
-      console.log(data.error);
-    } else {
-      return { blog: data }
-    }
-  });
+singleBlog.getInitialProps = async (ctx) => {
+  const { query } = ctx;
+
+  const data = await cacheFetch(`${API}/blogs/${query.blogSlug}`);
+
+  const isServerRendered = !!ctx.req;
+
+  if (data.error) {
+    return { serverError: data.error, isServerRendered: true }
+  } else {
+    return { blog: data, isServerRendered }
+  }
 }
 
 export default singleBlog;

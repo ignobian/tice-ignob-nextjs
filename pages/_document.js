@@ -1,23 +1,38 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
-// import styled components
-import { ServerStyleSheet } from 'styled-components';
+import { ServerStyleSheet as StyledComponentSheets } from 'styled-components';
+import { ServerStyleSheets as MaterialUiServerStyleSheets } from '@material-ui/styles';
 
 // import config
 import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 
 class MyDocument extends Document {
-  static getInitialProps({ renderPage }) {
-    // create instance of ServerStyleSheet
-    const sheet = new ServerStyleSheet();
-    // retrieve styles from components in the page
-    const page = renderPage((App) => props => sheet.collectStyles(<App {...props} />));
-
-    // extract the styles as style tags
-    const styleTags = sheet.getStyleElement();
-
-    // pass styleTags as a prop
-    return { ...page, styleTags };
+  static async getInitialProps (ctx) {
+    const styledComponentSheet = new StyledComponentSheets()
+    const materialUiSheets = new MaterialUiServerStyleSheets()
+    const originalRenderPage = ctx.renderPage
+    try {
+      ctx.renderPage = () =>
+        originalRenderPage({
+          enhanceApp: App => props =>
+            styledComponentSheet.collectStyles(
+              materialUiSheets.collect(<App {...props} />),
+            ),
+        })
+      const initialProps = await Document.getInitialProps(ctx)
+      return {
+        ...initialProps,
+        styles: [
+          <React.Fragment key="styles">
+            {initialProps.styles}
+            {materialUiSheets.getStyleElement()}
+            {styledComponentSheet.getStyleElement()}
+          </React.Fragment>,
+        ],
+      }
+    } finally {
+      styledComponentSheet.seal()
+    }
   }
 
   setGoogleTags = () => {

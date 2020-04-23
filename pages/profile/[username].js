@@ -11,6 +11,7 @@ import ClapImg from '../../components/ClapImg';
 import FollowButton from '../../components/FollowButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
+import { Image, Transformation } from 'cloudinary-react';
 
 const Stats = styled.div`
   display: flex;
@@ -27,10 +28,6 @@ const Stats = styled.div`
 `;
 
 const UserProfile = ({ user, blogs }) => {
-  const setDefaultSrc = e => {
-    e.target.src = '/images/default.png';
-  }
-
   const head = () => (
     <Head>
       <title>{user.name} profile - {APP_NAME}</title>
@@ -43,8 +40,8 @@ const UserProfile = ({ user, blogs }) => {
       <meta property="og:url" content={`${DOMAIN}/profile/${user.username}`} />
       <meta property="og:site_name" content={APP_NAME} />
 
-      <meta property="og:image" content={`${API}/user/photo/${user.uniqueUsername}`} />
-      <meta property="og:image:secure_url" content={`${API}/user/photo/${user.uniqueUsername}`} />
+      <meta property="og:image" content={`${API}/user/photo/${user.username}`} />
+      <meta property="og:image:secure_url" content={`${API}/user/photo/${user.username}`} />
       <meta property="og:image:type" content="image/jpg" />
       <meta name="robots" content="index,follow" />
       {/* TODO: <meta property="fb:app_id" content={FB_APP_ID} /> */}
@@ -77,14 +74,16 @@ const UserProfile = ({ user, blogs }) => {
               <div className="card p-4">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <h3 className="m-0">{user.name}</h3>
-                  <Avatar src={`${API}/user/photo/${user.uniqueUsername}`} alt={user.username} onError={setDefaultSrc} />
+                  <Image style={{width: 50, height: 50, borderRadius: '50%'}} publicId={user.photo && user.photo.key} alt={user.username}>
+                    <Transformation width="200" crop="fill" />
+                  </Image>
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
                   <FollowButton user={user} />
 
                   <Stats>
                     <div className="left">
-                      <p className="m-0 mr-1">{user.claps}</p>
+                      <p className="m-0 mr-1">{user.claps.length}</p>
                       <p className="m-0 mr-1">{user.impressions.length}</p>
                       <p className="m-0 mr-1">{user.shares.length}</p>
                     </div>
@@ -126,6 +125,7 @@ const UserProfile = ({ user, blogs }) => {
 // ssr
 UserProfile.getInitialProps = ({ query }) => {
   return userPublicProfile(query.username).then(data => {
+    console.log(data);
     if (data.error) {
       console.log(data.error);
     } else {

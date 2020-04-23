@@ -2,6 +2,7 @@ import fetch from 'isomorphic-fetch';
 import cookie from 'js-cookie';
 import { API } from '../config';
 import Router from 'next/router';
+import { setInStorage } from '../helpers/storage';
 
 export const handleResponse = response => {
   if (response.status === 401) {
@@ -17,7 +18,7 @@ export const handleResponse = response => {
 }
 
 export const preSignup = (user) => {
-  return fetch(`${API}/pre-signup`, {
+  return fetch(`${API}/registrations/pre-signup`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -30,7 +31,7 @@ export const preSignup = (user) => {
 };
 
 export const signup = token => {
-  return fetch(`${API}/signup`, {
+  return fetch(`${API}/registrations`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -43,7 +44,7 @@ export const signup = token => {
 };
 
 export const signin = (user) => {
-  return fetch(`${API}/signin`, {
+  return fetch(`${API}/sessions`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -59,10 +60,6 @@ export const signout = (next) => {
   removeCookie('token');
   removeLocalStorage('user');
   next();
-
-  return fetch(`${API}/signout`)
-  .then(res => console.log('signout success'))
-  .catch(err => console.log(err));
 }
 
 // set cookie
@@ -108,7 +105,7 @@ export const removeLocalStorage = (key) => {
 // authenticate user by pass data to cookie and localstorage
 export const authenticate = (data, next) => {
   setCookie('token', data.token);
-  setLocalStorage('user', data.user);
+  setInStorage('user', data.user);
   next();
 }
 

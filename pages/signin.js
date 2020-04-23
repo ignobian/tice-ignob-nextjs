@@ -6,6 +6,7 @@ import { withRouter } from 'next/router';
 import { H2 } from '../components/Heading';
 import { DefaultLink } from '../components/Link';
 import { APP_NAME, DOMAIN } from '../config';
+import Error from '../components/Error';
 
 const Signin = ({ router }) => {
   const head = () => (
@@ -29,15 +30,13 @@ const Signin = ({ router }) => {
 
   const showActivateMessage = () => {
     if (router.query.activate) {
-      return <div className="text-muted mt-4">Your account has been activated! Please sign in</div>
+      return <div className="text-muted">Your account has been activated! Please sign in</div>
     }
   }
 
   const showRedirectMessage = () => {
     if (router.query.message) {
-      return <div className="alert alert-danger">
-        {router.query.message}
-      </div>
+      return <Error content={router.query.message} />
     }
   }
   return (
@@ -47,8 +46,8 @@ const Signin = ({ router }) => {
         <div className="container">
           <div className="row">
             <div className="col-10 col-md-6 offset-1 offset-md-3">
+              <H2 className="text-center mt-4 mb-2">Sign in</H2>
               {showActivateMessage()}
-              <H2 className="text-center my-4">Sign in</H2>
               {showRedirectMessage()}
               <SigninComponent/>
               <div className="mt-4" style={{opacity: 0.8}}>

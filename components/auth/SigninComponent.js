@@ -4,10 +4,12 @@ import Router from 'next/router';
 import { Button } from '../Button';
 import { DefaultLink } from '../Link';
 import Loading from '../Loading';
+import Error from '../Error';
+import Message from '../Message';
 import Link from 'next/link';
 import LoginGoogle from './LoginGoogle';
 import LoginFacebook from './LoginFacebook';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Form, FormGroup, Input } from 'reactstrap';
 
 const SigninComponent = () => {
   const [ values, setValues ] = useState({
@@ -34,13 +36,8 @@ const SigninComponent = () => {
     signin(user)
     .then(data => {
       if (data.error) {
-        setValues({ ...values, 
-          error: data.error,
-          loading: false
-        });
+        setValues({ ...values, error: data.error, loading: false });
       } else {
-        // save user token to cookie
-        // save user info to localstorage
         // authenticate user
         authenticate(data, () => {
           Router.push('/');
@@ -54,38 +51,35 @@ const SigninComponent = () => {
   }
 
   const showLoading = () => loading && <Loading/>;
-  const showError = () => error && <div className="alert alert-danger">{error}</div>;
-  const showMessage = () => message && <div className="alert alert-info">{message}</div>;
+  const showError = () => error && <Error content={error} />;
+  const showMessage = () => message && <Message color="success" content={message} />;
 
   const signinForm = () => {
     return (
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
 
-        <div className="form-group">
-          <input
+        <FormGroup>
+          <Input
             type="email"
             onChange={handleChange('email')}
             value={email}
-            className="form-control"
             placeholder="Type your email" />
-        </div>
+        </FormGroup>
 
-        <div className="form-group">
-          <input
+        <FormGroup>
+          <Input
             type="password"
             onChange={handleChange('password')}
             value={password}
-            className="form-control"
             placeholder="Type your password" />
-        </div>
+        </FormGroup>
 
         <div className="d-flex justify-content-between align-items-center mt-4">
           <Link href="/user/password/forgot"><DefaultLink>Forgot password?</DefaultLink></Link>
           <Button type="submit">Sign in</Button>
         </div>
 
-
-      </form>
+      </Form>
     )
   }
   return (
@@ -94,11 +88,11 @@ const SigninComponent = () => {
       {showLoading()}
       {showMessage()}
       <Row className="mt-5">
-        <Col xs="6">
+        <Col xs="12" md="6">
           <LoginGoogle />
         </Col>
 
-        <Col xs="6" className="d-flex justify-content-end">
+        <Col xs="12" md="6" className="d-md-flex justify-content-end d-block">
           <LoginFacebook />
         </Col>
       </Row>

@@ -12,11 +12,11 @@ export const getReports = token => {
   .catch(err => console.log(err));
 }
 
-export const createReport = (data) => {
+export const createReport = (data, token) => {
   return fetch(`${API}/reports`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${data.token}`,
+      Authorization: `Bearer ${token}`,
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },

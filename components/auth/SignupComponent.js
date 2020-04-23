@@ -3,19 +3,24 @@ import { isAuth, preSignup } from '../../actions/auth';
 import Router from 'next/router';
 import { Button } from '../Button';
 import Loading from '../Loading';
+import Error from '../Error';
+import { Form, Input, FormGroup, Row, Col, InputGroup } from 'reactstrap';
 
 const SignupComponent = () => {
   const [ values, setValues ] = useState({
-    name: '',
+    username: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
+    passwordConfirmation: '',
     error: '',
     loading: false,
     message: '',
     showForm: true
   });
 
-  const { name, email, password, error, loading, message, showForm } = values;
+  const { username, firstName, lastName, email, password, passwordConfirmation, error, loading, message, showForm } = values;
 
   // redirect user when already signed in
   useEffect(() => {
@@ -24,28 +29,29 @@ const SignupComponent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setValues({ ...values, loading: true, error: false });
-    const user = { name, email, password };
+    // check if password and confirmation are the same
+    if (password === passwordConfirmation) {
+      setValues({ ...values, loading: true, error: '' });
 
-    preSignup(user)
-    .then(data => {
-      if (data.error) {
-        setValues({ ...values, 
-          error: data.error,
-          loading: false
-        });
-      } else {
-        setValues({...values,
-          name: '',
-          email: '',
-          password: '',
-          error: '',
-          loading: false,
-          message: data.message,
-          showForm: false
-        });
+      const user = {
+        username,
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        password
       }
-    });
+
+      preSignup(user).then(data => {
+        if (data.error) {
+          setValues({ ...values, error: data.error, loading: false });
+        } else {
+          setValues({...values, loading: false, message: data.message, showForm: false });
+        }
+      });
+      
+    } else {
+      setValues({ ...values, error: 'Passwords don\'t match', password: '', passwordConfirmation: '' });
+    }
   }
   
   const handleChange = name => (e) => {
@@ -53,45 +59,77 @@ const SignupComponent = () => {
   }
 
   const showLoading = () => loading && <Loading/>;
-  const showError = () => error && <div className="alert alert-danger">{error}</div>;
+  const showError = () => error && <Error content={error} />;
   const showMessage = () => message && <div className="text-muted">{message}</div>;
 
   const signupForm = () => {
     return (
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
 
-        <div className="form-group">
-          <input
+        <InputGroup className="mb-3">
+          <div className="input-group-prepend">
+            <div className="input-group-text">@</div>
+          </div>
+          <Input 
             type="text"
-            onChange={handleChange('name')}
-            value={name}
-            className="form-control"
-            placeholder="Type your name" />
-        </div>
+            placeholder="Username"
+            onChange={handleChange('username')}
+            value={username} />
+        </InputGroup>
 
-        <div className="form-group">
-          <input
+        <Row form>
+          <Col xs="12" md="6">
+            <FormGroup>
+              <Input
+                type="text"
+                onChange={handleChange('firstName')}
+                value={firstName}
+                placeholder="First name" />
+            </FormGroup>
+          </Col>
+
+          <Col xs="12" md="6">
+            <FormGroup>
+              <Input
+                type="text"
+                onChange={handleChange('lastName')}
+                value={lastName}
+                placeholder="Last name" />
+            </FormGroup>
+          </Col>
+        </Row>
+
+
+
+        <FormGroup>
+          <Input
             type="email"
             onChange={handleChange('email')}
             value={email}
-            className="form-control"
-            placeholder="Type your email" />
-        </div>
+            placeholder="Email" />
+        </FormGroup>
 
-        <div className="form-group">
-          <input
+        <FormGroup>
+          <Input
             type="password"
             onChange={handleChange('password')}
             value={password}
-            className="form-control"
-            placeholder="Type your password" />
-        </div>
+            placeholder="Password" />
+        </FormGroup>
+
+        <FormGroup>
+          <Input
+            type="password"
+            onChange={handleChange('passwordConfirmation')}
+            value={passwordConfirmation}
+            placeholder="Retype password" />
+        </FormGroup>
 
         <div className="d-flex justify-content-center mt-4">
           <Button type="submit">Sign up</Button>
         </div>
 
-      </form>
+      </Form>
     )
   }
   return (

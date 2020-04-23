@@ -4,13 +4,14 @@ import queryString from 'query-string';
 import { handleResponse } from './auth';
 
 export const createBlog = (blog, token) => {
-  return fetch(`${API}/blog`, {
+  return fetch(`${API}/blogs`, {
     method: 'POST',
     headers: {
+      'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: blog
+    body: JSON.stringify(blog)
   })
   .then(res => {
     handleResponse(res);
@@ -20,7 +21,7 @@ export const createBlog = (blog, token) => {
 };
 
 export const listBlogsWithCategoriesAndTags = (skip, limit) => {
-  return fetch(`${API}/blogs-categories-tags`, {
+  return fetch(`${API}/blogs/with-categories-tags`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -32,21 +33,8 @@ export const listBlogsWithCategoriesAndTags = (skip, limit) => {
   .catch(err => console.log(err));
 };
 
-export const getBlog = slug => {
-  return fetch(`${API}/blog/${slug}`)
-    .then(res => res.json())
-    .catch(err => console.log(err))
-}
-
-export const listRelated = (blog) => {
-  return fetch(`${API}/blogs/related`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({blog})
-  })
+export const listRelated = blog => {
+  return fetch(`${API}/blogs/${blog.id}/list-related`)
   .then(res => res.json())
   .catch(err => console.log(err));
 };
@@ -58,7 +46,7 @@ export const list = () => {
 }
 
 export const removeBlog = (slug, token) => {
-  return fetch(`${API}/blog/${slug}`, {
+  return fetch(`${API}/blogs/${slug}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -73,13 +61,14 @@ export const removeBlog = (slug, token) => {
 };
 
 export const updateBlog = (blog, token, slug) => {
-  return fetch(`${API}/blog/${slug}`, {
+  return fetch(`${API}/blogs/${slug}`, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: blog
+    body: JSON.stringify(blog)
   })
   .then(res => () => {
     handleResponse(res);
@@ -88,16 +77,15 @@ export const updateBlog = (blog, token, slug) => {
   .catch(err => console.log(err));
 };
 
-export const listSearch = (params) => {
+export const listSearch = params => {
   let query = queryString.stringify({search: params});
-
   return fetch(`${API}/blogs/search?${query}`)
   .then(res => res.json())
   .catch(err => console.log(err))
 }
 
 export const listFromUser = token => {
-  return fetch(`${API}/user/blogs`, {
+  return fetch(`${API}/blogs/from-self`, {
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`
@@ -107,15 +95,14 @@ export const listFromUser = token => {
   .catch(err => console.log(err))
 }
 
-export const addClap = (blog, user) => {
-  if (user) {
-    return fetch(`${API}/blog/${blog.slug}/add-clap`, {
+export const addClap = (blog, token) => {
+  if (token) {
+    return fetch(`${API}/blogs/${blog.slug}/add-clap`, {
       method: 'PUT',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: user._id })
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+      }
     })
     .then(res => res.json())
     .catch(err => console.log(err))
@@ -145,4 +132,30 @@ export const getFeedBlogs = token => {
   })
   .then(res => res.json())
   .catch(err => console.log(err))
+}
+
+export const getCommentsForBlog = slug => {
+  return fetch(`${API}/blogs/${slug}/comments`)
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}
+
+export const createComment = (blogId, content, token) => {
+  return fetch(`${API}/blogs/${blogId}/comments`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ content })
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}
+
+export const getBlog = slug => {
+  return fetch(`${API}/blogs/${slug}`)
+    .then(res => res.json())
+    .catch(err => console.log(err))
 }

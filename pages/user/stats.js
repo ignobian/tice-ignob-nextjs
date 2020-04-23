@@ -4,12 +4,15 @@ import Layout from '../../components/Layout';
 import { Container, Row, Col, Table, Input, Label } from 'reactstrap';
 import styled from 'styled-components';
 import Loading from '../../components/Loading';
+import Error from '../../components/Error';
 import { isAuth, getCookie } from '../../actions/auth';
 import { loadUserStats } from '../../actions/user';
 import { API } from '../../config';
 import { DefaultLink } from '../../components/Link';
 import Link from 'next/link';
 import sortBy from 'sort-by';
+import { Image, Transformation } from 'cloudinary-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const GridContainer = styled.div`
   display: grid;
@@ -20,13 +23,14 @@ const UserStats = () => {
   const sortOptions = ['Impressions', 'Shares'];
 
   const [values, setValues] = useState({
-    data: null,
+    stats: null,
+    blogs: [],
     loading: true,
     error: '',
     sortMethod: 'Impressions'
   });
 
-  const { loading, data, error, sortMethod } = values;
+  const { loading, stats, blogs, error, sortMethod } = values;
 
   const token = isAuth() && getCookie('token');
 
@@ -35,7 +39,7 @@ const UserStats = () => {
       if (data.error) {
         setValues({ ...values, loading: false, error: data.error });
       } else {
-        setValues({ ...values, loading: false, data });
+        setValues({ ...values, loading: false, stats: data.stats, blogs: data.blogs });
       }
     });
   }, []);
@@ -45,27 +49,21 @@ const UserStats = () => {
   }
 
   const showLoading = () => loading && <Loading />
-  const showError = () => error && <p className="alert alert-danger">{error}</p>
+  const showError = () => error && <Error content={error} />
 
   const listBlogs = () => {
-    const blogsWithExtraData = data.blogs.map(blog => {
-      blog.impressionsLength = blog.impressions.length;
-      blog.sharesLength = blog.shares.length;
-      return blog;
-    });
-
-    let blogsWithExtraDataSorted;
+    let blogsSorted;
     if (sortMethod === 'Impressions') {
       // order by impressions length and then shares length
-      blogsWithExtraDataSorted = blogsWithExtraData.sort(sortBy('-impressionsLength', '-sharesLength'));
+      blogsSorted = blogs.sort(sortBy('-impressionsLength', '-sharesLength'));
     } else {
-      blogsWithExtraDataSorted = blogsWithExtraData.sort(sortBy('-sharesLength', '-impressionsLength'));
+      blogsSorted = blogs.sort(sortBy('-sharesLength', '-impressionsLength'));
     }
 
     return (
-      blogsWithExtraDataSorted.map(blog => (
+      blogsSorted.map(blog => (
         <tr>
-          <td><img width="40" style={{borderRadius: 4}} src={`${API}/blog/photo/${blog.slug}`} /></td>
+          <td><Image width="40" style={{borderRadius: 4}} publicId={blog.photo && blog.photo.key}><Transformation crop="fill" width="200" /></Image></td>
           <td style={{maxWidth: 60, overflow: 'hidden'}}><Link href={`/${blog.slug}`}><DefaultLink>{blog.title}</DefaultLink></Link></td>
           <td>{blog.impressions.length}</td>
           <td>{blog.shares.length}</td>
@@ -86,10 +84,11 @@ const UserStats = () => {
             </Col>
 
             <Col xs="12">
-              {data && (
+              {stats && (
                 <GridContainer>
-                  <p>Total impressions: {data.totalViews}</p>
-                  <p>Total shares: {data.totalShares}</p>
+                  <p>Total blogs: {blogs.length}</p>
+                  <p>Total impressions: {stats.totalViews}</p>
+                  <p>Total shares: {stats.totalShares}</p>
                 </GridContainer>
               )}
             </Col>
@@ -109,14 +108,14 @@ const UserStats = () => {
             </Col>
 
             <Col xs="12">
-              {data && (
+              {blogs && (
                 <Table>
                   <thead>
                     <tr>
                       <th></th>
                       <th>Title</th>
-                      <th>Impressions</th>
-                      <th>Shares</th>
+                      <th><FontAwesomeIcon width="20" icon={['far', 'eye']} /></th>
+                      <th><FontAwesomeIcon style={{marginLeft: 2}} width="14" icon={['fas', 'share-alt']} /></th>
                     </tr>
                   </thead>
                   <tbody>

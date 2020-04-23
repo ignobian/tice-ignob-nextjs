@@ -14,7 +14,7 @@ const Loading = () => {
   return (
     <Container>
       <div className="d-flex align-items-center justify-content-center h-100">
-        <img width="100" src="/images/loading.gif" alt="Loading..."/>
+        <img width="100" src="/images/loading.svg" alt="Loading..."/>
       </div>
     </Container>
   )
