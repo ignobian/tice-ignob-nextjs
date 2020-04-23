@@ -45,7 +45,7 @@ const BlogComments = ({ blog }) => {
   const showCommentList = () => (
     comments.map(comment => (
       <div className="text-left border-bottom pb-3 mb-3">
-        <p>{comment.content}</p>
+        <p className="text-muted font-italic">{comment.content}</p>
         <div className="d-flex align-items-center">
           {comment.user.photo && (
             <Image publicId={comment.user.photo && comment.user.photo.key} style={{width: 50, borderRadius: '50%'}}>
@@ -62,7 +62,7 @@ const BlogComments = ({ blog }) => {
   const showCommentForm = () => (
     <Form onSubmit={handleSubmit}>
       <FormGroup>
-        <Input value={content} onChange={() => setContent(e.target.value)} type="textarea" id="comment" placeholder="write a comment..." />
+        <Input value={content} onChange={e => setContent(e.target.value)} type="textarea" id="comment" placeholder="write a comment..." />
       </FormGroup>
 
       <FormGroup className="d-flex">

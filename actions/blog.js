@@ -142,6 +142,7 @@ export const getCommentsForBlog = slug => {
 
 export const createComment = (blogId, content, token) => {
   return fetch(`${API}/blogs/${blogId}/comments`, {
+    method: 'POST',
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
