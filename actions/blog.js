@@ -33,12 +33,6 @@ export const listBlogsWithCategoriesAndTags = (skip, limit) => {
   .catch(err => console.log(err));
 };
 
-export const getBlog = slug => {
-  return fetch(`${API}/blogs/${slug}`)
-    .then(res => res.json())
-    .catch(err => console.log(err))
-}
-
 export const listRelated = blog => {
   return fetch(`${API}/blogs/${blog.id}/list-related`)
   .then(res => res.json())

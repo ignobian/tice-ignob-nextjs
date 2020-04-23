@@ -22,6 +22,7 @@ import ReportBtn from '../components/ReportBtn';
 import { H1 } from '../components/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Image, Transformation } from 'cloudinary-react';
+import cacheFetch, { overrideCache } from '../helpers/cacheFetch';
 
 const Banner = styled.div`
   height: 300px;
@@ -47,7 +48,7 @@ const BodyContainer = styled.div`
   }
 `;
 
-const singleBlog = ({ blog, serverError }) => {
+const singleBlog = ({ blog, serverError, isServerRendered }) => {
   if (serverError) return <Error content={serverError} />
 
   const keywords = blog.tags.concat(blog.keywords || []);
@@ -85,6 +86,11 @@ const singleBlog = ({ blog, serverError }) => {
     loadRelated();
     setCount(blog.claps);
     initImpression();
+
+    // handle overriding client cache if the page is server rendered
+    if (isServerRendered) {
+      overrideCache(`${API}/blogs/${blog.slug}`, blog);
+    }
   }, []);
 
   const initImpression = () => {
@@ -282,14 +288,18 @@ const singleBlog = ({ blog, serverError }) => {
 };
 
 // ssr
-singleBlog.getInitialProps = ({ query }) => {
-  return getBlog(query.blogSlug).then(data => {
-    if (data.error) {
-      return { error: data.error }
-    } else {
-      return { blog: data }
-    }
-  });
+singleBlog.getInitialProps = async (ctx) => {
+  const { query } = ctx;
+
+  const data = await cacheFetch(`${API}/blogs/${query.blogSlug}`);
+
+  const isServerRendered = !!ctx.req;
+
+  if (data.error) {
+    return { serverError: data.error, isServerRendered: true }
+  } else {
+    return { blog: data, isServerRendered }
+  }
 }
 
 export default singleBlog;
