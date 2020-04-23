@@ -40,6 +40,13 @@ const SocialIconsContainer = styled.div`
   }
 `;
 
+const BodyContainer = styled.div`
+  overflow-x: hidden;
+  img {
+    max-width: 100%;
+  }
+`;
+
 const singleBlog = ({ blog, serverError }) => {
   if (serverError) return <Error content={serverError} />
 
@@ -239,8 +246,10 @@ const singleBlog = ({ blog, serverError }) => {
                 <H1 className="my-4">{blog.title}</H1>
               </Col>
 
-              <Col xs="12" md={{size: 10, offset: 1}} style={{overflowX: 'hidden'}}>
-                {renderHtml(blog.body)}
+              <Col xs="12" md={{size: 10, offset: 1}}>
+                <BodyContainer>
+                  {renderHtml(blog.body)}
+                </BodyContainer>
               </Col>
 
               <Col className="mt-4 d-flex justify-content-end" xs="12" md={{size: 10, offset: 1}}>
