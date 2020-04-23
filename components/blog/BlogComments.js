@@ -34,6 +34,7 @@ const BlogComments = ({ blog }) => {
         if (data.error) {
           console.log(data.error);
         } else {
+          setContent('');
           getCommentsForBlog(blog.slug).then(data => {
             setComments(data);
           });
