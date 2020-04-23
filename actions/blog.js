@@ -139,3 +139,16 @@ export const getCommentsForBlog = slug => {
   .then(res => res.json())
   .catch(err => console.log(err))
 }
+
+export const createComment = (blogId, content, token) => {
+  return fetch(`${API}/blogs/${blogId}/comments`, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ content })
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}
