@@ -9,7 +9,6 @@ import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../config';
 import moment from 'moment';
 import renderHtml from 'react-render-html';
 import RelatedBlog from '../components/blog/RelatedBlog';
-import DisqusThread from '../components/DisqusThread';
 import { DefaultLink } from '../components/Link';
 import styled from 'styled-components';
 import Error from '../components/Error';
@@ -23,6 +22,7 @@ import { H1 } from '../components/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Image, Transformation } from 'cloudinary-react';
 import cacheFetch, { overrideCache } from '../helpers/cacheFetch';
+import BlogComments from '../components/blog/BlogComments';
 
 const Banner = styled.div`
   height: 300px;
@@ -81,7 +81,6 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
   const [related, setRelated] = useState([]);
   const [count, setCount] = useState(0);
   const [error, setError] = useState('');
-  const [showingComments, setShowingComments] = useState(false);
 
   useEffect(() => {
     loadRelated();
@@ -92,11 +91,6 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
     if (isServerRendered) {
       overrideCache(`${API}/blogs/${blog.slug}`, blog);
     }
-
-    // set comments on (increase page load by turning them off first)
-    setTimeout(() => {
-      setShowingComments(true);
-    }, 100);
   }, []);
 
   const initImpression = () => {
@@ -147,12 +141,6 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
       }
     });
   }
-
-  const showComments = () => (
-    <div className="w-100">
-      <DisqusThread id={blog.id} title={blog.title} path={`/blog/${blog.slug}`} />
-    </div>
-  )
 
   const showCategories = blog => (
     <div className="d-flex flex-wrap">
@@ -282,8 +270,7 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
 
             <Row className="text-center py-5">
               <hr/>
-              {showingComments && showComments()}
-
+              <BlogComments blog={blog} />
             </Row>
           </Container>
 
