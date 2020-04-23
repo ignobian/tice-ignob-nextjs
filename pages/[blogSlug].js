@@ -239,7 +239,7 @@ const singleBlog = ({ blog, serverError }) => {
                 <H1 className="my-4">{blog.title}</H1>
               </Col>
 
-              <Col xs="12" md={{size: 10, offset: 1}} style={{overFlowX: 'hidden'}}>
+              <Col xs="12" md={{size: 10, offset: 1}} style={{overflowX: 'hidden'}}>
                 {renderHtml(blog.body)}
               </Col>
 
