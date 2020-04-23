@@ -153,3 +153,9 @@ export const createComment = (blogId, content, token) => {
   .then(res => res.json())
   .catch(err => console.log(err))
 }
+
+export const getBlog = slug => {
+  return fetch(`${API}/blogs/${slug}`)
+    .then(res => res.json())
+    .catch(err => console.log(err))
+}
