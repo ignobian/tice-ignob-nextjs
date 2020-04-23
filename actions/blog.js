@@ -133,3 +133,9 @@ export const getFeedBlogs = token => {
   .then(res => res.json())
   .catch(err => console.log(err))
 }
+
+export const getCommentsForBlog = slug => {
+  return fetch(`${API}/blogs/${slug}/comments`)
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}
