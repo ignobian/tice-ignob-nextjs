@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Layout from '../../../../components/Layout';
-import { withRouter } from 'next/router';
-import { resetPassword } from '../../../../actions/auth';
+import Router, { withRouter } from 'next/router';
+import { resetPassword, signout } from '../../../../actions/auth';
 import Loading from '../../../../components/Loading';
 import { SecondaryButton } from '../../../../components/Button';
 import { DefaultLink } from '../../../../components/Link';
@@ -50,6 +50,11 @@ const ResetPassword = ({ router }) => {
       if (data.error) return setError(data.error);
 
       setMessage(data.message);
+
+      // sign out and redirect to sign in page
+      signout(() => {
+        Router.push('/signin');
+      });
     }
   }
 
