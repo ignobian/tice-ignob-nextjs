@@ -153,7 +153,7 @@ export const resetPassword = (resetPasswordLink, newPassword) => {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ resetPasswordLink, newPassword })
+    body: JSON.stringify({ reset_password_link: resetPasswordLink, new_password: newPassword })
   })
   .then(res => res.json())
   .catch(err => console.log(err));

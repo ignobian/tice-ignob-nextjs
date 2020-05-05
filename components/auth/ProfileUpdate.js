@@ -1,9 +1,6 @@
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import Router from 'next/router';
-import { getCookie, isAuth, updateUser } from '../../actions/auth';
+import { getCookie, isAuth, forgotPassword } from '../../actions/auth';
 import { getUserForEdit, update } from '../../actions/user';
-import { API } from '../../config';
 import { SecondaryButtonLabel, Button, SecondaryButton } from '../Button';
 import Loading from '../Loading';
 import { Form, FormGroup, InputGroup, Label, Input, Container, Row, Col } from 'reactstrap';
@@ -87,12 +84,15 @@ const ProfileUpdate = () => {
       return;
     }
 
-    setError('');
-    setSuccess(data.message);
+    setSuccess('User updated');
   }
 
-  const handleResetPassword = async () => {
-    console.log('hi')
+  const handleResetPassword = async e => {
+    e.preventDefault();
+    const data = await forgotPassword(isAuth().email);
+    if (data.error) return setError(data.error);
+
+    setResetPasswordMessage(data.message);
   }
 
   const showError = () => error && <Error content={error} />
