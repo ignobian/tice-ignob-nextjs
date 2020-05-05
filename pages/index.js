@@ -12,6 +12,7 @@ import FeaturedBlogs from '../components/home/FeaturedBlogs';
 import { list } from "../actions/blog";
 import { isAuth } from "../actions/auth";
 import { H2 } from '../components/Typography';
+import { Container, Row, Col } from 'reactstrap';
 
 const Index = ({ categories, tags, blogs }) => {
   const head = () => (
@@ -33,48 +34,46 @@ const Index = ({ categories, tags, blogs }) => {
     </Head>
   );
 
+  const showLearnMore = () => (
+    <Col xs={{size: 6, offset: 3}} md={{size: 4, offset: 4}} className="mt-2">
+      <ButtonLink style={{display: 'block', padding: '17px'}}>Get started</ButtonLink>
+
+      <div className="mt-3 text-left" style={{opacity: 0.8}}>
+        <p className="mb-2">Already have an account?</p>
+        <Link href="/"><DefaultLink>Sign in</DefaultLink></Link>
+      </div>
+    </Col>
+  )
+
   return (
     <>
       {head()}
       <Layout>
-        <div className="container">
-          <div className="row text-center">
-            <div className="col-12 mt-5">
+        <Container>
+          <Row className="text-center">
+            <Col xs="12" className="mt-5">
               <H2 className="font-weight-bold">Get to know about what matters to you.</H2>
-            </div>
+            </Col>
 
-            <div className="col-12 mt-5">
+            <Col xs="12" className="my-5">
               <CategoryListSection categories={categories}/>
-            </div>
+            </Col>
 
-            <div className="col-12 mt-3 mb-5">
-              <TagListSection tags={tags} />
-            </div>
-
-            <div className="col-12 my-2">
+            <Col className="my-2">
               <p><strong>We are passionate about coding and are keen to share that knowledge with you</strong></p>
-            </div>
+            </Col>
 
-            {!isAuth() && (
-              <div className="col-6 offset-3 col-md-4 offset-md-4 mt-2">
-                <ButtonLink style={{display: 'block', padding: '17px'}}>Get started</ButtonLink>
+            {!isAuth() && showLearnMore()}
 
-                <div className="mt-3 text-left" style={{opacity: 0.8}}>
-                  <p className="mb-2">Already have an account?</p>
-                  <Link href="/"><DefaultLink>Sign in</DefaultLink></Link>
-                </div>
-              </div>
-            )}
+          </Row>
 
-          </div>
-
-          <div className="row">
-            <div className="col-12 col-md-10 offset-md-1 mt-4">
+          <Row>
+            <Col xs="12" md={{size: 10, offset: 1}} className="mt-4">
               <h2 className="pt-5">Featured blogs</h2>
               <FeaturedBlogs blogs={blogs}/>
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Container>
       </Layout>
     </>
   )
