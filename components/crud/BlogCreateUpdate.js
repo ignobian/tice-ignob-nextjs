@@ -124,6 +124,9 @@ const CreateUpdateBlog = ({ slug }) => {
           setValues({ ...values, loading: false, error: data.error });
         } else {
           setValues({ ...values, loading: false, error: '', success: `${data.title} is created!`});
+          // remove saved blog from localstorage
+          localStorage.removeItem('title');
+          localStorage.removeItem('blog');
           // redirect to the update page of this blog post
           Router.push(`/${data.slug}`);
         }
