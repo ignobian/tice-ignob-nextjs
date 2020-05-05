@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { APP_NAME, DOMAIN } from '../config';
 import CategoryListSection from '../components/home/CategoryListSection';
-import TagListSection from '../components/home/TagListSection';
+// import TagListSection from '../components/home/TagListSection';
 import { getCategories } from "../actions/category";
 import { getFeaturedTags } from "../actions/tag";
 import { ButtonLink } from '../components/Button';
