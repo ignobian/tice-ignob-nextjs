@@ -45,7 +45,7 @@ const BlogComments = ({ blog }) => {
 
   const showCommentList = () => (
     comments.map(comment => (
-      <div className="text-left border-bottom pb-3 mb-3">
+      <div key={comment.id} className="text-left border-bottom pb-3 mb-3">
         <p className="text-muted font-italic">{comment.content}</p>
         <div className="d-flex align-items-center">
           {comment.user.photo && (
