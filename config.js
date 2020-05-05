@@ -12,6 +12,6 @@ export const FB_APP_ID = publicRuntimeConfig.FB_APP_ID;
 
 export const DISQUS_SHORTNAME = publicRuntimeConfig.DISQUS_SHORTNAME;
 
-export const GOOGLE_CLIENT_ID = publicRuntimeConfig.GOOGLE_CLIENT_ID;
+export const GOOGLE_CLIENT_ID = publicRuntimeConfig.PRODUCTION ? publicRuntimeConfig.GOOGLE_CLIENT_ID_PROD : publicRuntimeConfig.GOOGLE_CLIENT_ID_DEV;
 
 export const CLOUDINARY_CLOUDNAME = publicRuntimeConfig.CLOUDINARY_CLOUDNAME;
