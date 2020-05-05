@@ -10,7 +10,7 @@ module.exports = withCSS({
     DOMAIN_PRODUCTION: 'https://ignob-blog-site.herokuapp.com',
     FB_APP_ID: '224791541919508',
     DISQUS_SHORTNAME: 'gravinash-blog',
-    GOOGLE_CLIENT_ID: '451267118385-ae8h21u07q358q14c4gtfomvflb2srs3.apps.googleusercontent.com',
+    GOOGLE_CLIENT_ID: '848260892598-at9rapf8ev6v9iq8ajb7kn860rh7b8mo.apps.googleusercontent.com',
     CLOUDINARY_CLOUDNAME: 'ticekralt'
   }
 });

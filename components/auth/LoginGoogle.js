@@ -1,39 +1,30 @@
 import { useState } from 'react';
 import Router from 'next/router';
 import GoogleLogin from 'react-google-login';
-import { loginWithGoogle, authenticate, isAuth } from '../../actions/auth';
+import { loginWithGoogle, authenticate } from '../../actions/auth';
 import { GOOGLE_CLIENT_ID } from '../../config';
 import Loading from '../Loading';
 
 const LoginGoogle = () => {
-  const [values, setValues] = useState({
-    loading: false
-  });
-
-  const { loading } = values;
+  const [loading, setLoading] = useState(false);
 
   const logError = err => {
     console.log(err);
   }
 
-  const responseGoogle = response => {
+  const responseGoogle = async response => {
     const tokenId = response.tokenId;
     const user = { tokenId };
     console.log('belh')
 
-    setValues({ ...values, loading: true });
+    setLoading(true);
 
-    loginWithGoogle(user).then(data => {
-      console.log(data);
-      if (data.error) {
-        setValues({ ...values, loading: false });
-        console.log(data.error);
-      } else {
-        // authenticate the user
-        authenticate(data, () => {
-          Router.push('/');
-        });
-      }
+    const data = await loginWithGoogle(user);
+
+    if (data.error) return console.log(data.error);
+
+    authenticate(data, () => {
+      Router.push('/');
     });
   }
 
@@ -44,7 +35,7 @@ const LoginGoogle = () => {
       {showLoading()}
       <div className="pb-3">
         <GoogleLogin
-          autoLoad={false}
+          // autoLoad={false}
           clientId={GOOGLE_CLIENT_ID}
           buttonText="Login with Google"
           onSuccess={responseGoogle}
