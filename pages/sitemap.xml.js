@@ -55,10 +55,6 @@ const sitemapXml = ({ blogs, categories, tags, users }) => {
       <priority>1.00</priority>
     </url>
     <url>
-      <loc>${DOMAIN}/blogs</loc>
-      <priority>0.90</priority>
-    </url>
-    <url>
       <loc>${DOMAIN}/blogs/new</loc>
       <priority>0.90</priority>
     </url>
