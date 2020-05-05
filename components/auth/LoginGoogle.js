@@ -14,8 +14,7 @@ const LoginGoogle = () => {
 
   const responseGoogle = async response => {
     const tokenId = response.tokenId;
-    const user = { tokenId };
-    console.log('belh')
+    const user = { token_id: tokenId };
 
     setLoading(true);
 
