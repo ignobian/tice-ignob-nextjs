@@ -33,7 +33,7 @@ const DropdownMenu = () => {
             <li className="border-bottom pb-3"><Link href="/admin/reports"><DefaultLink>Manage Reports</DefaultLink></Link></li>
           </>
         )} 
-        <li><Link href="/blogs"><DefaultLink>Browse blogs</DefaultLink></Link></li>
+        <li><Link href=""><DefaultLink>Browse blogs</DefaultLink></Link></li>
         <li className="border-bottom pb-3"><Link href="/following"><DefaultLink>Following feed</DefaultLink></Link></li>
         <li><DefaultLink href="/blogs/new">Create blog</DefaultLink></li>
         <li><Link href="/user/blogs"><DefaultLink>Manage my blogs</DefaultLink></Link></li>
