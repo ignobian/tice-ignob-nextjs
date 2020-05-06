@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { searchWithOption } from '../../actions/blog';
 import { getCookie } from '../../actions/auth';
 import SmallCardUpdateDelete from '../blog/SmallCardUpdateDelete';
@@ -12,6 +12,7 @@ const AdminSearchBlogs = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [blogs, setBlogs] = useState([]);
+  const [noBlogsFound, setNoBlogsFound] = useState(false);
   const [values, setValues] = useState({
     query: '',
     selectedOption: options[0]
@@ -25,13 +26,23 @@ const AdminSearchBlogs = () => {
     setValues({ ...values, [name]: e.target.value });
   }
 
+  useEffect(() => {
+    if (noBlogsFound || blogs.length > 0) {
+      // perform search again
+      handleSubmit();
+    }
+  }, [selectedOption])
+
   const clearBlogsQuery = () => {
     setValues({ ...values, query: '' });
   }
 
   const handleSubmit = async e => {
-    e.preventDefault();
+    e && e.preventDefault();
+
     setLoading(true);
+
+    setNoBlogsFound(false);
 
     const data = await searchWithOption(query, token, selectedOption);
 
@@ -42,7 +53,10 @@ const AdminSearchBlogs = () => {
       setBlogs([]);
     }
 
-    setBlogs(data)
+    setBlogs(data);
+    if (data.length === 0) {
+      setNoBlogsFound(true);
+    }
   }
 
   const showForm = () => (
@@ -82,7 +96,7 @@ const AdminSearchBlogs = () => {
       <div className="mt-4 mb-5">
         {showLoading()}
         {showError()}
-        {query && !blogs.length ? <p className="text-muted font-italic">No blogs found</p> : ''}
+        {noBlogsFound && <p className="text-muted font-italic">No blogs found</p>}
         {showResults()}
       </div>
     </>
