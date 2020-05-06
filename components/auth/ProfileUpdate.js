@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getCookie, isAuth, forgotPassword } from '../../actions/auth';
 import { getUserForEdit, update } from '../../actions/user';
-import { SecondaryButtonLabel, Button, SecondaryButton } from '../Button';
+import { SecondaryButtonLabel, Button, SecondaryButton, DeleteButton } from '../Button';
 import Loading from '../Loading';
 import { Form, FormGroup, InputGroup, Label, Input, Container, Row, Col } from 'reactstrap';
 import Error from '../Error';
@@ -170,6 +170,10 @@ const ProfileUpdate = () => {
           <h2 className="d-none d-md-block my-4">Update profile</h2>
           {showLoading()}
           {showForm()}
+
+          <div className="my-5">
+            <DeleteButton>Delete profile</DeleteButton>
+          </div>
         </Col>
       </Row>
     </Container>
