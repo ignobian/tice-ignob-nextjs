@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import Layout from '../../../components/Layout';
 import Loading from '../../../components/Loading';
+import Error from '../../../components/Error';
 import { forgotPassword } from '../../../actions/auth';
 import { SecondaryButton } from '../../../components/Button';
 import Head from 'next/head';
 import { APP_NAME } from '../../../config';
+import { Container, Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 
 const ForgotPassword = () => {
   const head = () => (
@@ -13,76 +15,71 @@ const ForgotPassword = () => {
       <meta name="robots" content="noindex,nofollow" />
     </Head>
   )
-  const [values, setValues] = useState({
-    email: '',
-    message: '',
-    error: '',
-    loading: false,
-    showForm: true
-  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState('');
 
-  const { email, message, error, loading, showForm } = values;
-
-  const handleChange = name => e => {
-    setValues({ ...values, message: '', error: '', [name]: e.target.value });
+  const handleChange = e => {
+    setEmail(e.target.value);
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
-    setValues({ ...values, error: '', message: '', loading: true });
+    setLoading(true);
+    setError('');
 
-    forgotPassword(email).then(data => {
-      if (data.error) {
-        setValues({ ...values, error: data.error, loading: false });
-      } else {
-        setValues({ ...values, message: data.message, error: '', loading: false, showForm: false });
-      }
-    });
+    const data = await forgotPassword(email);
+
+    setLoading(false);
+
+    if (data.error) return setError(data.error);
+
+    setMessage(data.message);
   }
 
-  const showError = () => error && <div className="alert alert-danger">{error}</div>
+  const showError = () => error && <Error content={error} />
   const showMessage = () => message && <div className="text-muted">{message}</div>
   const showLoading = () => loading && <Loading/>
 
   const passwordForgotForm = () => (
-    <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="email" className="form-label">Enter email:</label>
-        <input 
+    <Form onSubmit={handleSubmit}>
+      <FormGroup>
+        <Label htmlFor="email">Enter email:</Label>
+        <Input 
           id="email"
           type="email"
-          onChange={handleChange('email')}
-          className="form-control"
+          onChange={handleChange}
           value={email}
           placeholder="example@example.com" />
-      </div>
+      </FormGroup>
 
-      <div className="form-group">
+      <FormGroup>
         <SecondaryButton type="submit">Send password reset link</SecondaryButton>
-      </div>
-    </form>
+      </FormGroup>
+    </Form>
   );
 
   return (
     <>
       {head()}
       <Layout>
-        <div className="container">
-          <div className="row">
+        <Container>
+          <Row>
 
-            <div className="col-md-10 offset-md-1 my-4">
-              <h2>Forgot password</h2>
-            </div>
+            <Col xs="12" md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="my-4">
+              <h2 className="mb-3">Forgot password</h2>
 
-            <div className="col-md-10 offset-md-1">
               {showError()}
               {showMessage()}
               {showLoading()}
-              {showForm && passwordForgotForm()}
-            </div>
-          </div>
-        </div>
+
+              {!message && passwordForgotForm()}
+            </Col>
+
+          </Row>
+        </Container>
 
       </Layout>
     </>

@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Layout from '../../../../components/Layout';
-import { withRouter } from 'next/router';
-import { forgotPassword, resetPassword } from '../../../../actions/auth';
+import Router, { withRouter } from 'next/router';
+import { resetPassword, signout } from '../../../../actions/auth';
 import Loading from '../../../../components/Loading';
 import { SecondaryButton } from '../../../../components/Button';
 import { DefaultLink } from '../../../../components/Link';
 import Link from 'next/link';
 import Head from 'next/head';
 import { APP_NAME } from '../../../../config';
+import { Container, Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 
 const ResetPassword = ({ router }) => {
   const head = () => (
@@ -16,71 +17,74 @@ const ResetPassword = ({ router }) => {
       <meta name="robots" content="noindex,nofollow" />
     </Head>
   )
-
+  
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState('');
+  const [message, setMessage] = useState('');
   const [values, setValues] = useState({
     newPassword: '',
     passwordConfirmation: '',
-    error: '',
-    message: '',
-    loading: false,
-    showForm: true
   });
 
-  const { newPassword, passwordConfirmation, error, message, loading, showForm } = values;
+  const { newPassword, passwordConfirmation } = values;
 
   const handleChange = name => e => {
-    setValues({ ...values, error: '', message: '', [name]: e.target.value });
+    setError('');
+    setValues({ ...values, [name]: e.target.value });
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     if (newPassword !== passwordConfirmation) {
-      setValues({ ...values, error: 'Passwords don\'t match' });
+      setError('Passwords don\'t match');
     } else {
-      setValues({ ...values, error: '', message: '', loading: true });
+      setLoading(true);
   
       const resetPasswordLink = router.query.token;
-  
-      resetPassword(resetPasswordLink, newPassword).then(data => {
-        if (data.error) {
-          setValues({ ...values, error: data.error, loading: false });
-        } else {
-          setValues({ ...values, error: '', message: data.message, showForm: false, loading: false });
-        }
+
+      const data = await resetPassword(resetPasswordLink, newPassword);
+
+      setLoading(false);
+
+      if (data.error) return setError(data.error);
+
+      setMessage(data.message);
+
+      // sign out and redirect to sign in page
+      signout(() => {
+        Router.push('/signin');
       });
     }
   }
 
   const passwordResetForm = () => (
-    <form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit}>
 
-      <div className="form-group">
-        <label htmlFor="password" className="form-label">Enter new password:</label>
-        <input 
+      <FormGroup>
+        <Label htmlFor="password">Enter new password:</Label>
+        <Input 
           id="password"
           type="password"
           onChange={handleChange('newPassword')}
-          className="form-control"
           value={newPassword}
           placeholder="password123" />
-      </div>
+      </FormGroup>
 
-      <div className="form-group">
-        <label htmlFor="passwordConfirmation" className="form-label">Reenter password:</label>
-        <input 
+      <FormGroup>
+        <Label htmlFor="passwordConfirmation">Re-enter password:</Label>
+        <Input 
           id="passwordConfirmation"
           type="password"
           onChange={handleChange('passwordConfirmation')}
-          className="form-control"
           value={passwordConfirmation}
           placeholder="password123" />
-      </div>
+      </FormGroup>
 
-      <div className="form-group">
+      <FormGroup>
         <SecondaryButton type="submit">Reset</SecondaryButton>
-      </div>
-    </form>
+      </FormGroup>
+    </Form>
   );
 
   const showError = () => error && <div className="alert alert-danger">{error}</div>
@@ -97,20 +101,20 @@ const ResetPassword = ({ router }) => {
     <>
       {head()}
       <Layout>
-        <div className="container">
-          <div className="row">
-            <div className="col-md-10 col-lg-8 offset-md-1 offset-lg-2 my-4">
-              <h2>Reset password</h2>
-            </div>
+        <Container>
+          <Row>
+            <Col xs="12" md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="my-4">
+              <h2 className="mb-4">Reset password</h2>
 
-            <div className="col-md-10 col-lg-8 offset-md-1 offset-lg-2">
               {showError()}
               {showMessage()}
               {showLoading()}
-              {showForm && passwordResetForm()}
-            </div>
-          </div>
-        </div>
+
+              {!message && passwordResetForm()}
+            </Col>
+            
+          </Row>
+        </Container>
       </Layout>
     </>
   );

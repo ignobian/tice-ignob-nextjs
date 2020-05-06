@@ -1,66 +1,82 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { searchWithOption } from '../../actions/blog';
 import { getCookie } from '../../actions/auth';
 import SmallCardUpdateDelete from '../blog/SmallCardUpdateDelete';
 import { SecondaryButton } from '../Button';
+import { Form, FormGroup, Input, Label } from 'reactstrap';
+import capitalize from 'capitalize';
 
 const AdminSearchBlogs = () => {
-
   const options = ['title', 'username', 'body'];
 
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [blogs, setBlogs] = useState([]);
+  const [noBlogsFound, setNoBlogsFound] = useState(false);
   const [values, setValues] = useState({
-    error: '',
-    loading: false,
-    blogs: [],
-    //TODO: noblogs will show a little message (no blogs found)
-    noBlogs: false,
     query: '',
-    option: 'title'
+    selectedOption: options[0]
   });
 
-  const { error, blogs, noBlogs, query, option, loading } = values;
+  const { query, selectedOption } = values;
 
   const token = getCookie('token');
 
   const handleChange = name => e => {
-    setValues({ ...values, error: '', [name]: e.target.value, noBlogs: false });
+    setValues({ ...values, [name]: e.target.value });
   }
+
+  useEffect(() => {
+    if (noBlogsFound || blogs.length > 0) {
+      // perform search again
+      handleSubmit();
+    }
+  }, [selectedOption])
 
   const clearBlogsQuery = () => {
-    setValues({ ...values, error: '', query: '', blogs: [], noBlogs: false, loading: false })
+    setValues({ ...values, query: '' });
   }
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    setValues({ ...values, loading: true, error: '' });
-    searchWithOption(query, token, option).then(data => {
-      if (data.error) {
-        setValues({ ...values, error: data.error, blogs: [], noBlogs: false, loading: false })
-      } else {
-        setValues({ ...values, blogs: data, error: '', loading: false, noBlogs: data.length < 1 })
-      }
-    });
-  }
+  const handleSubmit = async e => {
+    e && e.preventDefault();
 
-  const showOptionSelect = () => (
-    <select id="option" onChange={handleChange('option')} className="form-control" style={{ width: '70px' }}>
-      {options.map((val, i) => (
-        <option key={i} value={val}>{val}</option>
-      ))}
-    </select>
-  )
+    setLoading(true);
+
+    setNoBlogsFound(false);
+
+    const data = await searchWithOption(query, token, selectedOption);
+
+    setLoading(false);
+
+    if (data.error) {
+      setError(data.error);
+      setBlogs([]);
+    }
+
+    setBlogs(data);
+    if (data.length === 0) {
+      setNoBlogsFound(true);
+    }
+  }
 
   const showForm = () => (
-    <div className="d-flex align-items-center justify-content-between">
-      <form onSubmit={handleSubmit}>
-        <input type="search" className="form-control" value={query} onChange={handleChange('query')} style={{display: 'inline-block', width: 'auto'}} />
-        <SecondaryButton type="submit">Search</SecondaryButton>
-      </form>
-      <div className="d-flex align-items-center">
-        <label className="mr-1 mb-0" htmlFor="option">Search by</label>
-        {showOptionSelect()}
-      </div>
-    </div>
+      <Form onSubmit={handleSubmit}>
+        <div style={{display: 'grid', gridTemplateColumns: '1fr 100px'}}>
+          <Input type="search" value={query} onChange={handleChange('query')} />
+          <SecondaryButton type="submit">Search</SecondaryButton>
+        </div>
+
+        <div style={{display: 'grid', gridTemplateColumns: '100px 1fr', alignItems: 'center'}} className="mt-3">
+          <Label className="mb-0" htmlFor="option">Search by</Label>
+
+          <Input type="select" id="option" onChange={handleChange('selectedOption')} value={selectedOption}>
+            {options.map(val => (
+              <option key={val} value={val}>{capitalize(val)}</option>
+            ))}
+          </Input>
+        </div>
+
+      </Form>
   );
 
   const showResults = () => (
@@ -69,9 +85,8 @@ const AdminSearchBlogs = () => {
     ))
   );
 
-  const showLoading = () =>  loading && <p className="text-muted">Loading ...</p>
-  const showError = () =>  error && <p className="alert alert-danger">{error}</p>
-  const showNoBlogs = () =>  noBlogs && <p className="text-muted">No blogs found</p>
+  const showLoading = () =>  loading && <p className="text-muted font-italic">Loading ...</p>
+  const showError = () =>  error && <Error content={error} />
 
   return (
     <>
@@ -81,7 +96,7 @@ const AdminSearchBlogs = () => {
       <div className="mt-4 mb-5">
         {showLoading()}
         {showError()}
-        {showNoBlogs()}
+        {noBlogsFound && <p className="text-muted font-italic">No blogs found</p>}
         {showResults()}
       </div>
     </>

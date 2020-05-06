@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../components/Layout';
-import { getBlog, listRelated, addClap } from '../actions/blog';
+import { listRelated, addClap } from '../actions/blog';
 import { addShare } from '../actions/share';
 import { addImpression } from '../actions/reach';
 import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../config';
@@ -71,8 +71,10 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
       <meta property="og:image" content={`http://res.cloudinary.com/ticekralt/image/upload/c_fill,w_1020/${blog.photo && blog.photo.key}`} />
       <meta property="og:image:secure_url" content={`http://res.cloudinary.com/ticekralt/image/upload/c_fill,w_1020/${blog.photo && blog.photo.key}`} />
       <meta property="og:image:type" content="image/jpg" />
-      {/* TODO: <meta property="fb:app_id" content={FB_APP_ID} /> */}
+      <meta property="fb:app_id" content={FB_APP_ID} />
       <meta name="robots" content="index,follow" />
+      {/* Google adsense code */}
+      <script data-ad-client="ca-pub-7599944658110193" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     </Head>
   );
 
@@ -172,7 +174,8 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
     const url = `${DOMAIN}/${blog.slug}`;
     const twitterLink = `https://twitter.com/intent/tweet?text=${blog.title} by @${blog.user.username} ${url}`;
     const linkedinLink = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-    const facebookLink = `https://www.facebook.com/v3.3/dialog/share?app_id=${FB_APP_ID}&${url}&display=page&redirect_uri=${url}?facebook=true`
+    console.log(FB_APP_ID)
+    const facebookLink = `https://www.facebook.com/v3.3/dialog/share?app_id=${FB_APP_ID}&href=${url}&display=page&redirect_uri=${url}&facebook=true`
     return (
       <SocialIconsContainer className="d-md-inline">
         <NoButton className="p-0 pr-1" onClick={handleShare('twitter', twitterLink)}><DefaultLink><FontAwesomeIcon icon={['fab', 'twitter']}/></DefaultLink></NoButton>

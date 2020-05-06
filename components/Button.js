@@ -72,6 +72,17 @@ export const SecondaryButtonLabel = styled.label`
   ${secondaryButtonStyles}
 `;
 
+export const DeleteButton = styled.button`
+  ${buttonOutlineStyles}
+  border-color: #f44336;
+  color: #f44336!important;
+  &:hover {
+    color: #e53935!important;
+    border-color: #e53935!important;
+    background-color: #efefef;
+  }
+`;
+
 export const NoButton = styled.button`
   border: none;
   background-color: transparent;

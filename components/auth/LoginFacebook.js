@@ -6,29 +6,20 @@ import { FB_APP_ID } from '../../config';
 import Loading from '../Loading';
 
 const LoginFacebook = () => {
-  const [values, setValues] = useState({
-    loading: false
-  });
+  const [loading, setLoading] = useState(false);
 
-  const { loading } = values;
-
-  const responseFacebook = response => {
+  const responseFacebook = async response => {
     const accessToken = response.accessToken;
-    const user = { accessToken };
+    const user = { access_token: accessToken };
 
-    setValues({ ...values, loading: true });
+    setLoading(true);
 
-    loginWithFacebook(user).then(data => {
-      console.log(data);
-      if (data.error) {
-        setValues({ ...values, loading: false });
-        console.log(data.error);
-      } else {
-        // authenticate the user
-        authenticate(data, () => {
-          Router.push('/');
-        });
-      }
+    const data = await loginWithFacebook(user);
+
+    if (data.error) return console.log(data.error);
+
+    authenticate(data, () => {
+      Router.push('/');
     });
   }
 

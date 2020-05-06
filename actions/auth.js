@@ -153,7 +153,7 @@ export const resetPassword = (resetPasswordLink, newPassword) => {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ resetPasswordLink, newPassword })
+    body: JSON.stringify({ token: resetPasswordLink, new_password: newPassword })
   })
   .then(res => res.json())
   .catch(err => console.log(err));
@@ -184,3 +184,17 @@ export const loginWithFacebook = (user) => {
   .then(res => res.json())
   .catch(err => console.log(err));
 };
+
+export const deleteProfile = (deleteBlogs, token) => {
+  return fetch(`${API}/registrations/delete-profile`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ also_delete_blogs: deleteBlogs })
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err));
+}
