@@ -1,10 +1,9 @@
 import Head from 'next/head';
 import Layout from '../../components/Layout';
 import { userPublicProfile } from '../../actions/user';
-import { API, DOMAIN, APP_NAME } from '../../config';
+import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../../config';
 import moment from 'moment';
 import ContactAuthorForm from '../../components/form/ContactAuthorForm';
-import { Avatar } from '../../components/Avatar';
 import Card from '../../components/blog/Card';
 import { Container, Row, Col } from 'reactstrap';
 import ClapImg from '../../components/ClapImg';
@@ -40,11 +39,11 @@ const UserProfile = ({ user, blogs }) => {
       <meta property="og:url" content={`${DOMAIN}/profile/${user.username}`} />
       <meta property="og:site_name" content={APP_NAME} />
 
-      <meta property="og:image" content={`${API}/user/photo/${user.username}`} />
-      <meta property="og:image:secure_url" content={`${API}/user/photo/${user.username}`} />
+      <meta property="og:image" content={`https://res.cloudinary.com/ticekralt/image/upload/c_fill,h_200,w_200/${user.photo ? user.photo.key : 'J61VUQPcXvCVLtY5evnBLJFx'}`} />
+      <meta property="og:image:secure_url" content={`https://res.cloudinary.com/ticekralt/image/upload/c_fill,h_200,w_200/${user.photo ? user.photo.key : 'J61VUQPcXvCVLtY5evnBLJFx'}`} />
       <meta property="og:image:type" content="image/jpg" />
       <meta name="robots" content="index,follow" />
-      {/* TODO: <meta property="fb:app_id" content={FB_APP_ID} /> */}
+      <meta property="fb:app_id" content={FB_APP_ID} />
     </Head>
   );
 
@@ -75,7 +74,7 @@ const UserProfile = ({ user, blogs }) => {
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <h3 className="m-0">{user.name}</h3>
                   <Image style={{width: 50, height: 50, borderRadius: '50%'}} publicId={user.photo && user.photo.key} alt={user.username}>
-                    <Transformation width="200" crop="fill" />
+                    <Transformation width="200" height="200" crop="fill" />
                   </Image>
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
