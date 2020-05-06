@@ -27,6 +27,7 @@ const Stats = styled.div`
 `;
 
 const UserProfile = ({ user, blogs }) => {
+  console.log(user);
   const head = () => (
     <Head>
       <title>{user.name} profile - {APP_NAME}</title>
@@ -77,40 +78,51 @@ const UserProfile = ({ user, blogs }) => {
                     <Transformation width="200" height="200" crop="fill" />
                   </Image>
                 </div>
-                <div className="d-flex justify-content-between align-items-center">
-                  <FollowButton user={user} />
 
-                  <Stats>
-                    <div className="left">
-                      <p className="m-0 mr-1">{user.claps.length}</p>
-                      <p className="m-0 mr-1">{user.impressions.length}</p>
-                      <p className="m-0 mr-1">{user.shares.length}</p>
-                    </div>
-                    <div className="right">
-                      <ClapImg style={{ width: 26 }} />
-                      <FontAwesomeIcon width="20" icon={['far', 'eye']} />
-                      <FontAwesomeIcon style={{marginLeft: 2}} width="14" icon={['fas', 'share-alt']} />
-                    </div>
-                  </Stats>
-                </div>
-                <hr/>
-                <p className="text-muted">Joined {moment(user.createdAt).fromNow()}</p>
-                <p>{user.about}</p>
+                {user.isDeleted ? (
+                  <p className="font-italic">The user has deleted his profile</p>
+                ) : (
+                  <>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <FollowButton user={user} />
+  
+                    <Stats>
+                      <div className="left">
+                        <p className="m-0 mr-1">{user.claps.length}</p>
+                        <p className="m-0 mr-1">{user.impressions.length}</p>
+                        <p className="m-0 mr-1">{user.shares.length}</p>
+                      </div>
+                      <div className="right">
+                        <ClapImg style={{ width: 26 }} />
+                        <FontAwesomeIcon width="20" icon={['far', 'eye']} />
+                        <FontAwesomeIcon style={{marginLeft: 2}} width="14" icon={['fas', 'share-alt']} />
+                      </div>
+                    </Stats>
+                  </div>
+                  <hr/>
+                  <p className="text-muted">Joined {moment(user.createdAt).fromNow()}</p>
+                  <p>{user.about}</p>
+                  </>
+                )}
 
               </div>
 
             </Col>
 
-            <Col xs="12" md="4" className="mt-3">
-              {showContactForm()}
-            </Col>
+            {!user.isDeleted && (
+              <>
+                <Col xs="12" md="4" className="mt-3">
+                  {showContactForm()}
+                </Col>
 
-            <hr/>
+                <hr/>
 
-            <Col xs="12">
-              <h2 className="my-5">{user.name}'s blogs</h2>
-              {showRecentPosts()}
-            </Col>
+                <Col xs="12">
+                  <h2 className="my-5">{user.name}'s blogs</h2>
+                  {showRecentPosts()}
+                </Col>
+              </>
+            )}
 
           </Row>
 
@@ -124,7 +136,6 @@ const UserProfile = ({ user, blogs }) => {
 // ssr
 UserProfile.getInitialProps = ({ query }) => {
   return userPublicProfile(query.username).then(data => {
-    console.log(data);
     if (data.error) {
       console.log(data.error);
     } else {

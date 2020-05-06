@@ -190,6 +190,7 @@ export const deleteProfile = (deleteBlogs, token) => {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
     body: JSON.stringify({ also_delete_blogs: deleteBlogs })
