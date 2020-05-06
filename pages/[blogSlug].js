@@ -73,6 +73,8 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
       <meta property="og:image:type" content="image/jpg" />
       <meta property="fb:app_id" content={FB_APP_ID} />
       <meta name="robots" content="index,follow" />
+      {/* Google adsense code */}
+      <script data-ad-client="ca-pub-7599944658110193" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     </Head>
   );
 
