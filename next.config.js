@@ -13,6 +13,6 @@ module.exports = withCSS({
     DISQUS_SHORTNAME: 'gravinash-blog',
     GOOGLE_CLIENT_ID_DEV: '848260892598-at9rapf8ev6v9iq8ajb7kn860rh7b8mo.apps.googleusercontent.com',
     GOOGLE_CLIENT_ID_PROD: '451267118385-ae8h21u07q358q14c4gtfomvflb2srs3.apps.googleusercontent.com',
-    CLOUDINARY_CLOUDNAME: 'drafhqqxi'
+    CLOUDINARY_CLOUDNAME: 'ticekralt'
   }
 });
