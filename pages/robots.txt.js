@@ -2,7 +2,7 @@ import React from 'react';
 import { DOMAIN } from '../config';
 
 const robotTXT = () => {
-  return `Sitemap: ${DOMAIN}/sitemap.xml
+  return `Sitemap: ${DOMAIN}/sitemap_index.xml
 User-Agent:*
 Disallow: /admin/*`;
 }

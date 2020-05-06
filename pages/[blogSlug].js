@@ -15,6 +15,7 @@ import Error from '../components/Error';
 import { ClapImg } from '../components/ClapImg';
 import { CategoryBtn, TagBtn, NoButton } from '../components/Button';
 import { isAuth, getCookie } from '../actions/auth';
+import { getXmlForCategory } from '../actions/general';
 import FollowButton from '../components/FollowButton';
 import { Container, Row, Col } from 'reactstrap';
 import ReportBtn from '../components/ReportBtn';
@@ -23,6 +24,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Image, Transformation } from 'cloudinary-react';
 import cacheFetch, { overrideCache } from '../helpers/cacheFetch';
 import BlogComments from '../components/blog/BlogComments';
+import generateXmlForCategory from '../helpers/generateXmlForCategory';
 
 const Banner = styled.div`
   height: 300px;
@@ -285,17 +287,27 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
 
 // ssr
 singleBlog.getInitialProps = async (ctx) => {
-  const { query } = ctx;
-
-  const data = await cacheFetch(`${API}/blogs/${query.blogSlug}`);
-
-  const isServerRendered = !!ctx.req;
-
-  if (data.error) {
-    return { serverError: data.error, isServerRendered: true }
+  const { query, res } = ctx;
+  // check if the endpoint contains xml (then it is used for the categories of sitemap)
+  if (query.blogSlug.match(/.xml$/)) {
+    const category = query.blogSlug.substring(8, query.blogSlug.length - 4);
+    const data = await getXmlForCategory(category);
+    
+    res.setHeader("Content-Type", "text/xml");
+    res.write(generateXmlForCategory(data))
+    res.end();
   } else {
-    return { blog: data, isServerRendered }
+    const data = await cacheFetch(`${API}/blogs/${query.blogSlug}`);
+  
+    const isServerRendered = !!ctx.req;
+  
+    if (data.error) {
+      return { serverError: data.error, isServerRendered: true }
+    } else {
+      return { blog: data, isServerRendered }
+    }
   }
+
 }
 
 export default singleBlog;
