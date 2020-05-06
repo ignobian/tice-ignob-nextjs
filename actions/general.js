@@ -24,3 +24,9 @@ export const getXmlForCategory = slug => {
   .then(res => res.json())
   .catch(err => console.log(err))
 }
+
+export const mainXml = () => {
+  return fetch(`${API}/main-xml`)
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}
