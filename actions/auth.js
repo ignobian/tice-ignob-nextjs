@@ -185,12 +185,14 @@ export const loginWithFacebook = (user) => {
   .catch(err => console.log(err));
 };
 
-export const deleteProfile = token => {
+export const deleteProfile = (deleteBlogs, token) => {
   return fetch(`${API}/registrations/delete-profile`, {
+    method: 'DELETE',
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`
-    }
+    },
+    body: JSON.stringify({ also_delete_blogs: deleteBlogs })
   })
   .then(res => res.json())
   .catch(err => console.log(err));
