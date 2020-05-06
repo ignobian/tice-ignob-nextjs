@@ -7,12 +7,14 @@ import { Form, FormGroup, InputGroup, Label, Input, Container, Row, Col } from '
 import Error from '../Error';
 import Message from '../Message';
 import { Image, Transformation } from 'cloudinary-react';
+import DeleteProfileModal from './DeleteProfileModal';
 
 const ProfileUpdate = () => {
   const [resetPasswordMessage, setResetPasswordMessage] = useState('');
   const [loading, setLoading] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isDeleteModal, setDeleteModal] = useState(false);
   const [values, setValues] = useState({
     username: '',
     firstName: '',
@@ -95,6 +97,10 @@ const ProfileUpdate = () => {
     setResetPasswordMessage(data.message);
   }
 
+  const onDeleteProfile = () => setDeleteModal(true);
+
+  const closeDeleteProfileModal = () => setDeleteModal(false);
+
   const showError = () => error && <Error content={error} />
   const showSuccess = () => success && <Message color='success' content={success} />
   const showLoading = () => loading && <Loading/>
@@ -172,7 +178,8 @@ const ProfileUpdate = () => {
           {showForm()}
 
           <div className="my-5">
-            <DeleteButton>Delete profile</DeleteButton>
+            <DeleteButton onClick={onDeleteProfile}>Delete profile</DeleteButton>
+            <DeleteProfileModal isOpen={isDeleteModal} toggle={closeDeleteProfileModal} />
           </div>
         </Col>
       </Row>
