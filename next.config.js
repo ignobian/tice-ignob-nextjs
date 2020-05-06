@@ -7,7 +7,7 @@ module.exports = withCSS({
     API_PRODUCTION: 'https://ignob-backend-rails-api.herokuapp.com/v1',
     PRODUCTION: process.env.NODE_ENV === 'production',
     DOMAIN_DEVELOPMENT: 'http://localhost:3000',
-    DOMAIN_PRODUCTION: 'https://ignob-blog-site.herokuapp.com',
+    DOMAIN_PRODUCTION: 'https://ignob.com',
     FB_APP_ID_PROD: '955287474921853',
     FB_APP_ID_DEV: '252219785912168',
     DISQUS_SHORTNAME: 'gravinash-blog',
