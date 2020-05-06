@@ -1,6 +1,6 @@
 import React from 'react';
 import { DOMAIN } from '../config';
-import { listXML } from '../actions/general';
+import { indexXml } from '../actions/general';
 
 const generateBlogsXml = (blogs) => {
   let latestPost = 0;
@@ -41,55 +41,43 @@ const generateXml = (data, extension, priority, keyForSlug = 'slug') => {
   return xml
 }
 
-const sitemapXml = ({ blogs, categories, tags, users }) => {
-  const { postsXml, latestPost } = generateBlogsXml(blogs);
-  const categoriesXml = generateXml(categories, 'categories', 0.6);
-  const tagsXml = generateXml(tags, 'tags', 0.5);
-  const usersXml = generateXml(users, 'profile', 0.4, 'username');
+const generateCategorySitemapLinks = categories => {
+  let xml = ``;
+
+  categories.forEach(cat => {
+    xml += `<sitemap>
+      <loc>${DOMAIN}/sitemap_${cat.slug}.xml</loc>
+      <lastmod>${cat.lastModified}</lastmod>
+    </sitemap>`;
+  });
+
+  return xml;
+}
+
+const sitemapXml = ({ categories, lastMod }) => {
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-      <loc>${DOMAIN}/</loc>
-      <lastmod>${latestPost}</lastmod>
-      <priority>1.00</priority>
-    </url>
-    <url>
-      <loc>${DOMAIN}/blogs/new</loc>
-      <priority>0.90</priority>
-    </url>
-    <url>
-      <loc>${DOMAIN}/following</loc>
-      <priority>0.85</priority>
-    </url>
-    <url>
-      <loc>${DOMAIN}/user/followers</loc>
-      <priority>0.80</priority>
-    </url>
-    <url>
-      <loc>${DOMAIN}/search</loc>
-      <priority>0.80</priority>
-    </url>
-    <url>
-      <loc>${DOMAIN}/signin</loc>
-      <priority>0.50</priority>
-    </url>
-    <url>
-      <loc>${DOMAIN}/signup</loc>
-      <priority>0.50</priority>
-    </url>
-    ${postsXml}
-    ${categoriesXml}
-    ${tagsXml}
-    ${usersXml}
-  </urlset>`;
+  <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+   <sitemap>
+
+      <loc>${DOMAIN}/sitemap_main.xml</loc>
+
+      <lastmod>${lastMod}</lastmod>
+
+   </sitemap>
+
+   ${generateCategorySitemapLinks(categories)}
+
+</sitemapindex>`
 };
 
 export default class Sitemap extends React.Component {
   static async getInitialProps({ res }) {
-    const { blogs, categories, tags, users } = await listXML();
+    const data = await indexXml();
+    console.log(data);
     res.setHeader("Content-Type", "text/xml");
-    res.write(sitemapXml({ blogs, categories, tags, users }));
+    res.write(sitemapXml(data));
     res.end();
   }
 }
