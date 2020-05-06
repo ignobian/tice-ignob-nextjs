@@ -18,3 +18,9 @@ export const indexXml = () => {
   .then(res => res.json())
   .catch(err => console.log(err))
 }
+
+export const getXmlForCategory = slug => {
+  return fetch(`${API}/get-category-xml/${slug}`)
+  .then(res => res.json())
+  .catch(err => console.log(err))
+}
