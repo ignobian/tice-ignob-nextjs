@@ -12,8 +12,9 @@ import { SecondaryButtonLink } from '../../components/Button';
 import AdminSearchBlogs from '../../components/admin/AdminSearchBlogs';
 import { DisplaySmallerThanLg } from '../../components/responsive/Display';
 import Admin from '../../components/auth/Admin';
-import { Container, Row, Col, Table } from 'reactstrap';
+import { Container, Row, Col, Table, Input, Label } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import capitalize from 'capitalize';
 
 const Dashboard = () => {
 
@@ -24,34 +25,33 @@ const Dashboard = () => {
     </Head>
   )
 
+  const orderOptions = ['claps', 'blogs', 'impressions', 'shares', 'username']
+
+  const [error, setError] = useState('');
+
   const [values, setValues] = useState({
-    error: '',
+    selectedOrderOption: '',
     users: [],
     reports: [],
-    orderOptions: ['claps', 'blogs', 'impressions', 'shares', 'name']
   });
 
-  const { error, users, reports, orderOptions } = values;
+  const { users, reports, selectedOrderOption } = values;
 
   const token = getCookie('token');
 
-  const loadUsers = () => {
-    getUsers(token).then(data => {
-      if (data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        // convert impressions and shares to just the length of the array
-        const users = data;
+  const loadUsers = async () => {
 
-        getReports(token).then(data => {
-          if (data.error) {
-            setValues({ ...values, error: data.error });
-          } else {            
-            setValues({ ...values, error: '', users: users.sort(sortBy('-claps')), reports: data });
-          }
-        });
-      }
-    });
+    let data = await getUsers(token);
+
+    if (data.error) return setError(data.error);
+
+    const users = data;
+
+    data = await getReports(token);
+
+    if (data.error) return setError(data.error);
+
+    setValues({ ...values, users, reports: data });
   }
   
   useEffect(() => {
@@ -59,51 +59,54 @@ const Dashboard = () => {
   }, []);
 
   const handleChange = e => {
-    // sort oppositely when selecting claps, impressions, shares or blogs (from big to small) otherwise from small to big (a-z)
-    const sortTerm = e.target.value === 'name' ? e.target.name : '-' + e.target.value
-    const newArr = users.sort(sortBy(sortTerm));
-    setValues({ ...values, error: '', users: newArr });
+    const sortTerm = e.target.value === 'username' ? e.target.name : '-' + e.target.value
+    setValues({ ...values, error: '', sortOption: sortTerm });
   }
 
   const showOptionSelect = () => (
-    <div className="d-flex align-items-center justify-content-end pr-5">
-      <label htmlFor="order">Order by</label>
-      <select onChange={handleChange} style={{display: 'inline-block', width: 'auto'}} className="ml-2 mb-2 form-control" id="order">
+    <div style={{display: 'grid', gridTemplateColumns: '100px 1fr', alignItems: 'center'}} className="my-3">
+      <Label htmlFor="order">Order by</Label>
+      <Input type="select" onChange={handleChange} id="order">
         {orderOptions.map((name, i) => (
-          <option value={name}>{name}</option>
+          <option value={name}>{capitalize(name)}</option>
         ))}
-      </select>
+      </Input>
     </div>
   )
 
-  const showUsersTable = () => (
-    <Table>
-      <thead>
-        <tr>
-          <th>Username</th>
-          <th>Full name</th>
-          <th><ClapImg src="/images/clap.svg" alt="claps" /></th>
-          <th><FontAwesomeIcon width="20" icon={['far', 'eye']} /></th>
-          <th><FontAwesomeIcon width="16" icon={['fas', 'share-alt']} /></th>
-          <th>Amount of blogs</th>
-          <th></th>
-        </tr>
-
-        {users.map((user, i) => (
-          <tr key={i}>
-            <td>{user.username}</td>
-            <td>{user.name}</td>
-            <td>{user.claps}</td>
-            <td>{user.impressions}</td>
-            <td>{user.shares}</td>
-            <td>{user.blogs.length}</td>
-            <td><Link href={`/profile/${user.username}`}><SecondaryButtonLink>View</SecondaryButtonLink></Link></td>
+  const showUsersTable = () => {
+    // sort oppositely when selecting claps, impressions, shares or blogs (from big to small) otherwise from small to big (a-z)
+    const orderedUsers = users.sort(sortBy(selectedOrderOption));
+    
+    return (
+      <Table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Full name</th>
+            <th><ClapImg src="/images/clap.svg" alt="claps" /></th>
+            <th><FontAwesomeIcon width="20" icon={['far', 'eye']} /></th>
+            <th><FontAwesomeIcon width="16" icon={['fas', 'share-alt']} /></th>
+            <th>Amount of blogs</th>
+            <th></th>
           </tr>
-        ))}
-
-      </thead>
-    </Table>
-  );
+  
+          {orderedUsers.map((user, i) => (
+            <tr key={i}>
+              <td>{user.username}</td>
+              <td>{user.name}</td>
+              <td>{user.claps}</td>
+              <td>{user.impressions}</td>
+              <td>{user.shares}</td>
+              <td>{user.blogs.length}</td>
+              <td><Link href={`/profile/${user.username}`}><SecondaryButtonLink>View</SecondaryButtonLink></Link></td>
+            </tr>
+          ))}
+  
+        </thead>
+      </Table>
+    );
+  }
 
   const showAdminSearchBlogs = () => (
     <div className="ml-md-4">
