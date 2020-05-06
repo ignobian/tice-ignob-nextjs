@@ -1,14 +1,30 @@
 // import { useState } from 'react';
 // import Head from 'next/head';
 // import Link from 'next/link';
-// import { withRouter } from 'next/router';
-// import Layout from '../../components/Layout';
+import Router from 'next/router';
+import Layout from '../../components/Layout';
+import { useEffect } from 'react';
 // import { listBlogsWithCategoriesAndTags } from '../../actions/blog';
 // import Card from '../../components/blog/Card';
 // import { APP_NAME, DOMAIN, FB_APP_ID } from '../../config';
 // import { CategoryBtn, TagBtn, SecondaryButton } from '../../components/Button';
 // import { Container, Row, Col } from 'reactstrap';
 // import { H1 } from '../../components/Typography';
+
+const Blogs = () => {
+  useEffect(() => {
+    Router.push('/');
+  }, []);
+
+  return (
+    <Layout>
+
+    </Layout>
+  )
+}
+
+export default Blogs
+
 
 // const Blogs = ({ blogs, categories, tags, totalBlogs, blogsLimit, blogsSkip, router }) => {
 //   const head = () => (
