@@ -83,7 +83,6 @@ const CreateUpdateBlog = ({ slug }) => {
   }, [slug]);
 
   const initUpdateBlog = blog => {
-    console.log(blog);
     setCheckedCategories(blog.categories.map(cat => cat.id));
     setTags(blog.tags.map(t => t.name));
     setTitle(blog.title);
@@ -203,6 +202,15 @@ const CreateUpdateBlog = ({ slug }) => {
   const showLoading = () => loading && <Loading/>
   const showError = () => error && <Error content={error} />
   const showSuccess = () => success && <Message content={success} color='success' />;
+
+  const showQuill = () => {
+    // check if we have a slug already, which means is edit, then render a custom reactquill that is almost the same, but has a different value
+    if (slug) {
+      return <ReactQuill onChange={handleBody} modules={QuillModules} formats={QuillFormats} value={body} placeholder="Write something..." />
+    } else {
+      return <ReactQuill onChange={handleBody} modules={QuillModules} formats={QuillFormats} defaultValue={blogFromLS()} placeholder="Write something..." />
+    }
+  }
   
   const showCategories = () => (
     <ul style={{maxHeight: '150px', overflowY: 'scroll', paddingLeft: 23}}>
@@ -254,7 +262,7 @@ const CreateUpdateBlog = ({ slug }) => {
         </FormGroup>
 
         <FormGroup className="mb-1">
-          <ReactQuill onChange={handleBody} modules={QuillModules} formats={QuillFormats} defaultValue={blogFromLS()} placeholder="Write something..." />
+          {showQuill()}
         </FormGroup>
 
         <div className="d-flex justify-content-end mb-3 w-100">

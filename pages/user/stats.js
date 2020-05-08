@@ -16,7 +16,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const GridContainer = styled.div`
   display: grid;
-
 `;
 
 const UserStats = () => {

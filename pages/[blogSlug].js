@@ -176,7 +176,6 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
     const url = `${DOMAIN}/${blog.slug}`;
     const twitterLink = `https://twitter.com/intent/tweet?text=${blog.title} by @${blog.user.username} ${url}`;
     const linkedinLink = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-    console.log(FB_APP_ID)
     const facebookLink = `https://www.facebook.com/v3.3/dialog/share?app_id=${FB_APP_ID}&href=${url}&display=page&redirect_uri=${url}&facebook=true`
     return (
       <SocialIconsContainer className="d-md-inline">
@@ -189,7 +188,7 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
 
   const showAuthor = (user) => (
     <div className="d-flex my-3">
-      <Image style={{borderRadius: '50%', width: 40, height: 40, objectFit: 'cover'}} publicId={user.photo && user.photo.key} className="mr-3">
+      <Image style={{borderRadius: '50%', width: 40, height: 40, objectFit: 'cover'}} publicId={user.photo ? user.photo.key : 'VC5fY84CZiCQofi6AAC3TnCc'} className="mr-3">
         <Transformation width="100" crop="fill" />
       </Image>
       <div className="flex-grow-1">
