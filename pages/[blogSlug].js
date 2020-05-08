@@ -176,7 +176,7 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
     const url = `${DOMAIN}/${blog.slug}`;
     const twitterLink = `https://twitter.com/intent/tweet?text=${blog.title} by @${blog.user.username} ${url}`;
     const linkedinLink = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-    const facebookLink = `https://www.facebook.com/v3.3/dialog/share?app_id=${FB_APP_ID}&href=${url}&display=page&redirect_uri=${url}&facebook=true`
+    const facebookLink = `https://www.facebook.com/v3.3/dialog/feed?app_id=${FB_APP_ID}&link=${url}&display=page&redirect_uri=${url}&facebook=true`
     return (
       <SocialIconsContainer className="d-md-inline">
         <NoButton className="p-0 pr-1" onClick={handleShare('twitter', twitterLink)}><DefaultLink><FontAwesomeIcon icon={['fab', 'twitter']}/></DefaultLink></NoButton>
