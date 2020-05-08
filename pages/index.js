@@ -59,7 +59,7 @@ const Index = ({ categories, tags, blogs }) => {
               <CategoryListSection categories={categories}/>
             </Col>
 
-            <Col className="my-2">
+            <Col xs="12" className="my-2">
               <p><strong>We are passionate about coding and are keen to share that knowledge with you</strong></p>
             </Col>
 
