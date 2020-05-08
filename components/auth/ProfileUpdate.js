@@ -8,6 +8,7 @@ import Error from '../Error';
 import Message from '../Message';
 import { Image, Transformation } from 'cloudinary-react';
 import DeleteProfileModal from './DeleteProfileModal';
+import { setInStorage } from '../../helpers/storage';
 
 const ProfileUpdate = () => {
   const [resetPasswordMessage, setResetPasswordMessage] = useState('');
@@ -31,13 +32,15 @@ const ProfileUpdate = () => {
 
   // get user information with getProfile
   useEffect(() => {
-    setValues({ ...values, loading: true });
+    setLoading(true);
 
     getUserForEdit(token).then(data => {
       if (data.error) {
-        setValues({ ...values, error: data.error, loading: false });
+        setLoading(false);
+        setError(data.error);
       } else {
-        setValues({ ...values, ...data })
+        setLoading(false);
+        setValues({ ...values, ...data });
       }
     });
   }, []);
@@ -77,7 +80,7 @@ const ProfileUpdate = () => {
 
     window.scrollTo(0,0);
 
-    const data = update(token, userData);
+    const data = await update(token, userData);
     
     setLoading(false);
 
@@ -85,6 +88,9 @@ const ProfileUpdate = () => {
       setError(data.error);
       return;
     }
+
+    // update local storage with new user data
+    setInStorage('user', data.user);
 
     setSuccess('User updated');
   }
@@ -159,30 +165,33 @@ const ProfileUpdate = () => {
   )
   
   return (
-    <Container>
-      <Row className="mb-5">
-        <Col xs="12" md="4">
-          <h2 className="d-block d-md-none my-4">Update profile</h2>
-          {showError()}
-          {showSuccess()}
-          {showProfilePhotoPreview()}
-          {cloudinaryPhoto && showCloudinaryProfilePhoto()}
-        </Col>
+    <>
+    {showLoading()}
+      <Container>
+        <Row className="mb-5">
+          <Col xs="12" md="4">
+            <h2 className="d-block d-md-none my-4">Update profile</h2>
+            {showError()}
+            {showSuccess()}
+            {showProfilePhotoPreview()}
+            {cloudinaryPhoto && showCloudinaryProfilePhoto()}
+          </Col>
 
-        <Col xs="12" md="8">
-          <h2 className="d-none d-md-block my-4">Update profile</h2>
-          {showLoading()}
-          {showForm()}
+          <Col xs="12" md="8">
+            <h2 className="d-none d-md-block my-4">Update profile</h2>
+            {showLoading()}
+            {showForm()}
 
-          <SecondaryButton className="mt-5" onClick={handleResetPassword}>Reset password</SecondaryButton>
+            <SecondaryButton className="mt-5" onClick={handleResetPassword}>Reset password</SecondaryButton>
 
-          <div className="my-5">
-            <DeleteButton onClick={onDeleteProfile}>Delete profile</DeleteButton>
-            <DeleteProfileModal isOpen={isDeleteModal} toggle={closeDeleteProfileModal} />
-          </div>
-        </Col>
-      </Row>
-    </Container>
+            <div className="my-5">
+              <DeleteButton onClick={onDeleteProfile}>Delete profile</DeleteButton>
+              <DeleteProfileModal isOpen={isDeleteModal} toggle={closeDeleteProfileModal} />
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </>
   )
 }
 
