@@ -90,7 +90,6 @@ const ProfileUpdate = () => {
   }
 
   const handleResetPassword = async e => {
-    e.preventDefault();
     const data = await forgotPassword(isAuth().email);
     if (data.error) return setError(data.error);
 
@@ -135,8 +134,6 @@ const ProfileUpdate = () => {
 
       {showResetPasswordMessage()}
 
-      <SecondaryButton className="mt-2 mb-3" onClick={handleResetPassword}>Reset password</SecondaryButton>
-
       <FormGroup>
         <Label htmlFor="firstName" className="text-muted">First name</Label>
         <Input id="firstName" onChange={handleChange('firstName')} value={firstName} />
@@ -160,7 +157,7 @@ const ProfileUpdate = () => {
       <Button type="submit">Update</Button>
     </Form>
   )
-
+  
   return (
     <Container>
       <Row className="mb-5">
@@ -176,6 +173,8 @@ const ProfileUpdate = () => {
           <h2 className="d-none d-md-block my-4">Update profile</h2>
           {showLoading()}
           {showForm()}
+
+          <SecondaryButton className="mt-5" onClick={handleResetPassword}>Reset password</SecondaryButton>
 
           <div className="my-5">
             <DeleteButton onClick={onDeleteProfile}>Delete profile</DeleteButton>
