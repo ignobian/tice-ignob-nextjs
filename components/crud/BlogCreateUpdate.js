@@ -226,7 +226,7 @@ const CreateUpdateBlog = ({ slug }) => {
   const showTags = () => (
     <div className="d-flex flex-wrap my-3">
       {tags.map(tag => (
-        <Chip onDelete={removeTag} className="mr-1">{tag}</Chip>
+        <Chip key={tag} onDelete={removeTag} className="mr-1">{tag}</Chip>
       ))}
     </div>
   )
@@ -246,7 +246,7 @@ const CreateUpdateBlog = ({ slug }) => {
     // for the body (based on words)
     const bodyWordMin = 300;
     const bodyWordCount = stripHtml(body || '').split(' ').length;
-    
+
     return (
       <Form onSubmit={handleSubmit}>
         <FormGroup>
@@ -256,7 +256,7 @@ const CreateUpdateBlog = ({ slug }) => {
               <Input type="text" onChange={handleChange('title')} value={title} id="title" />
             </Col>
             <Col xs="1">
-              <small style={{ color: (titleCount >= titleMin && titleCount <= titleMax) ? 'green' : 'red' }}>{titleCount}</small>
+              <small className={(titleCount >= titleMin && titleCount <= titleMax) ? 'text-success' : 'text-danger'}>{titleCount}</small>
             </Col>
           </Row>
         </FormGroup>
@@ -266,7 +266,7 @@ const CreateUpdateBlog = ({ slug }) => {
         </FormGroup>
 
         <div className="d-flex justify-content-end mb-3 w-100">
-          <small style={{ color: (bodyWordCount >= bodyWordMin) ? 'green' : 'red' }}>{bodyWordCount}</small>
+          <small className={(bodyWordCount >= bodyWordMin) ? 'text-success' : 'text-danger'}>{bodyWordCount}</small>
         </div>
 
         <FormGroup>
@@ -307,8 +307,10 @@ const CreateUpdateBlog = ({ slug }) => {
     <Container fluid>
       <Row>
         <Col xs="12" md="8">
-          {showError()}
-          {showSuccess()}
+          <div className="mb-3">
+            {showError()}
+            {showSuccess()}
+          </div>
           {blogForm()}
           {showLoading()}
           <DisplaySmallerThanMd>
