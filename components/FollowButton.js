@@ -23,7 +23,7 @@ const FollowButton = ({ user, noborder }) => {
 
   const [followText, setFollowText] = useState(isFollowing ? 'Following' : 'Follow');
 
-  const token = isAuth() ? getCookie('token') : '';
+  const token = getCookie('token');
 
   const toggleHoverText = e => {
     if (e && (e.type === 'mouseenter')) {
