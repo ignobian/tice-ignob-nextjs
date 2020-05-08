@@ -27,7 +27,7 @@ const DeleteProfileModal = ({ isOpen, toggle }) => {
   const handleDeleteProfile = async () => {
     const data = await deleteProfile(deleteBlogs, token);
     if (data.error) return setError(data.error);
-    // signout(() => Router.push('/'));
+    signout(() => Router.push('/'));
   }
 
   const disabled = username !== (isAuth() && isAuth().username);
