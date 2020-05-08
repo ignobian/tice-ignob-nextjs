@@ -3,18 +3,21 @@ import stripHtml from 'string-strip-html';
 import Link from 'next/link';
 import moment from 'moment';
 import { Image, Transformation} from 'cloudinary-react';
+import { DefaultLink } from '../Link';
 
 const RelatedBlog = ({ blog }) => (
   <>
     <div className="ui-card">
-      <Image className="ui-card-featured-image" style={{width: '100%'}} publicId={blog.photo && blog.photo.key}>
-        <Transformation width="300" crop="fill" />
-      </Image>
+      <Link href={blog.slug}>
+        <Image className="ui-card-featured-image" style={{width: '100%', cursor: 'pointer'}} publicId={blog.photo && blog.photo.key}>
+          <Transformation width="300" crop="fill" />
+        </Image>
+      </Link>
       <div className="details pt-3">
-        <h5>{blog.title}</h5>
+        <Link href={blog.slug}><DefaultLink><h5>{blog.title}</h5></DefaultLink></Link>
         <p className="text-muted">{stripHtml(blog.excerpt).substring(0, 100)}...</p>
         <p>Created by <Link href={`/profile/${blog.user.username}`}><a>{blog.user.username}</a></Link> | Published {moment(blog.createdAt).fromNow()}</p>
-        <Link href={`/${blog.slug}`}><a className="btn-link">Read more</a></Link>
+        <Link href={`/${blog.slug}`}><DefaultLink className="btn-link">Read more</DefaultLink></Link>
       </div>
     </div>
     <style jsx>{`
