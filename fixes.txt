@@ -3,6 +3,6 @@ Done - Dont want this previous blog post info, in create new blog post option.
 Done - Not working in admin dashboard
 Done - Order by is not working...
 Pretty much done - Facebook share error... articles are unable to share on fb
-- Stats were not correct......
-- In Admin dashboard and in my stats of users also
-- Errors while updating profile pic, "username taken, Email taken" these are the error mssgs which I am getting while updating my profile pic.
+Done - Stats were not correct......
+Done - In Admin dashboard and in my stats of users also
+Done - Errors while updating profile pic, "username taken, Email taken" these are the error mssgs which I am getting while updating my profile pic.
