@@ -1,4 +1,3 @@
-- Dont want this previous blog post info, in create new blog post option.
 - Not working in admin dashboard
 - Order by is not working...
 - Facebook share error... articles are unable to share on fb

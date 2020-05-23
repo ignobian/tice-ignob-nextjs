@@ -17,7 +17,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
 
 const Dashboard = () => {
-
   const head = () => (
     <Head>
       <title>Admin dashboard - {APP_NAME}</title>
@@ -26,11 +25,9 @@ const Dashboard = () => {
   )
 
   const orderOptions = ['claps', 'blogs', 'impressions', 'shares', 'username']
-
   const [error, setError] = useState('');
-
   const [values, setValues] = useState({
-    selectedOrderOption: '',
+    selectedOrderOption: '-claps',
     users: [],
     reports: [],
   });
@@ -40,13 +37,11 @@ const Dashboard = () => {
   const token = getCookie('token');
 
   const loadUsers = async () => {
-
     let data = await getUsers(token);
 
     if (data.error) return setError(data.error);
 
     const users = data;
-
     data = await getReports(token);
 
     if (data.error) return setError(data.error);
@@ -59,8 +54,8 @@ const Dashboard = () => {
   }, []);
 
   const handleChange = e => {
-    const sortTerm = e.target.value === 'username' ? e.target.name : '-' + e.target.value
-    setValues({ ...values, error: '', sortOption: sortTerm });
+    const sortTerm = e.target.value === 'username' ? e.target.value : '-' + e.target.value
+    setValues({ ...values, error: '', selectedOrderOption: sortTerm });
   }
 
   const showOptionSelect = () => (
