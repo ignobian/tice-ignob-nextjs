@@ -21,7 +21,6 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import { QuillModules, QuillFormats } from '../../helpers/quill';
 // import css for react quill
 import '../../node_modules/react-quill/dist/quill.snow.css';
-import { API } from '../../config';
 import Loading from '../Loading';
 import Error from '../Error';
 import Message from '../Message';
@@ -43,6 +42,7 @@ const CreateUpdateBlog = ({ slug }) => {
   }
 
   // state
+  const isEdit = !!slug;
   const [categories, setCategories] = useState([]);
 
   const [checkedCategories, setCheckedCategories] = useState([]);
@@ -60,11 +60,10 @@ const CreateUpdateBlog = ({ slug }) => {
     photoPreview: '',
     cloudinaryPhoto: null,
     tagField: '',
-    hidePublishButton: false,
-    isEdit: false
+    hidePublishButton: false
   });
 
-  const { error, tagField, sizeError, success, loading, hidePublishButton, cloudinaryPhoto, photo, photoPreview, isEdit } = values;
+  const { error, tagField, sizeError, success, loading, hidePublishButton, cloudinaryPhoto, photo, photoPreview } = values;
   const token = getCookie('token');
 
   useEffect(() => {
@@ -86,8 +85,12 @@ const CreateUpdateBlog = ({ slug }) => {
     setCheckedCategories(blog.categories.map(cat => cat.id));
     setTags(blog.tags.map(t => t.name));
     setTitle(blog.title);
-    setBody(blog.body);
-    setValues({...values, isEdit: true, cloudinaryPhoto: blog.photo || null });
+    if (localStorage.getItem(slug)) {
+      setBody(JSON.parse(localStorage.getItem(slug)));
+    } else {
+      setBody(blog.body);
+    }
+    setValues({...values, cloudinaryPhoto: blog.photo || null });
   }
 
   const initCategories = () => {
@@ -137,6 +140,8 @@ const CreateUpdateBlog = ({ slug }) => {
           setValues({ ...values, loading: false, error: data.error });
         } else {
           setValues({ ...values, loading: false, error: '', success: 'Succesfully updated', photoPreview: '' });
+          // clear localstorage item of slug
+          if (localStorage.getItem(slug)) localStorage.removeItem(slug);
         }
       });
     }
@@ -186,7 +191,12 @@ const CreateUpdateBlog = ({ slug }) => {
     setBody(e);
     // set local storage when body is being typed
     if (typeof window !== 'undefined') {
-      localStorage.setItem('blog', JSON.stringify(e));
+      if (!isEdit) {
+        localStorage.setItem('blog', JSON.stringify(e));
+      } else {
+        // set local storage blog with slug
+        localStorage.setItem(slug, JSON.stringify(e));
+      }
     }
   }
   

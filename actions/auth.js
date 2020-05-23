@@ -59,6 +59,9 @@ export const signin = (user) => {
 export const signout = (next) => {
   removeCookie('token');
   removeLocalStorage('user');
+  // remove blog update changes
+  removeLocalStorage('title');
+  removeLocalStorage('blog');
   next();
 }
 
