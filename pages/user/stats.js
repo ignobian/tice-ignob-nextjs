@@ -19,14 +19,14 @@ const GridContainer = styled.div`
 `;
 
 const UserStats = () => {
-  const sortOptions = ['Impressions', 'Shares'];
+  const sortOptions = ['Impressions', 'Shares', 'Claps'];
 
   const [values, setValues] = useState({
     stats: null,
     blogs: [],
     loading: true,
     error: '',
-    sortMethod: 'Impressions'
+    sortMethod: sortOptions[0]
   });
 
   const { loading, stats, blogs, error, sortMethod } = values;
@@ -51,21 +51,16 @@ const UserStats = () => {
   const showError = () => error && <Error content={error} />
 
   const listBlogs = () => {
-    let blogsSorted;
-    if (sortMethod === 'Impressions') {
-      // order by impressions length and then shares length
-      blogsSorted = blogs.sort(sortBy('-impressionsLength', '-sharesLength'));
-    } else {
-      blogsSorted = blogs.sort(sortBy('-sharesLength', '-impressionsLength'));
-    }
+    const blogsSorted = blogs.sort(sortBy(`-${sortMethod.toLowerCase()}`));
 
     return (
       blogsSorted.map(blog => (
         <tr>
           <td><Image width="40" style={{borderRadius: 4}} publicId={blog.photo && blog.photo.key}><Transformation crop="fill" width="200" /></Image></td>
           <td style={{maxWidth: 60, overflow: 'hidden'}}><Link href={`/${blog.slug}`}><DefaultLink>{blog.title}</DefaultLink></Link></td>
-          <td>{blog.impressions.length}</td>
-          <td>{blog.shares.length}</td>
+          <td>{blog.impressions}</td>
+          <td>{blog.shares}</td>
+          <td>{blog.claps}</td>
         </tr>
       ))
     )
@@ -115,6 +110,7 @@ const UserStats = () => {
                       <th>Title</th>
                       <th><FontAwesomeIcon width="20" icon={['far', 'eye']} /></th>
                       <th><FontAwesomeIcon style={{marginLeft: 2}} width="14" icon={['fas', 'share-alt']} /></th>
+                      <th><img width="25" src="/images/clap.svg" alt="clap" /></th>
                     </tr>
                   </thead>
                   <tbody>
