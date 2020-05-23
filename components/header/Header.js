@@ -79,12 +79,12 @@ const Header = (props) => {
 
   const showAvatar = user => (
     user.photo ? (
-      <Image onClick={toggleDropdown} width="40" height="40" style={{borderRadius: '50%', objectFit: 'cover'}} publicId={user.photo.key}>
+      <Image onClick={toggleDropdown} width="40" height="40" style={{borderRadius: '50%', objectFit: 'cover', cursor: 'pointer'}} publicId={user.photo.key}>
         <Transformation width="300" crop="fill" />
       </Image>
     ) : (
       // show default image
-      <img onClick={toggleDropdown} src="/images/default.png" width="40" height="40" style={{borderRadius: '50%'}} alt={user.username}/>
+      <img onClick={toggleDropdown} src="/images/default.png" width="40" height="40" style={{borderRadius: '50%', cursor: 'pointer'}} alt={user.username}/>
     )
   )
 
