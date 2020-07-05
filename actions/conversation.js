@@ -48,3 +48,14 @@ export const sendMessage = (content, id, token) => {
   .then(res => res.json())
   .catch(err => console.log(err));
 };
+
+export const sendIsTyping = (id, token) => {
+  return fetch(`${API}/conversations/${id}/is-typing`, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err));
+};

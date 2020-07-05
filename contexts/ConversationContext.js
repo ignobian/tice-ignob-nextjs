@@ -12,6 +12,8 @@ export const ConversationContextProvider = ({ children, id }) => {
   const [convoUser, setConvoUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const messagesRef = useRef(messages);
+  const [typing, setTyping] = useState([]);
+  const typingRef = useRef(typing);
 
   const token = getCookie('token');
 
@@ -19,11 +21,14 @@ export const ConversationContextProvider = ({ children, id }) => {
     messagesRef.current = messages;
 
     if (messages.length > 0) {
-      // set last message ref
-      document.querySelector('#last-message').scrollIntoView();
-      
+      // scroll last message into view
+      document.querySelector('#last-message').scrollIntoView(); 
     }
   }, [messages]);
+
+  useEffect(() => {
+    typingRef.current = typing;
+  }, [typing])
 
   useEffect(() => {
     if (id) {
@@ -49,8 +54,21 @@ export const ConversationContextProvider = ({ children, id }) => {
     }
   }, [id]);
 
+  const timeout = useRef(null);
+
   const handleReceived = data => {
     // if it is a new message, append to current messages
+    if (data.typing) {
+      if (!typingRef.current.includes(data.typing)) {
+        setTyping(typingRef.current.concat(data.typing));
+      }
+
+      // clear timeout
+      clearTimeout(timeout.current);
+      // set timeout
+      timeout.current = setTimeout(() => setTyping([]), 500);
+    }
+
     if (data.message) {
       setMessages(messagesRef.current.concat(data.message));
     }
@@ -60,6 +78,7 @@ export const ConversationContextProvider = ({ children, id }) => {
     <ConversationContext.Provider value={{
       id,
       convoUser,
+      typing,
       messages
     }}>
       {children}

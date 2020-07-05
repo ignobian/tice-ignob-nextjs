@@ -9,7 +9,7 @@ const Message = ({ message, lastMessage }) => {
     </Image>
   )
   return (
-    <div className="d-flex my-2" id={lastMessage ? 'last-message' : false}>
+    <div className="d-flex my-2" id={lastMessage ? 'last-message' : undefined}>
       <div className="p-2">
         {showProfileImg()}
       </div>
