@@ -8,6 +8,7 @@ import { sendMessage } from '../../actions/conversation';
 
 const TextArea = styled.textarea`
   border: none;
+  padding: 5px;
   &:focus {
     outline: none;
   }
@@ -29,7 +30,12 @@ const MessageInput = () => {
     e.preventDefault();
 
     sendMessage(content, id, token).then(data => {
-      console.log(data);
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setError('');
+        setContent('');
+      }
     });
   }
 
