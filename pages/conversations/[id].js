@@ -9,12 +9,18 @@ import { useEffect } from 'react';
 
 
 const Conversation = ({ router }) => {
+  const resizeChatContainer = () => {
+    document.querySelector('#chat-container').style.height = `${window.innerHeight - 70}px`;
+  }
+
   useEffect(() => {
     // set height of div and every time again on resize
-    document.querySelector('#chat-container').style.height = `${window.innerHeight - 70}px`;
-    window.addEventListener('resize', () => {
-      document.querySelector('#chat-container').style.height = `${window.innerHeight - 70}px`;
-    });
+    resizeChatContainer();
+    window.addEventListener('resize', resizeChatContainer);
+
+    return () => {
+      window.removeEventListener('resize', resizeChatContainer);
+    }
   }, []);
   return (
     <Private>

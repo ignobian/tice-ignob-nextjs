@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import { Button } from '../Button';
 import { Form } from 'reactstrap';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { ConversationProvider } from '../../contexts/ConversationProvider'
+import { getCookie } from '../../actions/auth';
+import { sendMessage } from '../../actions/conversation';
 
 const TextArea = styled.textarea`
   border: none;
@@ -11,8 +14,11 @@ const TextArea = styled.textarea`
 `;
 
 const MessageInput = () => {
+  const { id } = useContext(ConversationProvider);
   const [content, setContent] = useState('');
   const [error, setError] = useState('');
+
+  const token = getCookie('token');
 
   const handleChange = e => {
     setError('');
@@ -22,7 +28,9 @@ const MessageInput = () => {
   const handleSubmit = e => {
     e.preventDefault();
 
-    console.log(content);
+    sendMessage(content, id, token).then(data => {
+      console.log(data);
+    });
   }
 
   return (

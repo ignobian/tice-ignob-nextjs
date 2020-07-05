@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 import { Image, Transformation } from 'cloudinary-react';
 import { SecondaryButton } from '../../components/Button';
+import { isAuth } from '../../actions/auth';
 
 const Stats = styled.div`
   display: flex;
@@ -105,7 +106,9 @@ const UserProfile = ({ user, blogs }) => {
                     <hr/>
                     <p className="text-muted">Joined {moment(user.createdAt).fromNow()}</p>
                     <p>{user.about}</p>
-                    <SecondaryButton role="link" onClick={() => Router.push(`/conversations?with=${user.id}`)}>Message {user.name}</SecondaryButton>
+                    {(isAuth() && isAuth().id !== user.id) ? (
+                      <SecondaryButton role="link" onClick={() => Router.push(`/conversations?with=${user.id}`)}>Message {user.name}</SecondaryButton>
+                    ) : null}
                   </div>
                   </>
                 )}
