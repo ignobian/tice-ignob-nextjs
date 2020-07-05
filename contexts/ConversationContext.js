@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { getConversation } from '../actions/conversation';
 import { getCookie } from '../actions/auth';
 import { useState } from "react";
+import { API } from "../config";
 
 export const ConversationContext = createContext();
 
@@ -20,6 +21,11 @@ export const ConversationContextProvider = ({ children, id }) => {
       });
     }
   }, [id]);
+
+  const handleReceived = (message) => {
+    console.log(message)
+  }
+
   return (
     <ConversationContext.Provider value={{
       id,
