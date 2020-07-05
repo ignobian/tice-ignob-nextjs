@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Button } from '../Button';
 import { Form } from 'reactstrap';
 import { useState, useContext } from 'react';
-import { ConversationProvider } from '../../contexts/ConversationProvider'
+import { ConversationContext } from '../../contexts/ConversationContext'
 import { getCookie } from '../../actions/auth';
 import { sendMessage } from '../../actions/conversation';
 
@@ -14,7 +14,7 @@ const TextArea = styled.textarea`
 `;
 
 const MessageInput = () => {
-  const { id } = useContext(ConversationProvider);
+  const { id } = useContext(ConversationContext);
   const [content, setContent] = useState('');
   const [error, setError] = useState('');
 
