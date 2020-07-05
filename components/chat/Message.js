@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import { Image, Transformation } from 'cloudinary-react';
 
-const Message = ({ message }) => {
+const Message = ({ message, lastMessage }) => {
 
   const showProfileImg = () => (
     <Image onClick={() => Router.push(`/profile/${message.from.id}`)} width="40" height="40" style={{borderRadius: '50%', objectFit: 'cover', cursor: 'pointer'}} publicId={message.from.photo}>
@@ -9,7 +9,7 @@ const Message = ({ message }) => {
     </Image>
   )
   return (
-    <div className="d-flex my-2">
+    <div className="d-flex my-2" id={lastMessage ? 'last-message' : false}>
       <div className="p-2">
         {showProfileImg()}
       </div>
