@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Router from 'next/router';
 import Layout from '../../components/Layout';
 import { userPublicProfile } from '../../actions/user';
 import { DOMAIN, APP_NAME, FB_APP_ID } from '../../config';
@@ -11,6 +12,7 @@ import FollowButton from '../../components/FollowButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 import { Image, Transformation } from 'cloudinary-react';
+import { SecondaryButton } from '../../components/Button';
 
 const Stats = styled.div`
   display: flex;
@@ -69,7 +71,7 @@ const UserProfile = ({ user, blogs }) => {
 
           <Row className="mt-4">
 
-            <Col xs="12" md="8">
+            <Col xs="12" md={{size: 8, offset: 2}}>
 
               <div className="card p-4">
                 <div className="d-flex justify-content-between align-items-center mb-3">
@@ -99,9 +101,12 @@ const UserProfile = ({ user, blogs }) => {
                       </div>
                     </Stats>
                   </div>
-                  <hr/>
-                  <p className="text-muted">Joined {moment(user.createdAt).fromNow()}</p>
-                  <p>{user.about}</p>
+                  <div>
+                    <hr/>
+                    <p className="text-muted">Joined {moment(user.createdAt).fromNow()}</p>
+                    <p>{user.about}</p>
+                    <SecondaryButton role="link" onClick={() => Router.push(`/conversations?with=${user.id}`)}>Message {user.name}</SecondaryButton>
+                  </div>
                   </>
                 )}
 
@@ -110,18 +115,10 @@ const UserProfile = ({ user, blogs }) => {
             </Col>
 
             {!user.isDeleted && (
-              <>
-                <Col xs="12" md="4" className="mt-3">
-                  {showContactForm()}
-                </Col>
-
-                <hr/>
-
-                <Col xs="12">
-                  <h2 className="my-5">{user.name}'s blogs</h2>
-                  {showRecentPosts()}
-                </Col>
-              </>
+              <Col xs="12" className="mt-3">
+                <h2 className="my-5">{user.name}'s blogs</h2>
+                {showRecentPosts()}
+              </Col>
             )}
 
           </Row>
