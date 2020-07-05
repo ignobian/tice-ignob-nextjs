@@ -7,6 +7,7 @@ import { ConversationContextProvider } from '../../contexts/ConversationContext'
 import { API } from '../../config';
 import { withRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { getCookie } from '../../actions/auth';
 
 const Conversation = ({ router }) => {
   const resizeChatContainer = () => {
@@ -24,7 +25,6 @@ const Conversation = ({ router }) => {
     return () => {
       window.removeEventListener('resize', resizeChatContainer);
     }
-
   }, []);
 
   useEffect(() => {
@@ -35,9 +35,16 @@ const Conversation = ({ router }) => {
   
       cable.subscriptions.create({
         channel: 'ConversationChannel',
-        id: router.query.id
+        id: router.query.id,
+        token: getCookie('token')
       }, {
-        received: data => {
+        connected() {
+          console.log('connected')
+        },
+        rejected() {
+          console.log('rejected')
+        },
+        received(data) {
           console.log(data);
         }
       });

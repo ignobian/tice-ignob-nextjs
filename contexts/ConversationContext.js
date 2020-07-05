@@ -22,10 +22,6 @@ export const ConversationContextProvider = ({ children, id }) => {
     }
   }, [id]);
 
-  const handleReceived = (message) => {
-    console.log(message)
-  }
-
   return (
     <ConversationContext.Provider value={{
       id,
