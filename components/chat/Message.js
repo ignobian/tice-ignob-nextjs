@@ -1,5 +1,6 @@
 import Router from 'next/router';
 import { Image, Transformation } from 'cloudinary-react';
+import moment from 'moment';
 
 const Message = ({ message, lastMessage }) => {
 
@@ -14,7 +15,7 @@ const Message = ({ message, lastMessage }) => {
         {showProfileImg()}
       </div>
       <div>
-        <p className="font-weight-bold mb-1">{message.from.username}</p>
+        <p className="mb-1"><span className="font-weight-bold">{message.from.username}</span><small className="text-muted font-italic ml-2">{moment(message.createdAt).format('LLLL')}</small></p>
         <p>{message.content}</p>
       </div>
 

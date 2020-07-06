@@ -35,6 +35,17 @@ export const getConversation = (id, token) => {
   .catch(err => console.log(err));
 };
 
+export const getMessages = (id, skip, token) => {
+  return fetch(`${API}/conversations/${id}/messages?skip=${skip}`, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => res.json())
+  .catch(err => console.log(err));
+};
+
 export const sendMessage = (content, id, token) => {
   return fetch(`${API}/conversations/${id}/messages`, {
     method: 'POST',

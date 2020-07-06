@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { useEffect } from "react";
-import { getConversation } from '../actions/conversation';
+import { getConversation, getMessages } from '../actions/conversation';
 import { getCookie } from '../actions/auth';
 import { useState } from "react";
 import { WS_API } from "../config";
@@ -11,6 +11,8 @@ export const ConversationContext = createContext();
 export const ConversationContextProvider = ({ children, id }) => {
   const [convoUser, setConvoUser] = useState(null);
   const [messages, setMessages] = useState([]);
+  const oldLoaded = useRef(false);
+  const [loading, setLoading] = useState(false);
   const messagesRef = useRef(messages);
   const [typing, setTyping] = useState([]);
   const typingRef = useRef(typing);
@@ -20,10 +22,15 @@ export const ConversationContextProvider = ({ children, id }) => {
   useEffect(() => {
     messagesRef.current = messages;
 
-    if (messages.length > 0) {
-      // scroll last message into view
+    console.log(oldLoaded.current);
+
+    if (!oldLoaded.current && messages.length > 0) {
       document.querySelector('#last-message').scrollIntoView(); 
     }
+
+    oldLoaded.current = false;
+
+    console.log(oldLoaded.current);
   }, [messages]);
 
   useEffect(() => {
@@ -74,12 +81,27 @@ export const ConversationContextProvider = ({ children, id }) => {
     }
   }
 
+  const fetchMessages = async () => {
+    setLoading(true);
+    const skip = messagesRef.current.length;
+
+    const data = await getMessages(id, skip, token);
+
+    oldLoaded.current = true;
+
+    setMessages(data.concat(messagesRef.current));
+    
+    setLoading(false);
+  }
+
   return (
     <ConversationContext.Provider value={{
       id,
       convoUser,
       typing,
-      messages
+      messages,
+      loading,
+      fetchMessages
     }}>
       {children}
     </ConversationContext.Provider>
