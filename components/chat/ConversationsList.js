@@ -19,23 +19,23 @@ const ConversationsList = () => {
 
   return (
     <div>
-      <Container className="border-bottom">
-        <Row>
-          <Col xs="12">
+      <Container>
+        <Row className="justify-content-center">
+          <Col xs="12" sm="10" md="9">
             <h3 className="py-3">My conversations</h3>
+            {loading && (
+              <div className="d-flex justify-content-center">
+                <img src="/images/loading.svg" width="30" className="mt-3" alt="Loading..."/>
+              </div>
+            )}
+
+            {convos.map((convo, i) => (
+              <Convo isFirst={i === 0} convo={convo} />
+            ))}
           </Col>
         </Row>
       </Container>
 
-      {loading && (
-        <div className="d-flex justify-content-center">
-          <img src="/images/loading.svg" width="30" className="mt-3" alt="Loading..."/>
-        </div>
-      )}
-
-      {convos.map(convo => (
-        <Convo convo={convo} />
-      ))}
     </div>
   )
 }

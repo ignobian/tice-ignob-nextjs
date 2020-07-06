@@ -8,9 +8,11 @@ const StyledDiv = styled.div`
     background-color: #efefef;
     transition: background-color, 200ms ease-out;
   }
+  border-radius: 5px;
+  cursor: pointer;
 `;
 
-const Convo = ({ convo }) => {
+const Convo = ({ convo, isFirst }) => {
   const showProfileImg = () => (
     <Image onClick={() => Router.push(`/profile/${convo.with.id}`)} width="30" height="30" style={{borderRadius: '50%', objectFit: 'cover', cursor: 'pointer'}} publicId={convo.with.photo}>
       <Transformation width="300" crop="fill" />
@@ -18,7 +20,7 @@ const Convo = ({ convo }) => {
   )
 
   return (
-    <StyledDiv role="button" onClick={() => Router.push(`/conversations/${convo.id}`)} className="border-bottom py-2 d-flex align-items-center">
+    <StyledDiv role="button" onClick={() => Router.push(`/conversations/${convo.id}`)} className={`border-left border-right border-bottom py-2 d-flex align-items-center ${isFirst && 'border-top'}`}>
       <div className="p-2">
         {showProfileImg()}
       </div>
