@@ -47,7 +47,7 @@ export const ConversationContextProvider = ({ children, id }) => {
       // if all of our initial messages are loaded, we can connect websocket
       const actioncable = require('actioncable');
 
-      const cable = actioncable.createConsumer(`${WS_API}/cable`);
+      const cable = actioncable.createConsumer(WS_API);
   
       cable.subscriptions.create({
         channel: 'ConversationChannel',
