@@ -6,7 +6,7 @@ module.exports = withCSS({
     API_DEVELOPMENT: 'http://localhost:3001/v1',
     API_PRODUCTION: 'https://ignob-backend-rails-api.herokuapp.com/v1',
     WS_API_DEVELOPMENT: 'ws://localhost:3001/cable',
-    WS_API_PRODUCTION: 'ws://ignob-backend-rails-api.herokuapp.com/cable',
+    WS_API_PRODUCTION: 'wss://ignob-backend-rails-api.herokuapp.com/cable',
     PRODUCTION: process.env.NODE_ENV === 'production',
     DOMAIN_DEVELOPMENT: 'http://localhost:3000',
     DOMAIN_PRODUCTION: 'https://ignob.com',
