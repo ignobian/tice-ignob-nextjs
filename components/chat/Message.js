@@ -5,7 +5,7 @@ import moment from 'moment';
 const Message = ({ message, lastMessage }) => {
 
   const showProfileImg = () => (
-    <Image onClick={() => Router.push(`/profile/${message.from.id}`)} width="40" height="40" style={{borderRadius: '50%', objectFit: 'cover', cursor: 'pointer'}} publicId={message.from.photo}>
+    <Image onClick={() => Router.push(`/profile/${message.from.id}`)} width="40" height="40" style={{borderRadius: '50%', objectFit: 'cover', cursor: 'pointer'}} publicId={message.from.photo} secure="true">
       <Transformation width="300" crop="fill" />
     </Image>
   )

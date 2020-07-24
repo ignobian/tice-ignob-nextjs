@@ -77,7 +77,7 @@ const UserProfile = ({ user, blogs }) => {
               <div className="card p-4">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <h3 className="m-0">{user.name}</h3>
-                  <Image style={{width: 50, height: 50, borderRadius: '50%'}} publicId={user.photo && user.photo.key} alt={user.username}>
+                  <Image style={{width: 50, height: 50, borderRadius: '50%'}} publicId={user.photo && user.photo.key} alt={user.username} secure="true">
                     <Transformation width="200" height="200" crop="fill" />
                   </Image>
                 </div>

@@ -114,7 +114,7 @@ const ProfileUpdate = () => {
   const showProfilePhotoPreview = () => <img width="150" className="p-2" src={photoPreview} alt=""/>
 
   const showCloudinaryProfilePhoto = () => (
-    <Image width="150" className="p-2" publicId={cloudinaryPhoto.key} >
+    <Image width="150" className="p-2" publicId={cloudinaryPhoto.key} secure="true">
       <Transformation width="400" crop="fill" />
     </Image>
   )

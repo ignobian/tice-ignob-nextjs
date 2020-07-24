@@ -300,7 +300,7 @@ const CreateUpdateBlog = ({ slug }) => {
 
   const showCloudinaryImage = () => (
     cloudinaryPhoto && (
-      <Image publicId={cloudinaryPhoto && cloudinaryPhoto.key} height="100">
+      <Image publicId={cloudinaryPhoto && cloudinaryPhoto.key} height="100" secure="true">
         <Transformation width="200" crop="fill" />
       </Image>
     )

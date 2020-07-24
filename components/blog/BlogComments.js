@@ -49,7 +49,7 @@ const BlogComments = ({ blog }) => {
         <p className="text-muted font-italic">{comment.content}</p>
         <div className="d-flex align-items-center">
           {comment.user.photo && (
-            <Image publicId={comment.user.photo && comment.user.photo.key} style={{width: 50, borderRadius: '50%'}}>
+            <Image publicId={comment.user.photo && comment.user.photo.key} style={{width: 50, borderRadius: '50%'}} secure="true">
               <Transformation width="100" crop="fill" />
             </Image>
           )}

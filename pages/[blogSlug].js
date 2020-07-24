@@ -188,7 +188,7 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
 
   const showAuthor = (user) => (
     <div className="d-flex my-3">
-      <Image style={{borderRadius: '50%', width: 40, height: 40, objectFit: 'cover'}} publicId={user.photo ? user.photo.key : 'VC5fY84CZiCQofi6AAC3TnCc'} className="mr-3">
+      <Image style={{borderRadius: '50%', width: 40, height: 40, objectFit: 'cover'}} publicId={user.photo ? user.photo.key : 'VC5fY84CZiCQofi6AAC3TnCc'} className="mr-3" secure="true">
         <Transformation width="100" crop="fill" />
       </Image>
       <div className="flex-grow-1">
@@ -223,7 +223,7 @@ const singleBlog = ({ blog, serverError, isServerRendered }) => {
       <Layout>
         <main>
           <Banner>
-            <Image publicId={blog.photo && blog.photo.key} alt={blog.title}>
+            <Image publicId={blog.photo && blog.photo.key} alt={blog.title} secure="true">
               <Transformation width='1020' crop="fill" />
             </Image>
           </Banner>

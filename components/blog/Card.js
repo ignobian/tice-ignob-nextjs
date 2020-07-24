@@ -67,13 +67,13 @@ const Card = ({ blog }) => {
   return (
     <GridContainer>
       <div>
-        <Link href={`/${blog.slug}`}>
-          <DefaultLink>
-            <FeaturedImg publicId={blog.photo && blog.photo.key} alt={blog.title}>
+        {blog.photo && (
+          <Link href={`/${blog.slug}`}>
+            <FeaturedImg publicId={blog.photo.key} alt={blog.title} secure="true">
               <Transformation width="1000" crop="fill" />
             </FeaturedImg>
-          </DefaultLink>
-        </Link>
+          </Link>
+        )}
       </div>
 
       <div className="details">

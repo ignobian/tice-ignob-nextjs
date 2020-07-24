@@ -79,7 +79,7 @@ const Header = (props) => {
 
   const showAvatar = user => (
     user.photo ? (
-      <Image onClick={toggleDropdown} width="40" height="40" style={{borderRadius: '50%', objectFit: 'cover', cursor: 'pointer'}} publicId={user.photo.key}>
+      <Image onClick={toggleDropdown} width="40" height="40" style={{borderRadius: '50%', objectFit: 'cover', cursor: 'pointer'}} publicId={user.photo.key} secure="true">
         <Transformation width="300" crop="fill" />
       </Image>
     ) : (

@@ -64,7 +64,7 @@ const ReportsList = () => {
   const showReports = () => (
     reports.map(report => (
       <ReportItem>
-        <Image style={{borderRadius: 5, width: 50, marginRight: 20}} publicId={report.blog.photo && report.blog.photo.key}>
+        <Image style={{borderRadius: 5, width: 50, marginRight: 20}} publicId={report.blog.photo && report.blog.photo.key} secure="true">
           <Transformation width="200" crop="fill" />
         </Image>
 
@@ -80,7 +80,7 @@ const ReportsList = () => {
           <div className="mr-4">
             <p className="mb-1 text-muted">Posted by:</p>
             <div className="d-flex align-items-center">
-              <Image style={{borderRadius: '50%', width: 30, marginRight: 10}} publicId={report.blog.user.photo && report.blog.user.photo.key}>
+              <Image style={{borderRadius: '50%', width: 30, marginRight: 10}} publicId={report.blog.user.photo && report.blog.user.photo.key} secure="true">
                 <Transformation width="200" crop="fill" />
               </Image>
               <Link href={`/profile/${report.blog.user.username}`}><DefaultLink>{report.blog.user.username}</DefaultLink></Link>
@@ -90,7 +90,7 @@ const ReportsList = () => {
           <div className="mr-4">
             <p className="mb-1 text-muted">Reported by:</p>
             <div className="d-flex align-items-center">
-              <Image style={{borderRadius: '50%', width: 30, marginRight: 10}} publicId={report.blog.user.photo && report.blog.user.photo.key}>
+              <Image style={{borderRadius: '50%', width: 30, marginRight: 10}} publicId={report.blog.user.photo && report.blog.user.photo.key} secure="true">
                 <Transformation width="200" crop="fill" />
               </Image>
               <Link href={`/profile/${report.user.username}`}><DefaultLink>{report.user.username}</DefaultLink></Link>

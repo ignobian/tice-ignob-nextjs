@@ -56,7 +56,7 @@ const UserStats = () => {
     return (
       blogsSorted.map(blog => (
         <tr>
-          <td><Image width="40" style={{borderRadius: 4}} publicId={blog.photo && blog.photo.key}><Transformation crop="fill" width="200" /></Image></td>
+          <td><Image width="40" style={{borderRadius: 4}} publicId={blog.photo && blog.photo.key} secure="true"><Transformation crop="fill" width="200" /></Image></td>
           <td style={{maxWidth: 60, overflow: 'hidden'}}><Link href={`/${blog.slug}`}><DefaultLink>{blog.title}</DefaultLink></Link></td>
           <td>{blog.impressions}</td>
           <td>{blog.shares}</td>

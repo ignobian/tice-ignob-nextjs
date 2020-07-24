@@ -49,7 +49,7 @@ const FollowerList = () => {
   const showFollowers = () => (
     followers.map(follower => (
       <Li>
-        <Image style={{width: 20, height: 20, borderRadius: '50%'}} publicId={follower.photo && follower.photo.key}>
+        <Image style={{width: 20, height: 20, borderRadius: '50%'}} publicId={follower.photo && follower.photo.key} secure="true">
           <Transformation width="100" />
         </Image>
         <h5>{follower.username}</h5>
