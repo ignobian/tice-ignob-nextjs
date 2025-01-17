@@ -5,7 +5,7 @@ import Router from 'next/router';
 import NProgress from 'nprogress';
 import { signout, isAuth } from '../../actions/auth';
 // bring in the css from nprogress
-import '../../node_modules/nprogress/nprogress.css';
+// import '../../node_modules/nprogress/nprogress.css';
 import Search from '../blog/Search';
 import DropdownMenu from './DropdownMenu';
 import styled from 'styled-components';

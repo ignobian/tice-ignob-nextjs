@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Router, { withRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import stripHtml from 'string-strip-html';
+// import stripHtml from 'string-strip-html';
 import { Input, Label, FormGroup, Form, Container, Row, Col } from 'reactstrap';
 import { Image, Transformation } from 'cloudinary-react';
 
@@ -20,7 +20,7 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 // import configs for react quill
 import { QuillModules, QuillFormats } from '../../helpers/quill';
 // import css for react quill
-import '../../node_modules/react-quill/dist/quill.snow.css';
+// import '../../node_modules/react-quill/dist/quill.snow.css';
 import Loading from '../Loading';
 import Error from '../Error';
 import Message from '../Message';
@@ -255,7 +255,8 @@ const CreateUpdateBlog = ({ slug }) => {
 
     // for the body (based on words)
     const bodyWordMin = 300;
-    const bodyWordCount = stripHtml(body || '').split(' ').length;
+    // const bodyWordCount = stripHtml(body || '').split(' ').length;
+    const bodyWordCount = 20;
 
     return (
       <Form onSubmit={handleSubmit}>

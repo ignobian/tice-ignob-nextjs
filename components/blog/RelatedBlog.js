@@ -1,5 +1,5 @@
 import { API } from '../../config';
-import stripHtml from 'string-strip-html';
+// import stripHtml from 'string-strip-html';
 import Link from 'next/link';
 import moment from 'moment';
 import { Image, Transformation} from 'cloudinary-react';
@@ -15,7 +15,8 @@ const RelatedBlog = ({ blog }) => (
       </Link>
       <div className="details pt-3">
         <Link href={blog.slug}><DefaultLink><h5>{blog.title}</h5></DefaultLink></Link>
-        <p className="text-muted">{stripHtml(blog.excerpt).substring(0, 100)}...</p>
+        {/* <p className="text-muted">{stripHtml(blog.excerpt).substring(0, 100)}...</p> */}
+        <p className="text-muted">Altered...</p>
         <p>Created by <Link href={`/profile/${blog.user.username}`}><a>{blog.user.username}</a></Link> | Published {moment(blog.createdAt).fromNow()}</p>
         <Link href={`/${blog.slug}`}><DefaultLink className="btn-link">Read more</DefaultLink></Link>
       </div>

@@ -14,7 +14,7 @@ import { isAuth } from "../actions/auth";
 import { H2 } from '../components/Typography';
 import { Container, Row, Col } from 'reactstrap';
 
-const Index = ({ categories, tags, blogs }) => {
+const Index = ({ categories, tags, blogs, error }) => {
   const head = () => (
     <Head>
       <title>Welcome to {APP_NAME} - blogs about tech</title>
@@ -35,15 +35,31 @@ const Index = ({ categories, tags, blogs }) => {
   );
 
   const showLearnMore = () => (
-    <Col xs={{size: 6, offset: 3}} md={{size: 4, offset: 4}} className="mt-2">
-      <ButtonLink style={{display: 'block', padding: '17px'}}>Get started</ButtonLink>
+    <Col xs={{ size: 6, offset: 3 }} md={{ size: 4, offset: 4 }} className="mt-2">
+      <ButtonLink style={{ display: 'block', padding: '17px' }}>Get started</ButtonLink>
 
-      <div className="mt-3 text-left" style={{opacity: 0.8}}>
+      <div className="mt-3 text-left" style={{ opacity: 0.8 }}>
         <p className="mb-2">Already have an account?</p>
         <Link href="/"><DefaultLink>Sign in</DefaultLink></Link>
       </div>
     </Col>
-  )
+  );
+
+  if (error) {
+    return (
+      <Layout>
+        <Container>
+          <Row className="text-center">
+            <Col xs="12" className="mt-5">
+              <H2 className="font-weight-bold text-danger">
+                An error occurred while fetching data: {error.message}
+              </H2>
+            </Col>
+          </Row>
+        </Container>
+      </Layout>
+    );
+  }
 
   return (
     <>
@@ -56,7 +72,7 @@ const Index = ({ categories, tags, blogs }) => {
             </Col>
 
             <Col xs="12" className="my-5">
-              <CategoryListSection categories={categories}/>
+              <CategoryListSection categories={categories} />
             </Col>
 
             <Col xs="12" className="my-2">
@@ -68,40 +84,34 @@ const Index = ({ categories, tags, blogs }) => {
           </Row>
 
           <Row>
-            <Col xs="12" md={{size: 10, offset: 1}} className="mt-4">
+            <Col xs="12" md={{ size: 10, offset: 1 }} className="mt-4">
               <h2 className="pt-5">Featured blogs</h2>
-              <FeaturedBlogs blogs={blogs}/>
+              <FeaturedBlogs blogs={blogs} />
             </Col>
           </Row>
         </Container>
       </Layout>
     </>
-  )
-}
+  );
+};
 
-// ssr categories, some featured blogs and more data
-Index.getInitialProps = () => {
-  return getCategories().then(data => {
-    if (data.error) {
-      console.log(data.error);
-    } else {
-      const categories = data;
-      return getFeaturedTags().then(data => {
-        if (data.error) {
-          console.log(data.error);
-        } else {
-          const tags = data;
-          return list().then(data => {
-            if (data.error) {
-              console.log(data.error);
-            } else {
-              return { categories, tags, blogs: data }
-            }
-          });
-        }
-      })
-    }
-  });
-}
+// Use async/await for cleaner code and better error handling
+Index.getInitialProps = async () => {
+  try {
+    const categories = await getCategories();
+    if (categories.error) throw new Error(categories.error);
+
+    const tags = await getFeaturedTags();
+    if (tags.error) throw new Error(tags.error);
+
+    const blogs = await list();
+    if (blogs.error) throw new Error(blogs.error);
+
+    return { categories, tags, blogs };
+  } catch (error) {
+    console.error('Error in Index.getInitialProps:', error);
+    return { error };
+  }
+};
 
 export default Index;

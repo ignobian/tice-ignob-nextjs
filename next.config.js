@@ -1,6 +1,4 @@
-const withCSS = require('@zeit/next-css');
-
-module.exports = withCSS({
+module.exports = {
   publicRuntimeConfig: {
     APP_NAME: 'Ignob',
     API_DEVELOPMENT: 'http://localhost:3001/v1',
@@ -17,4 +15,4 @@ module.exports = withCSS({
     GOOGLE_CLIENT_ID_PROD: '451267118385-ae8h21u07q358q14c4gtfomvflb2srs3.apps.googleusercontent.com',
     CLOUDINARY_CLOUDNAME: 'drafhqqxi'
   }
-});
+};
